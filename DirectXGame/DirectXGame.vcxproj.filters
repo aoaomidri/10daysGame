@@ -76,6 +76,12 @@
     <Filter Include="ソース ファイル\Enemy">
       <UniqueIdentifier>{9d47220b-4b2f-4080-b7f0-7d188dfbc656}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\GamePad">
+      <UniqueIdentifier>{cb0493f5-cb4d-481b-b537-ecc9a046425f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\GamePad">
+      <UniqueIdentifier>{ac844ab2-3380-4b79-9116-ca38792c70d8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -140,6 +146,9 @@
     </ClCompile>
     <ClCompile Include="Wall.cpp">
       <Filter>ソース ファイル\field</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Downloads\Gamepad\Gamepad.cpp">
+      <Filter>ソース ファイル\GamePad</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -271,6 +280,9 @@
     </ClInclude>
     <ClInclude Include="Wall.h">
       <Filter>ヘッダー ファイル\field</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Downloads\Gamepad\Gamepad.h">
+      <Filter>ヘッダー ファイル\GamePad</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -106,6 +106,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\Downloads\Gamepad\Gamepad.cpp" />
     <ClCompile Include="2d\ImGuiManager.cpp" />
     <ClCompile Include="Adjustment_Item.cpp" />
     <ClCompile Include="BaseCharacter.cpp" />
@@ -129,6 +130,7 @@
     <ClCompile Include="WorldTransformEX.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\Downloads\Gamepad\Gamepad.h" />
     <ClInclude Include="2d\ImGuiManager.h" />
     <ClInclude Include="2d\Sprite.h" />
     <ClInclude Include="3d\AxisIndicator.h" />
