@@ -19,12 +19,8 @@ GameScene::~GameScene() {
 	delete ENSprite_;
 }
 
-void GameScene::Initialize() {
-
-	dxCommon_ = DirectXCommon::GetInstance();
-	input_ = Input::GetInstance();
-	audio_ = Audio::GetInstance();
-	//画像データ読み込み
+void GameScene::TextureInitialize() {
+	// 画像データ読み込み
 	textureHandle = TextureManager::Load("white1x1.png");
 	textureHandleSkydome = TextureManager::Load("skyDome/skyDome.jpg");
 	textureHandleGround = TextureManager::Load("Ground/firld.png");
@@ -61,13 +57,27 @@ void GameScene::Initialize() {
 
 	textureHandlePL = TextureManager::Load("text/PL.png");
 	textureHandleEN = TextureManager::Load("text/EN.png");
+}
 
-	//サウンドデータ読み込み
+void GameScene::SoundInitialize() {
+	// サウンドデータ読み込み
 	TitleBGMDataHandle_ = audio_->LoadWave("audio/8bit13.wav");
 	MainBGMDataHandle_ = audio_->LoadWave("audio/Game3.wav");
 	EndBGMDataHandle_ = audio_->LoadWave("audio/zingle.wav");
 
 	SEDataHandle_ = audio_->LoadWave("audio/break.wav");
+}
+
+void GameScene::Initialize() {
+
+	dxCommon_ = DirectXCommon::GetInstance();
+	input_ = Input::GetInstance();
+	audio_ = Audio::GetInstance();
+	
+	TextureInitialize();
+
+	SoundInitialize();
+	
 
 	//テクスチャ生成
 	titleSprite_ = Sprite::Create(textureHandleTitle, {640, 200}, {1, 1, 1, 1}, {0.5f, 0.5f});

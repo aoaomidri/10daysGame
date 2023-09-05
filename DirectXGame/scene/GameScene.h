@@ -42,6 +42,10 @@ public: // メンバ関数
 	/// </summary>
 	void Initialize();
 
+	void TextureInitialize();
+
+	void SoundInitialize();
+
 	/// <summary>
 	/// 毎フレーム処理
 	/// </summary>
@@ -64,6 +68,8 @@ public: // メンバ関数
 	bool IsCollisionOBBViewFrustum(const OBB& obb, const ViewingFrustum& viewingFrustum);
 
 	bool isCollisionOBBSphere(const OBB& obb, const Sphere& sphere);
+
+
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;
