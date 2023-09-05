@@ -350,9 +350,9 @@ void GameScene::Draw() {
 
 		skyDome_->Draw(viewProjection_);
 
-		ground_->Draw(viewProjection_);
+		//ground_->Draw(viewProjection_);
 
-		wall_->Draw(viewProjection_);
+		//wall_->Draw(viewProjection_);
 	}
 	/// </summary>
 
@@ -370,7 +370,7 @@ void GameScene::Draw() {
 	if (scene_ == Scene::Title || scene_ == Scene::Control) {
 		
 		sprite_[0]->Draw();
-		titleSprite_->Draw();
+		//titleSprite_->Draw();
 		sprite_[1]->Draw();
 		sprite_[1]->SetColor({0, 0, 0, 0.1f});
 		sprite_[3]->Draw();

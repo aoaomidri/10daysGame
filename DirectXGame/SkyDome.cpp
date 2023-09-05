@@ -2,6 +2,7 @@
 
 void SkyDome::Initialize(const std::vector<Model*>& models) { 
 	BaseField::Initialize(models);
+	worldTransform_.translation_ = {0.0f, 200.0f, 0.0f};
 }
 
 void SkyDome::Update() { worldTransform_.UpdateMatrix(scale); }
