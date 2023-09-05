@@ -147,6 +147,9 @@
     <ClCompile Include="Wall.cpp">
       <Filter>ソース ファイル\field</Filter>
     </ClCompile>
+    <ClCompile Include="GamePad.cpp">
+      <Filter>ソース ファイル\GamePad</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3d\ViewProjection.h">
@@ -277,6 +280,9 @@
     </ClInclude>
     <ClInclude Include="Wall.h">
       <Filter>ヘッダー ファイル\field</Filter>
+    </ClInclude>
+    <ClInclude Include="GamePad.h">
+      <Filter>ヘッダー ファイル\GamePad</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
