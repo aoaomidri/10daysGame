@@ -27,9 +27,7 @@ void PlayerBullet::Update() {
 	
 	switch (state_) {
 	case PlayerBullet::PlayerBulletState::Idle:
-		worldTransform_.translation_ =
-		    player_->GetWorldPosition(player_->GetBodyWorldPosition().matWorld_);
-		worldTransform_.translation_.y += 4.0f;
+		worldTransform_.translation_ = player_->GetOBB().center;
 		deathTimer_ = kLifeTime;
 		break;
 	case PlayerBullet::PlayerBulletState::Move:
@@ -66,7 +64,7 @@ void PlayerBullet::Update() {
 void PlayerBullet::ReturnPlayer()
 {
 	static MyVector vector;
-	Vector3 toPlayer = player_->GetWorldPosition(player_->GetBodyWorldPosition().matWorld_) -
+	Vector3 toPlayer = player_->GetOBB().center -
 	                   worldTransform_.translation_;
 
 	velocity_ = vector.Slerp(velocity_, toPlayer, 0.05f) * kReturnSpeed;
@@ -77,8 +75,7 @@ void PlayerBullet::ReturnPlayer()
 
 	worldTransform_.AddTransform(velocity_);
 	// t += 0.01f;
-	float distance = vector.Length(
-	    player_->GetWorldPosition(player_->GetBodyWorldPosition().matWorld_) -
+	float distance = vector.Length(player_->GetOBB().center -
 	    worldTransform_.translation_);
 	if (distance <= 10.0f) {
 		state_ = PlayerBulletState::Idle;

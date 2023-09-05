@@ -131,7 +131,20 @@ void Player::Update() {
 		BehaviorShotUpdate();
 		break;
 	}
+
+
+
 	Matrix4x4 PlayerRotateMatrix = matrix.MakeRotateMatrix(worldTransformBody_.rotation_);
+
+	for (int i = 0; i < 3; i++) {
+		obb.orientations[i].x = PlayerRotateMatrix.m[i][0];
+		obb.orientations[i].y = PlayerRotateMatrix.m[i][1];
+		obb.orientations[i].z = PlayerRotateMatrix.m[i][2];
+	}
+
+	obb.center = {
+	    worldTransform_.translation_.x, worldTransform_.translation_.y + 4.5f,
+	    worldTransform_.translation_.z};
 
 	Head_offset = vector.TransformNormal(Head_offset_Base, PlayerRotateMatrix);
 	L_arm_offset = vector.TransformNormal(L_arm_offset_Base, PlayerRotateMatrix);
@@ -156,15 +169,7 @@ void Player::Update() {
 		bullet->Update();
 	}
 
-	for (int i = 0; i < 3; i++) {
-		obb.orientations[i].x = PlayerRotateMatrix.m[i][0];
-		obb.orientations[i].y = PlayerRotateMatrix.m[i][1];
-		obb.orientations[i].z = PlayerRotateMatrix.m[i][2];
-	}
-
-	obb.center = {
-	    worldTransform_.translation_.x, worldTransform_.translation_.y + 5.0f,
-	    worldTransform_.translation_.z};
+	
 
 }
 
