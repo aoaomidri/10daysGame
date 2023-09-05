@@ -141,7 +141,9 @@ void GameScene::Initialize() {
 	modelEnemyL_parts_.reset(Model::CreateFromOBJ("EnemyParts", true));
 	modelEnemyR_parts_.reset(Model::CreateFromOBJ("EnemyParts", true));
 	modelPlayerWeapon_.reset(Model::CreateFromOBJ("Weapon", true));
-	modelPlayerBullet_.reset(Model::CreateFromOBJ("Bullet", true));
+	modelPlayerBulletBody_.reset(Model::CreateFromOBJ("BulletBody", true));
+	modelPlayerBulletFin_.reset(Model::CreateFromOBJ("tail", true));
+
 
 	viewProjection_.farZ = 2000.0f;
 	viewProjection_.Initialize();
@@ -154,7 +156,8 @@ void GameScene::Initialize() {
 	//自キャラモデル配列
 	std::vector<Model*> playerModels = {modelPlayerBody_.get(),   modelPlayerHead_.get(),
 	                                    modelPlayerL_arm_.get(),  modelPlayerR_arm_.get(),
-	                                    modelPlayerWeapon_.get(), modelPlayerBullet_.get()};
+	                                    modelPlayerWeapon_.get(), modelPlayerBulletBody_.get(),
+	                                    modelPlayerBulletFin_.get()};
 	// 自キャラの初期化
 	player_->Initialize(playerModels);
 

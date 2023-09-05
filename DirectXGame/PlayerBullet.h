@@ -15,9 +15,12 @@ public:
 	~PlayerBullet();
 
 	void Initialize(
-	    Model* model, const Vector3& position, const Vector3& rotate, const Vector3& velocity);
+	    Model* model, Model* model2, const Vector3& position, const Vector3& rotate,
+	    const Vector3& velocity);
 
 	void Update();
+
+	void FinAnimationUpdate();
 
 	void ReturnPlayer();
 
@@ -46,6 +49,8 @@ private:
 	WorldTransform worldTransform_;
 	// モデル
 	Model* model_ = nullptr;
+	Model* modelFin_ = nullptr;
+	
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 
@@ -68,4 +73,8 @@ private:
 	float t = 0.0f;
 	//戻ってくるときの速度
 	const float kReturnSpeed = 1.2f;
+
+	Vector3 Fin_offset_Base = {0.0f, 0.0f, -1.0f};
+	WorldTransform worldTransformFin_;
+	float finRotate = 0.0f;
 };

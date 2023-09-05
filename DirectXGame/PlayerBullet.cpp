@@ -6,11 +6,12 @@ PlayerBullet::~PlayerBullet() {
 }
 
 void PlayerBullet::Initialize(
-    Model* model, const Vector3& position, const Vector3& rotate, const Vector3& velocity) {
+    Model* model,Model* model2, const Vector3& position, const Vector3& rotate, const Vector3& velocity) {
 	assert(model);
 
 	model_ = model;
-
+	//model++;
+	modelFin_ = model2;
 	textureHandle_ = TextureManager::Load("black.png");
 
 	worldTransform_.Initialize();
@@ -20,6 +21,10 @@ void PlayerBullet::Initialize(
 	worldTransform_.rotation_ = rotate;
 
 	velocity_ = velocity;
+
+	worldTransformFin_.Initialize();
+	worldTransformFin_.translation_ = Fin_offset_Base;
+	worldTransformFin_.parent_ = &worldTransform_;
 }
 
 void PlayerBullet::Update() {
@@ -58,7 +63,8 @@ void PlayerBullet::Update() {
 	}
 	
 	worldTransform_.UpdateMatrix(scale);
-
+	FinAnimationUpdate();
+	worldTransformFin_.UpdateMatrix(scale);
 }
 
 void PlayerBullet::ReturnPlayer()
@@ -84,6 +90,7 @@ void PlayerBullet::ReturnPlayer()
 
 void PlayerBullet::Draw(const ViewProjection& viewProjection) {
 	model_->Draw(worldTransform_, viewProjection);
+	modelFin_->Draw(worldTransformFin_,viewProjection);
 }
 
 void PlayerBullet::OnCollision() { 
@@ -109,3 +116,8 @@ Vector3 PlayerBullet::GetWorldPosition() {
 	return worldPos;
 }
 
+void PlayerBullet::FinAnimationUpdate()
+{ 
+	finRotate += 0.5f;
+	worldTransformFin_.rotation_.y = (std::sin(finRotate))*float(M_PI)/4.0f; 
+}
