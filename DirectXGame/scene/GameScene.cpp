@@ -286,7 +286,9 @@ void GameScene::Update() {
 
 	selectMode = (selectMode % 2) * (selectMode % 2);
 
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		preJoyState = joyState;
+	}
 
 	
 
