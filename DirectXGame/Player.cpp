@@ -573,6 +573,26 @@ void Player::BehaviorShotUpdate() {
 
 	Attack();
 
+	if ((worldTransform_.translation_ + move).x > MoveMax) {
+		move.x = {0};
+		worldTransform_.translation_.x = MoveMax;
+		worldTransformBody_.translation_.x = MoveMax;
+	} else if ((worldTransform_.translation_ + move).x <= -MoveMax) {
+		move.x = {0};
+		worldTransform_.translation_.x = -MoveMax;
+		worldTransformBody_.translation_.x = -MoveMax;
+	}
+
+	if ((worldTransform_.translation_ + move).z > MoveMax) {
+		move.z = {0};
+		worldTransform_.translation_.z = MoveMax;
+		worldTransformBody_.translation_.z = MoveMax;
+	} else if ((worldTransform_.translation_ + move).z <= -MoveMax) {
+		move.z = {0};
+		worldTransform_.translation_.z = -MoveMax;
+		worldTransformBody_.translation_.z = -MoveMax;
+	}
+
 	// 座標を加算
 	worldTransform_.AddTransform(move);
 	worldTransformBody_.AddTransform(move);
