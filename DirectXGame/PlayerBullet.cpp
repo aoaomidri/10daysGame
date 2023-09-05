@@ -88,6 +88,13 @@ void PlayerBullet::Draw(const ViewProjection& viewProjection) {
 
 void PlayerBullet::OnCollision() { 
 	//isDead_ = true;
+	if (state_ == PlayerBulletState::Move)
+	{
+		velocity_.x *= -1.0f;
+		velocity_.y *= -1.0f;
+		velocity_.z *= -1.0f;
+	}
+	
 	state_ = PlayerBulletState::Return;
 }
 
