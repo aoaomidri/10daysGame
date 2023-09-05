@@ -1,5 +1,6 @@
 ﻿#include "MyVector.h"
 #include<assert.h>
+#include <algorithm>
 MyVector::MyVector() { 
 	x = 0.0f;
 	y = 0.0f;
@@ -35,7 +36,7 @@ float MyVector::Length(const Vector3& v) {
 	result = bulletNorm;
 	return result;
 }
-
+/*
 Vector3 MyVector::Slerp(const Vector3& v1, const Vector3& v2, float t) {
 	Vector3 result{0, 0, 0};
 
@@ -69,7 +70,6 @@ Vector3 MyVector::Slerp(const Vector3& v1, const Vector3& v2, float t) {
 
 	return result;
 }
-
 Vector3 MyVector::Lerp(const Vector3& v1, const Vector3& v2, float t) {
 	Vector3 result{0, 0, 0};
 	result = v1 + (v2 - v1) * t;
@@ -77,7 +77,7 @@ Vector3 MyVector::Lerp(const Vector3& v1, const Vector3& v2, float t) {
 
 	return result;
 }
-
+*/
 Vector3 MyVector::Normalize(const Vector3& v) {
 	Vector3 result{0, 0, 0};
 	float bulletNorm = sqrt((v.x * v.x) + (v.y * v.y) + (v.z * v.z));
@@ -141,4 +141,24 @@ float MyVector::Dot(const Vector3& v1, const Vector3& v2) {
 	float result = 0;
 	result = (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
 	return result;
+}
+
+Vector3 MyVector::Lerp(const Vector3& v1, const Vector3& v2, float t) {
+	return v1 + Multiply(t, v2 - v1);
+}
+
+Vector3 MyVector::Slerp(const Vector3& v1, const Vector3& v2, float t) {
+	Vector3 a = Normalize(v1), b = Normalize(v2);
+	float s = (1.0f - t) * Length(a) + t * Length(b);
+	Vector3 e1, e2;
+	e1 = Multiply(float(1.0f / Length(a)),a);
+	e2 = Multiply(float(1.0f / Length(b)),b);
+
+	float dot = std::clamp(Dot(a, b), 0.0f, 1.0f);
+	float theta = std::acos(dot /*/( Length(a)*Length(b))*/);
+	if (theta == 0.0f) {
+		return Lerp(a, b, t);
+	}
+	return Multiply(s , (Multiply((std::sinf((1.0f - t) * theta) / std::sinf(theta)) , a) +
+	            Multiply(std::sinf(t * theta) / std::sinf(theta) , b)));
 }

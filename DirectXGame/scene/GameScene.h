@@ -188,11 +188,11 @@ private: // メンバ変数
 		GameOver	//ゲームオーバー
 	};
 
-	Scene scene_ = Scene::Title;
+	Scene scene_ = Scene::Main;
 
 	Scene BeforeScene_;
 
-	std::optional<Scene> sceneRequest_ = Scene::Title;
+	std::optional<Scene> sceneRequest_ = Scene::Main;
 
 	int selectMode = 0;
 

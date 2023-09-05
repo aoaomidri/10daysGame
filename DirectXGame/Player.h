@@ -245,4 +245,7 @@ private:
 
 	// 発射タイマー
 	int32_t ChargeTimer = 0;
+
+	//弾の最大数
+	const int kBulletNum = 50;
 };

@@ -59,6 +59,23 @@ void Player::Initialize(const std::vector<Model*>& models) {
 
 	PlayerLife = kPlayerLifeMax;
 
+	for (int index = 0;index < kBulletNum;index++)
+	{
+		//const float kBulletSpeed = 0.0f;
+		
+		Vector3 velocity{0.0f,0.0f,0.0f};
+		// 弾を生成し、初期化
+		PlayerBullet* newBullet = new PlayerBullet();
+		
+		newBullet->Initialize(
+		    models_[5], GetWorldPosition(worldTransform_.matWorld_), Vector3{0.0f,0.0f,0.0f}, velocity);
+		
+		newBullet->SetState(PlayerBullet::PlayerBulletState::Idle);
+		newBullet->SetPlayer(this);
+		// 弾を登録する
+		bullets_.push_back(newBullet);
+		
+	}
 }
 
 void Player::Update() {
@@ -632,35 +649,53 @@ void Player::Attack() {
 	if (joyState.Gamepad.bRightTrigger != 0 || (joyState.Gamepad.wButtons&&XINPUT_GAMEPAD_B)) {
 		bulletTime += 1;
 		if (bulletTime % bulletInterval == 1) {
-
+			
 			// 弾の速度
 			const float kBulletSpeed = 5.0f;
 			Vector3 world3DReticlePos = GetWorldPosition(worldTransform3DReticle_.matWorld_);
 
 			Vector3 velocity = world3DReticlePos - GetWorldPosition(worldTransformL_arm_.matWorld_);
 			velocity = vector.NormalizePlus(velocity, kBulletSpeed);
+			
+			
+			/*
 			// 弾を生成し、初期化
 			PlayerBullet* newBullet = new PlayerBullet();
+			
 			newBullet->Initialize(
 			    models_[5], GetWorldPosition(worldTransformL_arm_.matWorld_),
 			    viewProjection_->rotation_, velocity);
 			// 弾を登録する
 			bullets_.push_back(newBullet);
+			*/
+			for (PlayerBullet* bullet : bullets_)
+			{
+				if (bullet->GetState() == PlayerBullet::PlayerBulletState::Idle)
+				{
+					bullet->SetShot(
+					    GetWorldPosition(worldTransformL_arm_.matWorld_),
+					    viewProjection_->rotation_, velocity);
+					bullet->SetState(PlayerBullet::PlayerBulletState::Move);
+					break;
+				}
+				//assert(false);
+			}
 		}
 	} else {
 		bulletTime = 0;
 	}
 }
+/*
+const Vector3& Player::GetMyWorldPosition() {
+	Vector3 worldPos(0, 0, 0);
 
-//const Vector3& Player::GetMyWorldPosition() {
-//	Vector3 worldPos(0, 0, 0);
-//
-//	worldPos.x = worldTransformBody_.matWorld_.m[3][0];
-//	worldPos.y = worldTransformBody_.matWorld_.m[3][1];
-//	worldPos.z = worldTransformBody_.matWorld_.m[3][2];
-//
-//	return worldPos;
-//}
+	worldPos.x = worldTransformBody_.matWorld_.m[3][0];
+	worldPos.y = worldTransformBody_.matWorld_.m[3][1];
+	worldPos.z = worldTransformBody_.matWorld_.m[3][2];
+
+	return worldPos;
+}
+*/
 
 Vector3 Player::GetWorldPosition(Matrix4x4 mat) {
 

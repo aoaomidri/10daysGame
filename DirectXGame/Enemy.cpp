@@ -394,7 +394,7 @@ void Enemy::BehaviorFirstInitialize() {
 void Enemy::BehaviorFirstUpdate() {
 	 //// キャラクターの移動ベクトル
 
-	
+	/*
 	 if (enemyMoveCount >= enemyMoveCountMax) {
 		if (enemyMoveInterval>0) {
 			enemyMoveInterval--;
@@ -426,6 +426,7 @@ void Enemy::BehaviorFirstUpdate() {
 	 if (EnemyLife <= 170.0f) {
 		behaviorRequest_ = Behavior::kSecond;
 	 }
+	 */
 }
 void Enemy::BehaviorSecondInitialize() {
 	 move = {0.5f, 0.0f, 0.5f};
