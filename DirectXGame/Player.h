@@ -82,6 +82,10 @@ public:
 		return (PlayerLife / kPlayerLifeMax);
 	}
 
+	int GetBulletNum() { return BulletNum; }
+
+	int GetBulletNumMax() { return kBulletNum; }
+
 	void SetchackCollision() { chackCollision = 0; }
 
 	void OnCollision();

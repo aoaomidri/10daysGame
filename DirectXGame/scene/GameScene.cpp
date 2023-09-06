@@ -14,6 +14,10 @@ GameScene::~GameScene() {
 		delete conSprite_[i];
 	}
 	delete sprite_[13];
+	for (int i = 0; i < 10; i++) {
+		delete NumberSprite_[i];
+	}
+	delete slashSprite_;
 	delete titleSprite_;
 	delete PLSprite_;
 	delete ENSprite_;
@@ -57,29 +61,23 @@ void GameScene::TextureInitialize() {
 
 	textureHandlePL = TextureManager::Load("text/PL.png");
 	textureHandleEN = TextureManager::Load("text/EN.png");
+
+	textureHandleNumber[0] = TextureManager::Load("Number/number0.png");
+	textureHandleNumber[1] = TextureManager::Load("Number/number1.png");
+	textureHandleNumber[2] = TextureManager::Load("Number/number2.png");
+	textureHandleNumber[3] = TextureManager::Load("Number/number3.png");
+	textureHandleNumber[4] = TextureManager::Load("Number/number4.png");
+	textureHandleNumber[5] = TextureManager::Load("Number/number5.png");
+	textureHandleNumber[6] = TextureManager::Load("Number/number6.png");
+	textureHandleNumber[7] = TextureManager::Load("Number/number7.png");
+	textureHandleNumber[8] = TextureManager::Load("Number/number8.png");
+	textureHandleNumber[9] = TextureManager::Load("Number/number9.png");
+	textureHandleNumber[10] = TextureManager::Load("Number/slash.png");
+
 }
 
-void GameScene::SoundInitialize() {
-	// サウンドデータ読み込み
-	TitleBGMDataHandle_ = audio_->LoadWave("audio/8bit13.wav");
-	MainBGMDataHandle_ = audio_->LoadWave("audio/Game3.wav");
-	EndBGMDataHandle_ = audio_->LoadWave("audio/zingle.wav");
-
-	SEDataHandle_ = audio_->LoadWave("audio/break.wav");
-}
-
-void GameScene::Initialize() {
-
-	dxCommon_ = DirectXCommon::GetInstance();
-	input_ = Input::GetInstance();
-	audio_ = Audio::GetInstance();
-	
-	TextureInitialize();
-
-	SoundInitialize();
-	
-
-	//テクスチャ生成
+void GameScene::MakeTexture() {
+	// テクスチャ生成
 	titleSprite_ = Sprite::Create(textureHandleTitle, {640, 200}, {1, 1, 1, 1}, {0.5f, 0.5f});
 	titleSprite_->SetSize({672, 130});
 
@@ -93,18 +91,21 @@ void GameScene::Initialize() {
 
 	sprite_[2] = Sprite::Create(textureHandle, {0, 0}, colorChangeEN);
 	sprite_[12] = Sprite::Create(textureHandle, {560, 650}, {0, 0, 1, 0.5f});
-	//テキスト系
+	// テキスト系
 	sprite_[3] = Sprite::Create(textureHandleText[0], {570, 500}, {1, 1, 1, 1}, {0.5f, 0.5f});
 	sprite_[4] = Sprite::Create(textureHandleText[1], {750, 500}, {1, 1, 1, 1}, {0.5f, 0.5f});
-	sprite_[5] = Sprite::Create(textureHandleText[2], {640, 350}, {0.3f, 0.3f, 0.3f, 0.9f}, {0.5f, 0.5f});
+	sprite_[5] =
+	    Sprite::Create(textureHandleText[2], {640, 350}, {0.3f, 0.3f, 0.3f, 0.9f}, {0.5f, 0.5f});
 	sprite_[5]->SetSize({284.0f, 134.0f});
 
-	sprite_[6] = Sprite::Create(textureHandleText[3], {640, 550}, {0.3f, 0.3f, 0.3f, 0.9f}, {0.5f, 0.5f});
+	sprite_[6] =
+	    Sprite::Create(textureHandleText[3], {640, 550}, {0.3f, 0.3f, 0.3f, 0.9f}, {0.5f, 0.5f});
 	sprite_[6]->SetSize({284.0f, 134.0f});
 
-	sprite_[7] = Sprite::Create(textureHandleText[4], {640, 100}, {0.3f, 0.3f, 0.3f, 0.9f}, {0.5f, 0.5f});
+	sprite_[7] =
+	    Sprite::Create(textureHandleText[4], {640, 100}, {0.3f, 0.3f, 0.3f, 0.9f}, {0.5f, 0.5f});
 	sprite_[7]->SetSize({362.0f, 138.0f});
-	//256//128
+	// 256//128
 	sprite_[8] = Sprite::Create(textureHandleText[5], {640, 200}, {1, 1, 1, 1}, {0.5f, 0.5f});
 	sprite_[8]->SetSize({384.0f, 192.0f});
 
@@ -128,6 +129,45 @@ void GameScene::Initialize() {
 
 	PLSprite_ = Sprite::Create(textureHandlePL, {500, 670}, {1, 1, 1, 1}, {0.5f, 0.5f});
 	ENSprite_ = Sprite::Create(textureHandleEN, {50, 70}, {1, 1, 1, 1}, {0.5f, 0.5f});
+
+	NumberSprite_[0] =
+	    Sprite::Create(textureHandleNumber[0], {1100, 600}, {1, 1, 1, 1}, {0.5f, 0.5f});
+	NumberSprite_[1] =
+	    Sprite::Create(textureHandleNumber[1], {1148, 600}, {1, 1, 1, 1}, {0.5f, 0.5f});
+	NumberSprite_[2] =
+	    Sprite::Create(textureHandleNumber[2], {1200, 680}, {1, 1, 1, 1}, {0.5f, 0.5f});
+	NumberSprite_[3] =
+	    Sprite::Create(textureHandleNumber[3], {1248, 680}, {1, 1, 1, 1}, {0.5f, 0.5f});
+	for (int i = 0; i < 4; i++) {
+		NumberSprite_[i]->SetSize({48.0f, 48.0f}); 
+	}
+
+	slashSprite_ = Sprite::Create(textureHandleNumber[10], {1170, 640}, {1, 1, 1, 1}, {0.5f, 0.5f});
+	slashSprite_->SetSize({144.0f, 144.0f});
+
+}
+
+void GameScene::SoundInitialize() {
+	// サウンドデータ読み込み
+	TitleBGMDataHandle_ = audio_->LoadWave("audio/8bit13.wav");
+	MainBGMDataHandle_ = audio_->LoadWave("audio/Game3.wav");
+	EndBGMDataHandle_ = audio_->LoadWave("audio/zingle.wav");
+
+	SEDataHandle_ = audio_->LoadWave("audio/break.wav");
+}
+
+void GameScene::Initialize() {
+
+	dxCommon_ = DirectXCommon::GetInstance();
+	input_ = Input::GetInstance();
+	audio_ = Audio::GetInstance();
+	
+	TextureInitialize();
+
+	SoundInitialize();
+	
+	MakeTexture();
+	
 
 	//モデル生成
 	modelSkyDome_.reset(Model::CreateFromOBJ("skyDome", true));
@@ -407,6 +447,14 @@ void GameScene::Draw() {
 		
 		sprite_[12]->SetSize({(player_->GetPlayerLifePer() * 256.0f), 36.0f});
 		sprite_[12]->Draw();
+
+		NumberSprite_[0]->Draw();
+		NumberSprite_[1]->Draw();
+
+		NumberSprite_[2]->Draw();
+		NumberSprite_[3]->Draw();
+
+		slashSprite_->Draw();
 
 		PLSprite_->Draw();
 		ENSprite_->Draw();

@@ -46,6 +46,8 @@ public: // メンバ関数
 
 	void SoundInitialize();
 
+	void MakeTexture();
+
 	/// <summary>
 	/// 毎フレーム処理
 	/// </summary>
@@ -80,7 +82,13 @@ private: // メンバ変数
 
 	Sprite* conSprite_[13] = {0};
 
+	Sprite* NumberSprite_[10] = {0};
+
+	Sprite* slashSprite_ = nullptr;
+
 	Sprite* titleSprite_ = nullptr;
+
+
 
 	Sprite* PLSprite_ = nullptr;
 	Sprite* ENSprite_ = nullptr;
@@ -109,6 +117,8 @@ private: // メンバ変数
 	uint32_t textureHandleText[10] = {0};
 
 	uint32_t textureHandleCon[10] = {0};
+
+	uint32_t textureHandleNumber[11] = {0};
 
 	//音楽データハンドル
 	uint32_t TitleBGMDataHandle_ = 0;
