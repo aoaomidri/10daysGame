@@ -919,7 +919,7 @@ bool GameScene::isCollisionOBBSphere(const OBB& obb, const Sphere& sphere) {
 }
 
 void GameScene::TitleInitialize() { 
-	TitleBGMHandle_ = audio_->PlayWave(TitleBGMDataHandle_, true);
+	//TitleBGMHandle_ = audio_->PlayWave(TitleBGMDataHandle_, true);
 	selectMode = 0;
 
 }
@@ -942,7 +942,7 @@ void GameScene::ControlUpdate() {
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) &&
 		    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_B)) {
-			audio_->StopWave(TitleBGMHandle_);
+			//audio_->StopWave(TitleBGMHandle_);
 
 			sceneRequest_ = Scene::Main;
 		}
@@ -953,8 +953,8 @@ void GameScene::ControlUpdate() {
 
 void GameScene::MainInitialize() { 
 	Initialize(); 
-	MainBGMHandle_ = audio_->PlayWave(MainBGMDataHandle_, true);
-	audio_->SetVolume(MainBGMHandle_, 0.5f);
+	//MainBGMHandle_ = audio_->PlayWave(MainBGMDataHandle_, true);
+	//audio_->SetVolume(MainBGMHandle_, 0.5f);
 }
 
 void GameScene::MainUpdate() { 
@@ -1012,7 +1012,7 @@ void GameScene::MainUpdate() {
 	}
 
 	if (enemy_->GetEnemyLife()<=0.0f) {
-		audio_->StopWave(MainBGMHandle_);
+		//audio_->StopWave(MainBGMHandle_);
 		sceneRequest_ = Scene::End;
 	}
 
@@ -1037,20 +1037,22 @@ void GameScene::PoseUpdate() {
 			if (selectMode == 0) {
 				sceneRequest_ = Scene::Main;
 			} else {
-				audio_->StopWave(MainBGMHandle_);
+				//audio_->StopWave(MainBGMHandle_);
 				sceneRequest_ = Scene::Title;
 			}
 		}
 	}
 }
 
-void GameScene::EndInitialize() { EndBGMHandle_ = audio_->PlayWave(EndBGMDataHandle_); }
+void GameScene::EndInitialize() {
+	// EndBGMHandle_ = audio_->PlayWave(EndBGMDataHandle_);
+}
 
 void GameScene::EndUpdate() {
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) &&
 		    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_B)) {
-			audio_->StopWave(EndBGMHandle_);
+			//audio_->StopWave(EndBGMHandle_);
 			sceneRequest_ = Scene::Title;
 		}
 	}
@@ -1065,10 +1067,10 @@ void GameScene::GameOverUpdate() {
 		    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_B)) {
 			audio_->StopWave(EndBGMHandle_);
 			if (selectMode==0) {
-				audio_->StopWave(MainBGMHandle_);
+				//audio_->StopWave(MainBGMHandle_);
 				sceneRequest_ = Scene::Main;
 			} else {
-				audio_->StopWave(MainBGMHandle_);
+				//audio_->StopWave(MainBGMHandle_);
 				sceneRequest_ = Scene::Title;
 			}
 		}
