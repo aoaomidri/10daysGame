@@ -71,6 +71,11 @@ public: // メンバ関数
 
 	bool isCollisionOBBSphere(const OBB& obb, const Sphere& sphere);
 
+private://メンバ関数
+	/*十の位の値を調べる*/
+	int CheckTensPlaceNumber(int num);
+	/*一の位の値を調べる*/
+	int CheckOensPlaceNumber(int num);
 
 
 private: // メンバ変数
@@ -82,7 +87,7 @@ private: // メンバ変数
 
 	Sprite* conSprite_[13] = {0};
 
-	Sprite* NumberSprite_[10] = {0};
+	Sprite* NumberSprite_[4] = {0};
 
 	Sprite* slashSprite_ = nullptr;
 
@@ -96,6 +101,19 @@ private: // メンバ変数
 
 	Vector4 colorChangeEN = {0};
 	Vector4 colorChangePL = {0};
+	/*十の位*/
+	const Vector2 numberTensPlacePosUP = {1100, 600};
+	;
+	/*一の位*/
+	const Vector2 numberOnesPlacePosUP = {1148, 600};
+
+	/*十の位*/
+	const Vector2 numberTensPlacePosDOWN = {1200, 680};
+	/*一の位*/
+	const Vector2 numberOnesPlacePosDOWN = {1248, 680};
+
+	/*真ん中のスラッシュ*/
+	const Vector2 slashPos = {1170, 640};
 
 	// テクスチャハンドル
 	uint32_t textureHandle = 0;

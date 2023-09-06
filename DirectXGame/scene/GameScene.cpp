@@ -14,7 +14,7 @@ GameScene::~GameScene() {
 		delete conSprite_[i];
 	}
 	delete sprite_[13];
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 4; i++) {
 		delete NumberSprite_[i];
 	}
 	delete slashSprite_;
@@ -22,6 +22,9 @@ GameScene::~GameScene() {
 	delete PLSprite_;
 	delete ENSprite_;
 }
+
+int GameScene::CheckTensPlaceNumber(int num) { return num / 10; }
+int GameScene::CheckOensPlaceNumber(int num) { return (num % 10); }
 
 void GameScene::TextureInitialize() {
 	// 画像データ読み込み
@@ -138,6 +141,7 @@ void GameScene::MakeTexture() {
 	    Sprite::Create(textureHandleNumber[2], {1200, 680}, {1, 1, 1, 1}, {0.5f, 0.5f});
 	NumberSprite_[3] =
 	    Sprite::Create(textureHandleNumber[3], {1248, 680}, {1, 1, 1, 1}, {0.5f, 0.5f});
+	
 	for (int i = 0; i < 4; i++) {
 		NumberSprite_[i]->SetSize({48.0f, 48.0f}); 
 	}
@@ -355,6 +359,11 @@ void GameScene::Update() {
 	ImGui::Begin("SELECTMODE");
 	ImGui::Text("select = %d", selectMode);
 	ImGui::End();
+
+	ImGui::Begin("CheckBox");
+	ImGui::Text("TensPlace = %d", CheckTensPlaceNumber(player_->GetBulletNum()));
+	ImGui::Text("OensPlace = %d", CheckOensPlaceNumber(player_->GetBulletNum()));
+	ImGui::End();
 	/*ImGui::Begin("CameraInforMation");
 	ImGui::DragFloat3("CameraRotate", &followCamera_->GetViewProjection().rotation_.x, 0.1f);
 	ImGui::Text("Frame rate: %6.2f fps", ImGui::GetIO().Framerate);
@@ -448,11 +457,26 @@ void GameScene::Draw() {
 		sprite_[12]->SetSize({(player_->GetPlayerLifePer() * 256.0f), 36.0f});
 		sprite_[12]->Draw();
 
+		NumberSprite_[0]->SetTextureHandle(
+		    textureHandleNumber[CheckTensPlaceNumber(player_->GetBulletNum())]);
 		NumberSprite_[0]->Draw();
-		NumberSprite_[1]->Draw();
+		NumberSprite_[0]->SetPosition(numberTensPlacePosUP);
 
+		NumberSprite_[1]->SetTextureHandle(
+		    textureHandleNumber[CheckOensPlaceNumber(player_->GetBulletNum())]);
+		NumberSprite_[1]->Draw();
+		NumberSprite_[1]->SetPosition(numberOnesPlacePosUP);
+
+		NumberSprite_[2]->SetTextureHandle(
+		    textureHandleNumber[CheckTensPlaceNumber(player_->GetBulletNumMax())]);
 		NumberSprite_[2]->Draw();
+		NumberSprite_[2]->SetPosition(numberTensPlacePosDOWN);
+
+
+		NumberSprite_[3]->SetTextureHandle(
+		    textureHandleNumber[CheckOensPlaceNumber(player_->GetBulletNumMax())]);
 		NumberSprite_[3]->Draw();
+		NumberSprite_[3]->SetPosition(numberOnesPlacePosDOWN);
 
 		slashSprite_->Draw();
 
