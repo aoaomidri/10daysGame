@@ -35,14 +35,7 @@ void PlayerBullet::Update() {
 		Idle();
 		break;
 	case PlayerBullet::PlayerBulletState::Move:
-		if (--deathTimer_ <= 0) {
-			//isDead_ = true;
-			state_ = PlayerBulletState::Return;
-			t = 0.0f;
-		}
-
-		worldTransform_.AddTransform(velocity_);
-		t = 0.0f;
+		Move();
 		break;
 	case PlayerBullet::PlayerBulletState::Return:
 		ReturnPlayer();
@@ -60,7 +53,7 @@ void PlayerBullet::Update() {
 void PlayerBullet::Idle() 
 {
 	worldTransform_.translation_ = player_->GetOBB().center;
-
+	//worldTransform_.parent_ = &player_->GetWorldTransform();
 	
 	/*
 	theta += float(M_PI) / 120.0f;
@@ -74,6 +67,29 @@ void PlayerBullet::Idle()
 	//worldTransform_.translation_.y += 2.0f;
 	//worldTransform_.translation_.z += -12.0f;
 	deathTimer_ = kLifeTime;
+}
+
+void PlayerBullet::Move()
+{
+	if (--deathTimer_ <= 0) {
+		// isDead_ = true;
+		//state_ = PlayerBulletState::Return;
+		t = 0.0f;
+	}
+
+	static MyVector vector;
+	Vector3 toEnemy = target_->translation_ - worldTransform_.translation_;
+
+	velocity_ = vector.Slerp(velocity_, toEnemy, 0.05f) * kReturnSpeed;
+	
+	
+	worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
+	Vector3 velocityXZ{velocity_.x, 0.0f, velocity_.z};
+	float besage = vector.Length(velocityXZ);
+	worldTransform_.rotation_.x = std::atan2(-velocity_.y, besage);
+
+	worldTransform_.AddTransform(velocity_);
+	t = 0.0f;
 }
 
 void PlayerBullet::ReturnPlayer()

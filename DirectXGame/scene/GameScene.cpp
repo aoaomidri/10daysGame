@@ -210,6 +210,13 @@ void GameScene::Initialize() {
 	enemyCamera_->SetTarget(&enemy_->GetWorldTransform());
 
 	player_->SetViewProjection(&followCamera_->GetViewProjection());
+
+	//プレイヤー弾に敵のworldTransformをセット
+	const std::list<PlayerBullet*>& playerBullets = player_->GetBullets();
+	for (PlayerBullet* bullet : playerBullets) {
+		bullet->setTarget(&enemy_->GetWorldTransform());
+	}
+
 #ifdef _DEBUG
 	////軸方向表示の表示を有効にする
 	AxisIndicator::GetInstance()->SetVisible(true);

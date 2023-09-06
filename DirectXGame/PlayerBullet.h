@@ -22,6 +22,8 @@ public:
 
 	void FinAnimationUpdate();
 
+	void Move();
+
 	void ReturnPlayer();
 
 	void Idle();
@@ -29,6 +31,8 @@ public:
 	void Draw(const ViewProjection& viewProjection);
 
 	bool IsDead() const { return isDead_; }
+
+	void setTarget(const WorldTransform* target) { target_ = target; };
 
 	Vector3 GetWorldPosition();
 	inline PlayerBulletState GetState() { return state_; };
@@ -82,4 +86,6 @@ private:
 	WorldTransform worldTransformFin_;
 	float finRotate = 0.0f;
 	float theta=0.0f;
+
+	const WorldTransform* target_ = nullptr;
 };
