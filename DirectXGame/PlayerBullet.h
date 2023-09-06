@@ -44,6 +44,7 @@ public:
 		worldTransform_.rotation_ = rotate;
 
 		velocity_ = velocity;
+		worldTransform_.parent_ = nullptr;
 	};
 	// 衝突したら呼び出す関数
 	void OnCollision();

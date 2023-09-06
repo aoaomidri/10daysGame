@@ -167,6 +167,9 @@ void Player::Update() {
 
 	BulletNum = CheckBullet();
 
+	//行列更新
+	worldTransform_.UpdateMatrix(worldTransform_.scale_);
+
 	for (PlayerBullet* bullet : bullets_) {
 		bullet->Update();
 	}	
