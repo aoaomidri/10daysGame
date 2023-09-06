@@ -71,8 +71,8 @@ void PlayerBullet::Idle()
 	worldTransform_.translation_.y += 2.0f;
 	worldTransform_.translation_.z += (sinf(a * theta)) * sinf(theta) * 5.0f - 3.0f;
 	*/
-	worldTransform_.translation_.y += 2.0f;
-	worldTransform_.translation_.z += -12.0f;
+	//worldTransform_.translation_.y += 2.0f;
+	//worldTransform_.translation_.z += -12.0f;
 	deathTimer_ = kLifeTime;
 }
 
