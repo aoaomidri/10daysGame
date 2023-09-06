@@ -8,7 +8,7 @@ PlayerBullet::~PlayerBullet() {
 void PlayerBullet::Initialize(
     Model* model,Model* model2, const Vector3& position, const Vector3& rotate, const Vector3& velocity) {
 	assert(model);
-
+	
 	model_ = model;
 	//model++;
 	modelFin_ = model2;
@@ -32,8 +32,7 @@ void PlayerBullet::Update() {
 	
 	switch (state_) {
 	case PlayerBullet::PlayerBulletState::Idle:
-		worldTransform_.translation_ = player_->GetOBB().center;
-		deathTimer_ = kLifeTime;
+		Idle();
 		break;
 	case PlayerBullet::PlayerBulletState::Move:
 		if (--deathTimer_ <= 0) {
@@ -46,17 +45,7 @@ void PlayerBullet::Update() {
 		t = 0.0f;
 		break;
 	case PlayerBullet::PlayerBulletState::Return:
-		//Vector3 velocity;
-
-
-		/*
-		worldTransform_.translation_ =
-		    vector.Multiply(
-		        (t), player_->GetWorldPosition(player_->GetBodyWorldPosition().matWorld_)) +
-		    vector.Multiply((1.0f-t), worldTransform_.translation_);
-		*/
 		ReturnPlayer();
-
 		break;
 	default:
 		break;
@@ -64,7 +53,27 @@ void PlayerBullet::Update() {
 	
 	worldTransform_.UpdateMatrix(scale);
 	FinAnimationUpdate();
-	worldTransformFin_.UpdateMatrix(scale);
+	worldTransformFin_.UpdateMatrix(finScale);
+}
+
+
+void PlayerBullet::Idle() 
+{
+	worldTransform_.translation_ = player_->GetOBB().center;
+
+	
+	/*
+	theta += float(M_PI) / 120.0f;
+	static float n = 3.0f;
+	static float d = 2.0f;
+	float a = n / d;
+	worldTransform_.translation_.x += (sinf(a * theta)) * cosf(theta) * 5.0f;
+	worldTransform_.translation_.y += 2.0f;
+	worldTransform_.translation_.z += (sinf(a * theta)) * sinf(theta) * 5.0f - 3.0f;
+	*/
+	worldTransform_.translation_.y += 2.0f;
+	worldTransform_.translation_.z += -12.0f;
+	deathTimer_ = kLifeTime;
 }
 
 void PlayerBullet::ReturnPlayer()
@@ -101,7 +110,10 @@ void PlayerBullet::OnCollision() {
 		velocity_.y *= -1.0f;
 		velocity_.z *= -1.0f;
 	}
-	
+	else
+	{
+		isDead_ = true;
+	}
 	state_ = PlayerBulletState::Return;
 }
 

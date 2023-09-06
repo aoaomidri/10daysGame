@@ -24,6 +24,8 @@ public:
 
 	void ReturnPlayer();
 
+	void Idle();
+
 	void Draw(const ViewProjection& viewProjection);
 
 	bool IsDead() const { return isDead_; }
@@ -54,9 +56,11 @@ private:
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 
-	float size = 0.8f;
+	float size = 1.8f;
+	float finSize = 1.0f;
 
 	Vector3 scale = {size, size, size};
+	Vector3 finScale = {finSize, finSize, finSize};
 
 	Vector3 velocity_;
 	// 寿命
@@ -77,4 +81,5 @@ private:
 	Vector3 Fin_offset_Base = {0.0f, 0.0f, -1.0f};
 	WorldTransform worldTransformFin_;
 	float finRotate = 0.0f;
+	float theta=0.0f;
 };
