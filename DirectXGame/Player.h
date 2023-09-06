@@ -246,6 +246,12 @@ private:
 	// 発射タイマー
 	int32_t ChargeTimer = 0;
 
+
+	// 弾の数
+	int BulletNum = 0;
 	//弾の最大数
 	const int kBulletNum = 50;
+	//現在の弾を調べる関数
+	int CheckBullet();
+
 };

@@ -155,8 +155,7 @@ void Player::Update() {
 	worldTransformHead_.translation_ = worldTransformBody_.translation_ + Head_offset;
 	worldTransformL_arm_.translation_ = worldTransformBody_.translation_ + L_arm_offset;
 	worldTransformR_arm_.translation_ = worldTransformBody_.translation_ + R_arm_offset;
-	worldTransformWeapon_.translation_ = worldTransformBody_.translation_ + Weapon_offset;
-	
+	worldTransformWeapon_.translation_ = worldTransformBody_.translation_ + Weapon_offset;	
 	
 
 	// 座標を転送
@@ -166,11 +165,11 @@ void Player::Update() {
 	worldTransformR_arm_.UpdateMatrix(scale);
 	worldTransformWeapon_.UpdateMatrix(scale);
 
+	BulletNum = CheckBullet();
+
 	for (PlayerBullet* bullet : bullets_) {
 		bullet->Update();
-	}
-
-	
+	}	
 
 }
 
@@ -613,6 +612,7 @@ void Player::DrawImgui() {
 	ImGui::SliderFloat("Amplitude", &floatingAmplitude, 0.1f, 1.0f);
 	ImGui::SliderFloat("DisGround", &disGround, 0.1f, 1.0f);
 	ImGui::DragInt("chackCollision", &chackCollision);
+	ImGui::DragInt("bulletNum", &BulletNum);
 	ImGui::End();
 
 	ImGui::Begin("PlayerRotate");
@@ -732,4 +732,15 @@ Vector3 Player::GetWorldPosition(Matrix4x4 mat) {
 	worldPos.z = mat.m[3][2];
 
 	return worldPos;
+}
+
+int Player::CheckBullet() { 
+	int nowBullet = 0;
+	for (PlayerBullet* bullet : bullets_) {
+		if (bullet->GetState() == PlayerBullet::PlayerBulletState::Idle) {
+			nowBullet++;
+		}
+	}
+	return nowBullet;
+
 }
