@@ -73,14 +73,14 @@ void PlayerBullet::Move()
 {
 	if (--deathTimer_ <= 0) {
 		// isDead_ = true;
-		//state_ = PlayerBulletState::Return;
+		state_ = PlayerBulletState::Return;
 		t = 0.0f;
 	}
 	
 	static MyVector vector;
 	Vector3 toEnemy = target_->translation_ - worldTransform_.translation_;
 
-	velocity_ = vector.Slerp(velocity_, toEnemy, 0.05f) * kReturnSpeed;
+	velocity_ = vector.Slerp(velocity_, toEnemy, 0.05f) * kAttackSpeed;
 	
 	
 	worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
@@ -143,9 +143,13 @@ Vector3 PlayerBullet::GetWorldPosition() {
 
 	Vector3 worldPos(0, 0, 0);
 
-	worldPos.x = worldTransform_.translation_.x;
-	worldPos.y = worldTransform_.translation_.y;
-	worldPos.z = worldTransform_.translation_.z;
+	//worldPos.x = worldTransform_.translation_.x;
+	//worldPos.y = worldTransform_.translation_.y;
+	//worldPos.z = worldTransform_.translation_.z;
+
+	worldPos.x = worldTransform_.matWorld_.m[3][0];
+	worldPos.y = worldTransform_.matWorld_.m[3][1];
+	worldPos.z = worldTransform_.matWorld_.m[3][2];
 
 	return worldPos;
 }
@@ -155,3 +159,13 @@ void PlayerBullet::FinAnimationUpdate()
 	finRotate += 0.5f;
 	worldTransformFin_.rotation_.y = (std::sin(finRotate))*float(M_PI)/4.0f; 
 }
+
+void PlayerBullet::SetShot(const Vector3& position, const Vector3& rotate, const Vector3& velocity)
+{
+	worldTransform_.translation_ = position;
+	worldTransform_.translation_ = GetWorldPosition();
+
+	worldTransform_.rotation_ = rotate;
+	velocity_ = velocity;
+	worldTransform_.parent_ = nullptr;
+};

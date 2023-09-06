@@ -38,14 +38,8 @@ public:
 	inline PlayerBulletState GetState() { return state_; };
 	inline void SetState(PlayerBulletState state) { state_ = state; };
 	inline void SetPlayer(Player* player) { player_ = player; };
-	inline void SetShot(const Vector3& position, const Vector3& rotate, const Vector3& velocity){
-		worldTransform_.translation_ = position;
+	void SetShot(const Vector3& position, const Vector3& rotate, const Vector3& velocity);
 
-		worldTransform_.rotation_ = rotate;
-
-		velocity_ = velocity;
-		worldTransform_.parent_ = nullptr;
-	};
 	// 衝突したら呼び出す関数
 	void OnCollision();
 
@@ -69,7 +63,7 @@ private:
 
 	Vector3 velocity_;
 	// 寿命
-	static const int32_t kLifeTime = 30;
+	static const int32_t kLifeTime = 60;
 	// デスタイマー
 	int32_t deathTimer_ = kLifeTime;
 	// デスフラグ
@@ -80,6 +74,10 @@ private:
 	Player* player_ = nullptr;
 
 	float t = 0.0f;
+
+	//攻撃時の速度
+	const float kAttackSpeed =2.0f;
+
 	//戻ってくるときの速度
 	const float kReturnSpeed = 1.2f;
 
