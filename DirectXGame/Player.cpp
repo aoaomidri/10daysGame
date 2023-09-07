@@ -414,8 +414,6 @@ void Player::BehaviorDashUpdate() {
 		dashCoolTime = kDashCoolTime;
 		behaviorRequest_ = Behavior::kRoot;
 	}
-	UpdateFloatingGimmick();
-	UpdateMoveArm();
 }
 
 void Player::BehaviorShotInitialize() { kCharacterSpeed = 0.2f; }
