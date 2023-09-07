@@ -571,7 +571,9 @@ void Player::DrawImgui() {
 	ImGui::SliderFloat3("ArmL Rotate", &worldTransformL_arm_.rotation_.x, -3.0f, 3.0f);
 	ImGui::End();
 
-	
+	ImGui::Begin("FPS");
+	ImGui::Text("Frame rate: %6.2f fps", ImGui::GetIO().Framerate);
+	ImGui::End();
 
 }
 
