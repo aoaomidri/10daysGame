@@ -13,6 +13,7 @@
 #include"SkyDome.h"
 #include"Ground.h"
 #include"Wall.h"
+#include "WaterFlowEffect.h"
 #include "DebugCamera.h"
 #include"FollowCamera.h"
 #include"EnemyCamera.h"
@@ -175,6 +176,9 @@ private: // メンバ変数
 	std::unique_ptr<Model> modelEnemyR_parts_;
 	/*武器のモデル*/
 	std::unique_ptr<Model> modelPlayerWeapon_;
+	/*水流エフェクトのモデル*/
+	std::unique_ptr<Model> modelWaterFlowParticle_;
+
 	// ビュープロジェクション
 	ViewProjection viewProjection_;
 

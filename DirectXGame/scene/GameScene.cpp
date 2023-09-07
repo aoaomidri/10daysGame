@@ -188,6 +188,7 @@ void GameScene::Initialize() {
 	modelPlayerWeapon_.reset(Model::CreateFromOBJ("Weapon", true));
 	modelPlayerBulletBody_.reset(Model::CreateFromOBJ("BulletBody", true));
 	modelPlayerBulletFin_.reset(Model::CreateFromOBJ("tail", true));
+	modelWaterFlowParticle_.reset(Model::CreateFromOBJ("WaterFlowParticle", true));
 
 
 	viewProjection_.farZ = 2000.0f;
@@ -202,7 +203,7 @@ void GameScene::Initialize() {
 	std::vector<Model*> playerModels = {modelPlayerBody_.get(),   modelPlayerHead_.get(),
 	                                    modelPlayerL_arm_.get(),  modelPlayerR_arm_.get(),
 	                                    modelPlayerWeapon_.get(), modelPlayerBulletBody_.get(),
-	                                    modelPlayerBulletFin_.get()};
+	                                    modelPlayerBulletFin_.get(), modelWaterFlowParticle_.get()};
 	// 自キャラの初期化
 	player_->Initialize(playerModels);
 
@@ -239,7 +240,6 @@ void GameScene::Initialize() {
 	    modelWall_.get(), modelWall_.get(), modelWall_.get(), modelWall_.get()};
 	//壁の初期化
 	wall_->Initialize(wallModels_);
-
 
 	// デバッグカメラの生成
 	debugCamera_ = std::make_unique<DebugCamera>(1280, 720);

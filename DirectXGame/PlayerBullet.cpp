@@ -6,12 +6,14 @@ PlayerBullet::~PlayerBullet() {
 }
 
 void PlayerBullet::Initialize(
-    Model* model,Model* model2, const Vector3& position, const Vector3& rotate, const Vector3& velocity) {
+    Model* model,Model* model2, Model* model3, const Vector3& position, const Vector3& rotate, const Vector3& velocity) {
 	assert(model);
 	
 	model_ = model;
 	//model++;
 	modelFin_ = model2;
+	modelWaterFlow_ = model3;
+
 	textureHandle_ = TextureManager::Load("black.png");
 
 	worldTransform_.Initialize();
@@ -28,6 +30,10 @@ void PlayerBullet::Initialize(
 	worldTransformFin_.Initialize();
 	worldTransformFin_.translation_ = Fin_offset_Base;
 	worldTransformFin_.parent_ = &worldTransformRoll_;
+
+	waterFlowEffect.Initialize(modelWaterFlow_);
+	waterFlowEffect.SetEmitterParent(&worldTransform_);
+	waterFlowEffect.SetBulletVelocity(&velocity_);
 }
 
 void PlayerBullet::SetPlayer(Player* player) {
@@ -41,8 +47,11 @@ void PlayerBullet::Update() {
 	switch (state_) {
 	case PlayerBullet::PlayerBulletState::Idle:
 		Idle();
+		waterFlowEffect.SetIsDraw(false);
+		waterFlowEffect.SetIsPop(false);
 		break;
 	case PlayerBullet::PlayerBulletState::Stance:
+
 		deathTimer_ = kLifeTime;
 		break;
 	case PlayerBullet::PlayerBulletState::Move:
@@ -54,7 +63,11 @@ void PlayerBullet::Update() {
 	default:
 		break;
 	}
-	
+	waterFlowEffect.SetBulletPos(worldTransform_.translation_);
+	waterFlowEffect.Update();
+
+
+
 	worldTransform_.UpdateMatrix(scale);
 	worldTransformRoll_.UpdateMatrix(finScale);
 	FinAnimationUpdate();
@@ -106,6 +119,8 @@ void PlayerBullet::Move()
 	worldTransform_.rotation_.z = std::atan2(float(M_PI)/2.0f, besage);
 	*/
 	worldTransformRoll_.rotation_.z += float(M_PI)/8.0f;
+	waterFlowEffect.SetIsDraw(true);
+	waterFlowEffect.SetIsPop(true);
 
 	worldTransform_.AddTransform(velocity_);
 	
@@ -147,6 +162,7 @@ void PlayerBullet::ReturnPlayer()
 void PlayerBullet::Draw(const ViewProjection& viewProjection) {
 	model_->Draw(worldTransformRoll_, viewProjection);
 	modelFin_->Draw(worldTransformFin_,viewProjection);
+	waterFlowEffect.Draw(viewProjection);
 }
 
 void PlayerBullet::OnCollision() { 
