@@ -407,7 +407,7 @@ void GameScene::Draw() {
 
 		skyDome_->Draw(viewProjection_);
 
-		//ground_->Draw(viewProjection_);
+		ground_->Draw(viewProjection_);
 
 		//wall_->Draw(viewProjection_);
 	}
