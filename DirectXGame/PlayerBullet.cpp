@@ -38,11 +38,15 @@ void PlayerBullet::Update() {
 	
 	switch (state_) {
 	case PlayerBullet::PlayerBulletState::Idle:
+		waterFlowEffect.SetIsDraw(false);
+		waterFlowEffect.SetIsPop(false);
+
 		worldTransform_.translation_ = player_->GetOBB().center;
 		deathTimer_ = kLifeTime;
 		break;
 	case PlayerBullet::PlayerBulletState::Move:
 		waterFlowEffect.SetIsDraw(true);
+		waterFlowEffect.SetIsPop(true);
 
 		if (--deathTimer_ <= 0) {
 			//isDead_ = true;
@@ -70,6 +74,7 @@ void PlayerBullet::Update() {
 		break;
 	}
 
+	waterFlowEffect.SetBulletPos(worldTransform_.translation_);
 	waterFlowEffect.Update();
 	
 	worldTransform_.UpdateMatrix(scale);
@@ -94,7 +99,6 @@ void PlayerBullet::ReturnPlayer()
 	float distance = vector.Length(player_->GetOBB().center -
 	    worldTransform_.translation_);
 	if (distance <= 10.0f) {
-		waterFlowEffect.SetIsDraw(false);
 		state_ = PlayerBulletState::Idle;
 	}
 }
