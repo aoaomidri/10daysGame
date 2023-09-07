@@ -164,7 +164,7 @@ private: // メンバ変数
 	std::unique_ptr<Model> modelWall_;
 	/*プレイヤーのモデル*/
 	std::unique_ptr<Model> modelPlayerBody_;
-	std::unique_ptr<Model> modelPlayerHead_;
+	std::unique_ptr<Model> modelPlayerTail_;
 	std::unique_ptr<Model> modelPlayerL_arm_;
 	/*プレイヤー弾のモデル*/
 	std::unique_ptr<Model> modelPlayerBulletBody_;

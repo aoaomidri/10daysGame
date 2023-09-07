@@ -49,8 +49,8 @@ void Adjustment_Item::Update() {
 			//Vector3型の値を保持していれば
 			else if (std::holds_alternative<Vector3>(item)) {
 				Vector3* ptr = std::get_if<Vector3>(&item);
-				ImGui::SliderFloat3(
-				    itemName.c_str(), reinterpret_cast<float*>(ptr), -5.0f, 5.0f, "%0.1f");
+				ImGui::DragFloat3(
+				    itemName.c_str(), reinterpret_cast<float*>(ptr), 0.01f, -5.0f, 5.0f);
 			}
 		}
 		//改行

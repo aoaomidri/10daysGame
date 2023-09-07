@@ -179,7 +179,7 @@ void GameScene::Initialize() {
 	modelGround_.reset(Model::CreateFromOBJ("Ground", true));
 	modelWall_.reset(Model::CreateFromOBJ("Wall", true));
 	modelPlayerBody_.reset(Model::CreateFromOBJ("float_Body", true));
-	modelPlayerHead_.reset(Model::CreateFromOBJ("float_Head", true));
+	modelPlayerTail_.reset(Model::CreateFromOBJ("float_Tail", true));
 	modelPlayerL_arm_.reset(Model::CreateFromOBJ("float_L_arm", true));
 	modelEnemy_.reset(Model::CreateFromOBJ("Enemy", true));
 	modelEnemyL_parts_.reset(Model::CreateFromOBJ("EnemyParts", true));
@@ -198,7 +198,7 @@ void GameScene::Initialize() {
 	// 自キャラの生成
 	player_ = std::make_unique<Player>();
 	//自キャラモデル配列
-	std::vector<Model*> playerModels = {modelPlayerBody_.get(),   modelPlayerHead_.get(),
+	std::vector<Model*> playerModels = {modelPlayerBody_.get(),   modelPlayerTail_.get(),
 	                                    modelPlayerL_arm_.get(),  modelPlayerBulletBody_.get(),
 	                                    modelPlayerBulletFin_.get(), modelWaterFlowParticle_.get()};
 	// 自キャラの初期化
