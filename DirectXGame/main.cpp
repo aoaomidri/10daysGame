@@ -80,14 +80,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 
 
-		//if (Input::GetInstance()->GetJoystickState(0, joyState)) {
-		//	if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_START) {
-		//		#ifdef _DEBUG
-		//		break;
-		//		#endif // DEBUG
-		//		
-		//	}
-		//}
+		if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+			if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_BACK) {
+				#ifdef _DEBUG
+				break;
+				#endif // DEBUG
+				
+			}
+		}
 
 		// ImGui受付開始
 		imguiManager->Begin();
