@@ -208,6 +208,14 @@ void Player::BehaviorRootInitialize() {
 
 void Player::BehaviorRootUpdate() {
 	
+	//構え状態の弾を解除
+	for (PlayerBullet* bullet : bullets_) {
+		if (bullet->GetState() == PlayerBullet::PlayerBulletState::Stance) {
+			bullet->StanceCancel();
+			break;
+		}
+	}
+
 	kCharacterSpeed = kCharacterSpeedBase;
 
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
@@ -596,6 +604,15 @@ void Player::BehaviorShotUpdate() {
 		worldTransformBody_.translation_.z = -MoveMax;
 	}
 
+	//待機状態になっている奴の先頭を手元に持ってくる
+	for (PlayerBullet* bullet : bullets_) {
+		if (bullet->GetState() == PlayerBullet::PlayerBulletState::Idle || 
+			bullet->GetState() == PlayerBullet::PlayerBulletState::Stance) {
+			bullet->SetShotIdle(L_arm_offset_Base);
+			break;
+		}
+	}
+
 	// 座標を加算
 	worldTransform_.AddTransform(move);
 	worldTransformBody_.AddTransform(move);
@@ -699,7 +716,7 @@ void Player::Attack() {
 			*/
 			for (PlayerBullet* bullet : bullets_)
 			{
-				if (bullet->GetState() == PlayerBullet::PlayerBulletState::Idle)
+				if (bullet->GetState() == PlayerBullet::PlayerBulletState::Stance)
 				{
 					bullet->SetShot(
 					    GetWorldPosition(worldTransformL_arm_.matWorld_),

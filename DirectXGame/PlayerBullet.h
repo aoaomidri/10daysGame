@@ -9,6 +9,7 @@ class PlayerBullet {
 public:
 	enum class PlayerBulletState {
 		Idle,
+		Stance,
 		Move,
 		Return
 	};
@@ -37,9 +38,11 @@ public:
 	Vector3 GetWorldPosition();
 	inline PlayerBulletState GetState() { return state_; };
 	inline void SetState(PlayerBulletState state) { state_ = state; };
-	inline void SetPlayer(Player* player) { player_ = player; };
+	void SetPlayer(Player* player);
 	void SetShot(const Vector3& position, const Vector3& rotate, const Vector3& velocity);
-
+	void StanceCancel();
+	//攻撃前にプレイヤーの手元に持ってくる
+	void SetShotIdle(const Vector3& position);
 	// 衝突したら呼び出す関数
 	void OnCollision();
 

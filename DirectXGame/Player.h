@@ -92,6 +92,8 @@ public:
 	
 	void DrawImgui();
 
+	const WorldTransform& GetLArmWorldTransform() { return worldTransformL_arm_; };
+
 private:
 
 	const float MoveMax = 237.00000f;

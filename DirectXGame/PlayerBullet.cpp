@@ -27,6 +27,11 @@ void PlayerBullet::Initialize(
 	worldTransformFin_.parent_ = &worldTransform_;
 }
 
+void PlayerBullet::SetPlayer(Player* player) {
+	player_ = player; 
+	worldTransform_.parent_ = &player->GetWorldTransform();
+};
+
 void PlayerBullet::Update() {
 	static MyVector vector;
 	
@@ -53,7 +58,6 @@ void PlayerBullet::Update() {
 void PlayerBullet::Idle() 
 {
 	//worldTransform_.translation_ = player_->GetOBB().center;
-	worldTransform_.parent_ = &player_->GetWorldTransform();
 	
 	/*
 	theta += float(M_PI) / 120.0f;
@@ -116,6 +120,7 @@ void PlayerBullet::ReturnPlayer()
 		worldTransform_.rotation_.x = 0.0f;
 		worldTransform_.rotation_.y = 0.0f;
 		worldTransform_.rotation_.z = 0.0f;
+		worldTransform_.parent_ = &player_->GetWorldTransform();
 	}
 }
 
@@ -169,3 +174,26 @@ void PlayerBullet::SetShot(const Vector3& position, const Vector3& rotate, const
 	velocity_ = velocity;
 	worldTransform_.parent_ = nullptr;
 };
+
+void PlayerBullet::SetShotIdle(const Vector3& position) {
+	state_ = PlayerBulletState::Stance;
+	worldTransform_.translation_ = position;
+	worldTransform_.translation_.x = 0.0f;
+	worldTransform_.translation_.y += 3.0f;
+	worldTransform_.translation_.z = 0.0f;
+	worldTransform_.rotation_.x = -float(M_PI) / 2.0f;
+	worldTransform_.parent_ = &player_->GetLArmWorldTransform();
+	// worldTransform_.rotation_ = rotate;
+	// worldTransform_.parent_ = nullptr;
+};
+
+void PlayerBullet::StanceCancel() {
+	state_ = PlayerBulletState::Idle;
+	worldTransform_.translation_.x = (float(rand()) / float(RAND_MAX) - 0.5f) * 10.0f;
+	worldTransform_.translation_.y = 2.0f + (float(rand()) / float(RAND_MAX) - 0.5f) * 10.0f;
+	worldTransform_.translation_.z = -5.0f;
+	worldTransform_.rotation_.x = 0.0f;
+	worldTransform_.rotation_.y = 0.0f;
+	worldTransform_.rotation_.z = 0.0f;
+	worldTransform_.parent_ = &player_->GetWorldTransform();
+}
