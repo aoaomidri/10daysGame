@@ -71,6 +71,9 @@ public: // メンバ関数
 
 	bool isCollisionOBBSphere(const OBB& obb, const Sphere& sphere);
 
+	bool IsCollisionOBBOBB(const OBB& obb1, const OBB& obb2);
+
+
 private://メンバ関数
 	/*十の位の値を調べる*/
 	int CheckTensPlaceNumber(int num);
