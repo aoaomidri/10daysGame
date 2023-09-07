@@ -86,7 +86,11 @@ public:
 
 	int GetBulletNumMax() { return BulletMax; }
 
-	void SetchackCollision() { chackCollision = 0; }
+	int GetcheckCamera() { return checkCamera; }
+
+	void SetcheckCameraHit() { checkCamera = 1; }
+
+	void SetcheckCameraNoHit() { checkCamera = 0; }
 
 	void OnCollision();
 	
@@ -228,8 +232,8 @@ private:
 	};
 
 	WorkDash workDash_;
-	//当たってるか調べるためのやつ
-	int chackCollision;
+	//カメラと当たってるか調べるためのやつ
+	int checkCamera;
 
 	/*弾関連変数群*/
 	// 2Dレティクル用スプライト

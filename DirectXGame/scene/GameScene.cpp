@@ -521,6 +521,12 @@ void GameScene::Draw() {
 
 void GameScene::CheckAllCollisions() {
 
+	if (IsCollisionOBBViewFrustum(enemy_->GetOBB(), followCamera_->GetViewingFrustum())) {
+		player_->SetcheckCameraHit();
+	} else {
+		player_->SetcheckCameraNoHit();
+	}
+
 	// 自弾リストの取得
 	const std::list<PlayerBullet*>& playerBullets = player_->GetBullets();
 	const std::list<EnemyBullet*>& enemyBullets = enemy_->GetBullets();

@@ -80,12 +80,13 @@ void PlayerBullet::Move()
 		state_ = PlayerBulletState::Return;
 		t = 0.0f;
 	}
-	
 	static MyVector vector;
-	Vector3 toEnemy = target_->translation_ - worldTransform_.translation_;
-
-	velocity_ = vector.Slerp(velocity_, toEnemy, 0.05f) * kAttackSpeed;
+	if (player_->GetcheckCamera() == 1) {
 	
+	Vector3 toEnemy = target_->translation_ - worldTransform_.translation_;	
+
+		velocity_ = vector.Slerp(velocity_, toEnemy, 0.05f) * kAttackSpeed;
+	}
 	
 	worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
 	Vector3 velocityXZ{velocity_.x, 0.0f, velocity_.z};

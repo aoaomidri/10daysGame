@@ -619,7 +619,6 @@ void Player::BehaviorShotUpdate() {
 }
 
 void Player::OnCollision() { 
-	chackCollision = 1;
 	PlayerLife--;
 }
 
@@ -631,8 +630,8 @@ void Player::DrawImgui() {
 	ImGui::SliderInt("floatingCycle_", &floatingCycle_, 10, 180);
 	ImGui::SliderFloat("Amplitude", &floatingAmplitude, 0.1f, 1.0f);
 	ImGui::SliderFloat("DisGround", &disGround, 0.1f, 1.0f);
-	ImGui::DragInt("chackCollision", &chackCollision);
 	ImGui::DragInt("bulletNum", &BulletNum);
+	ImGui::DragInt("checkCamera", &checkCamera);
 	ImGui::End();
 
 	ImGui::Begin("PlayerRotate");
