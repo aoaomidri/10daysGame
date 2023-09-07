@@ -11,7 +11,7 @@ void WaterFlowEffect::Update() {
 	static MyVector vector;
 	static MyMatrix matrix;
 
-	emitter_.worldTransform.translation_ = bulletPos_;
+	emitter_.worldTransform.translation_ = bulletPos_; //後で治す
 	if (IsPop_) {
 		// パーティクルの発生
 		if (particlePopTime_ <= 0) {
