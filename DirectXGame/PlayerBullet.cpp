@@ -22,9 +22,12 @@ void PlayerBullet::Initialize(
 
 	velocity_ = velocity;
 
+	worldTransformRoll_.Initialize();
+	worldTransformRoll_.parent_ = &worldTransform_;
+
 	worldTransformFin_.Initialize();
 	worldTransformFin_.translation_ = Fin_offset_Base;
-	worldTransformFin_.parent_ = &worldTransform_;
+	worldTransformFin_.parent_ = &worldTransformRoll_;
 }
 
 void PlayerBullet::SetPlayer(Player* player) {
@@ -53,6 +56,7 @@ void PlayerBullet::Update() {
 	}
 	
 	worldTransform_.UpdateMatrix(scale);
+	worldTransformRoll_.UpdateMatrix(finScale);
 	FinAnimationUpdate();
 	worldTransformFin_.UpdateMatrix(finScale);
 }
@@ -83,19 +87,28 @@ void PlayerBullet::Move()
 		t = 0.0f;
 	}
 	static MyVector vector;
+	static MyMatrix matrix;
 	if (player_->GetcheckCamera() == 1) {
 	
 	Vector3 toEnemy = target_->translation_ - worldTransform_.translation_;	
 
 		velocity_ = vector.Slerp(velocity_, toEnemy, 0.05f) * kAttackSpeed;
 	}
-	
+
+
 	worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
 	Vector3 velocityXZ{velocity_.x, 0.0f, velocity_.z};
 	float besage = vector.Length(velocityXZ);
 	worldTransform_.rotation_.x = std::atan2(-velocity_.y, besage);
+	/*
+	velocityXZ = {velocity_.x, velocity_.y, 0.0f};
+	besage = vector.Length(velocityXZ);
+	worldTransform_.rotation_.z = std::atan2(float(M_PI)/2.0f, besage);
+	*/
+	worldTransformRoll_.rotation_.z += float(M_PI)/8.0f;
 
 	worldTransform_.AddTransform(velocity_);
+	
 	t = 0.0f;
 }
 
@@ -112,7 +125,11 @@ void PlayerBullet::ReturnPlayer()
 	worldTransform_.rotation_.x = std::atan2(-velocity_.y, besage);
 
 	worldTransform_.AddTransform(velocity_);
-	// t += 0.01f;
+
+
+	worldTransformRoll_.rotation_.z = 0.0f;
+	
+
 	float distance = vector.Length(player_->GetOBB().center -
 	    worldTransform_.translation_);
 	if (distance <= 10.0f) {
@@ -128,7 +145,7 @@ void PlayerBullet::ReturnPlayer()
 }
 
 void PlayerBullet::Draw(const ViewProjection& viewProjection) {
-	model_->Draw(worldTransform_, viewProjection);
+	model_->Draw(worldTransformRoll_, viewProjection);
 	modelFin_->Draw(worldTransformFin_,viewProjection);
 }
 

@@ -89,5 +89,7 @@ private:
 	float finRotate = 0.0f;
 	float theta=0.0f;
 
+	WorldTransform worldTransformRoll_;
+
 	const WorldTransform* target_ = nullptr;
 };
