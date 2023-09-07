@@ -82,6 +82,12 @@
     <Filter Include="ヘッダー ファイル\GamePad">
       <UniqueIdentifier>{ac844ab2-3380-4b79-9116-ca38792c70d8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Effect">
+      <UniqueIdentifier>{cf3dd32a-a5a5-4347-b9da-ff45f28ae5ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Effect">
+      <UniqueIdentifier>{63286a8b-e71b-4767-a59d-5b799fefa0a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -146,6 +152,9 @@
     </ClCompile>
     <ClCompile Include="Wall.cpp">
       <Filter>ソース ファイル\field</Filter>
+    </ClCompile>
+    <ClCompile Include="Effect.cpp">
+      <Filter>ソース ファイル\Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -277,6 +286,9 @@
     </ClInclude>
     <ClInclude Include="Wall.h">
       <Filter>ヘッダー ファイル\field</Filter>
+    </ClInclude>
+    <ClInclude Include="Effect.h">
+      <Filter>ヘッダー ファイル\Effect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
