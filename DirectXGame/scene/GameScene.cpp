@@ -181,11 +181,9 @@ void GameScene::Initialize() {
 	modelPlayerBody_.reset(Model::CreateFromOBJ("float_Body", true));
 	modelPlayerHead_.reset(Model::CreateFromOBJ("float_Head", true));
 	modelPlayerL_arm_.reset(Model::CreateFromOBJ("float_L_arm", true));
-	modelPlayerR_arm_.reset(Model::CreateFromOBJ("float_R_arm", true));
 	modelEnemy_.reset(Model::CreateFromOBJ("Enemy", true));
 	modelEnemyL_parts_.reset(Model::CreateFromOBJ("EnemyParts", true));
 	modelEnemyR_parts_.reset(Model::CreateFromOBJ("EnemyParts", true));
-	modelPlayerWeapon_.reset(Model::CreateFromOBJ("Weapon", true));
 	modelPlayerBulletBody_.reset(Model::CreateFromOBJ("BulletBody", true));
 	modelPlayerBulletFin_.reset(Model::CreateFromOBJ("tail", true));
 	modelWaterFlowParticle_.reset(Model::CreateFromOBJ("WaterFlowParticle", true));
@@ -201,8 +199,7 @@ void GameScene::Initialize() {
 	player_ = std::make_unique<Player>();
 	//自キャラモデル配列
 	std::vector<Model*> playerModels = {modelPlayerBody_.get(),   modelPlayerHead_.get(),
-	                                    modelPlayerL_arm_.get(),  modelPlayerR_arm_.get(),
-	                                    modelPlayerWeapon_.get(), modelPlayerBulletBody_.get(),
+	                                    modelPlayerL_arm_.get(),  modelPlayerBulletBody_.get(),
 	                                    modelPlayerBulletFin_.get(), modelWaterFlowParticle_.get()};
 	// 自キャラの初期化
 	player_->Initialize(playerModels);

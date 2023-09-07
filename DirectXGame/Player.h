@@ -44,16 +44,12 @@ public:
 		
 	//通常行動初期化
 	void BehaviorRootInitialize();
-	//攻撃行動初期化
-	void BehaviorAttackInitialize();
 	//ダッシュ行動初期化
 	void BehaviorDashInitialize();
 	//射撃攻撃行動初期化
 	void BehaviorShotInitialize();
 	// 通常行動更新
 	void BehaviorRootUpdate();
-	//攻撃行動更新
-	void BehaviorAttackUpdate();
 	//ダッシュ行動更新
 	void BehaviorDashUpdate();
 	//射撃攻撃行動更新
@@ -112,8 +108,6 @@ private:
 	WorldTransform worldTransformBody_;
 	WorldTransform worldTransformHead_;
 	WorldTransform worldTransformL_arm_;
-	WorldTransform worldTransformR_arm_;
-	WorldTransform worldTransformWeapon_;
 
 	// 3Dレティクル用ワールドトランスフォーム
 	WorldTransform worldTransform3DReticle_;
@@ -191,13 +185,9 @@ private:
 	//パーツのあれこれ
 	Vector3 Head_offset;
 	Vector3 L_arm_offset;
-	Vector3 R_arm_offset;
-	Vector3 Weapon_offset;
 
 	Vector3 Head_offset_Base = {0.0f, 4.5f, 0.0f};
 	Vector3 L_arm_offset_Base = {1.4f, 3.5f, 0.0f};
-	Vector3 R_arm_offset_Base = {-1.4f, 3.5f, 0.0f};
-	Vector3 Weapon_offset_Base = {0.0f, 3.5f, 0.0f};
 
 
 	//武器の回転
@@ -217,7 +207,6 @@ private:
 	//振る舞い
 	enum class Behavior {
 		kRoot,		//通常状態
-		kAttack,	//攻撃中
 		kDash,		//ダッシュ中
 		kShot,		//射撃攻撃中
 	};

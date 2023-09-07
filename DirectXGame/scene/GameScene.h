@@ -166,7 +166,6 @@ private: // メンバ変数
 	std::unique_ptr<Model> modelPlayerBody_;
 	std::unique_ptr<Model> modelPlayerHead_;
 	std::unique_ptr<Model> modelPlayerL_arm_;
-	std::unique_ptr<Model> modelPlayerR_arm_;
 	/*プレイヤー弾のモデル*/
 	std::unique_ptr<Model> modelPlayerBulletBody_;
 	std::unique_ptr<Model> modelPlayerBulletFin_;
@@ -174,8 +173,6 @@ private: // メンバ変数
 	std::unique_ptr<Model> modelEnemy_;
 	std::unique_ptr<Model> modelEnemyL_parts_;
 	std::unique_ptr<Model> modelEnemyR_parts_;
-	/*武器のモデル*/
-	std::unique_ptr<Model> modelPlayerWeapon_;
 	/*水流エフェクトのモデル*/
 	std::unique_ptr<Model> modelWaterFlowParticle_;
 

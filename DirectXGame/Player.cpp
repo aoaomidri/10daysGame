@@ -22,29 +22,22 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	adjustment_item->CreateGroup(groupName2);
 
 	adjustment_item->AddItem(groupName, "CharacterSpeed", kCharacterSpeedBase);
-	adjustment_item->AddItem(groupName, "Weapon_offset", Weapon_offset_Base);
 	adjustment_item->AddItem(groupName, "floatingCycle", floatingCycle_);
 	adjustment_item->AddItem(groupName, "floatingAmplitude", floatingAmplitude);
 	adjustment_item->AddItem(groupName, "armAmplitude", armAmplitude);
 	adjustment_item->AddItem(groupName2, "Head_offset", Head_offset_Base);
 	adjustment_item->AddItem(groupName2, "ArmL_offset", L_arm_offset_Base);
-	adjustment_item->AddItem(groupName2, "ArmR_offset", R_arm_offset_Base);
 
 
 	BaseCharacter::Initialize(models);
 	worldTransform_.translation_ = {0.0f, 0.0f, 0.0f};
 
 	worldTransformBody_.Initialize();
-	worldTransformBody_.translation_ = {0.0f, 0.0f, 0.0f};
+	worldTransformBody_.translation_ = {0.0f, 4.0f, 0.0f};
 
 	worldTransformHead_.Initialize();
 
 	worldTransformL_arm_.Initialize();
-
-	worldTransformR_arm_.Initialize();
-
-	worldTransformWeapon_.Initialize();
-	worldTransformWeapon_.translation_.y = 1.0f;
 
 	uint32_t textureReticle = TextureManager::Load("Magic.png");
 
@@ -68,7 +61,7 @@ void Player::Initialize(const std::vector<Model*>& models) {
 		PlayerBullet* newBullet = new PlayerBullet();
 		
 		newBullet->Initialize(
-		    models_[5], models_[6], models_[7], GetWorldPosition(worldTransform_.matWorld_),
+		    models_[3], models_[4], models_[5], GetWorldPosition(worldTransform_.matWorld_),
 		    Vector3{0.0f, 0.0f, 0.0f}, velocity);
 		
 		newBullet->SetState(PlayerBullet::PlayerBulletState::Idle);
@@ -102,9 +95,6 @@ void Player::Update() {
 		case Behavior::kRoot:
 			BehaviorRootInitialize();
 			break;
-		case Behavior::kAttack:
-			BehaviorAttackInitialize();
-			break;
 		case Behavior::kDash:
 			BehaviorDashInitialize();
 			break;
@@ -121,9 +111,6 @@ void Player::Update() {
 	case Behavior::kRoot:
 	default:
 		BehaviorRootUpdate();
-		break;
-	case Behavior::kAttack:
-		BehaviorAttackUpdate();
 		break;
 	case Behavior::kDash:
 		BehaviorDashUpdate();
@@ -149,21 +136,15 @@ void Player::Update() {
 
 	Head_offset = vector.TransformNormal(Head_offset_Base, PlayerRotateMatrix);
 	L_arm_offset = vector.TransformNormal(L_arm_offset_Base, PlayerRotateMatrix);
-	R_arm_offset = vector.TransformNormal(R_arm_offset_Base, PlayerRotateMatrix);
-	Weapon_offset = vector.TransformNormal(Weapon_offset_Base, PlayerRotateMatrix);
 	// 座標をコピーしてオフセット分ずらす
 	worldTransformHead_.translation_ = worldTransformBody_.translation_ + Head_offset;
 	worldTransformL_arm_.translation_ = worldTransformBody_.translation_ + L_arm_offset;
-	worldTransformR_arm_.translation_ = worldTransformBody_.translation_ + R_arm_offset;
-	worldTransformWeapon_.translation_ = worldTransformBody_.translation_ + Weapon_offset;	
 	
 
 	// 座標を転送
 	worldTransformBody_.UpdateMatrix(bodyScale);
 	worldTransformHead_.UpdateMatrix(headScale);
 	worldTransformL_arm_.UpdateMatrix(leftArmScale);
-	worldTransformR_arm_.UpdateMatrix(scale);
-	worldTransformWeapon_.UpdateMatrix(scale);
 
 	BulletNum = CheckBullet();
 	BulletMax = CheckBulletAll();
@@ -178,12 +159,8 @@ void Player::Update() {
 
 void Player::Draw(const ViewProjection& viewProjection) {
 	models_[0]->Draw(worldTransformBody_, viewProjection);
-	models_[1]->Draw(worldTransformHead_, viewProjection);
-	models_[2]->Draw(worldTransformL_arm_, viewProjection);
-	models_[3]->Draw(worldTransformR_arm_, viewProjection);
-	if (behavior_== Behavior::kAttack) {
-		models_[4]->Draw(worldTransformWeapon_, viewProjection);
-	}
+	//models_[1]->Draw(worldTransformHead_, viewProjection);
+	//models_[2]->Draw(worldTransformL_arm_, viewProjection);
 
 	for (PlayerBullet* bullet : bullets_) {
 		bullet->Draw(viewProjection);
@@ -201,8 +178,6 @@ void Player::DrawUI() {
 void Player::BehaviorRootInitialize() { 
 	move = {0.0f,0.0f,0.0f};
 	worldTransformL_arm_.rotation_ = {0};
-	worldTransformR_arm_.rotation_ = {0};
-	worldTransformWeapon_.translation_.y = 100.0f;
 	
 }
 
@@ -291,9 +266,7 @@ void Player::BehaviorRootUpdate() {
 	worldTransformHead_.rotation_.y = worldTransformBody_.rotation_.y;
 
 	worldTransformL_arm_.rotation_.y = worldTransformBody_.rotation_.y;
-	worldTransformR_arm_.rotation_.y = worldTransformBody_.rotation_.y;
-	UpdateFloatingGimmick();
-	UpdateMoveArm();
+	//UpdateFloatingGimmick();
 
 	worldTransform_.rotation_.y = worldTransformBody_.rotation_.y;
 
@@ -333,44 +306,6 @@ void Player::BehaviorRootUpdate() {
 	if (joyState.Gamepad.bLeftTrigger != 0) {
 		behaviorRequest_ = Behavior::kShot;
 	}
-}
-
-void Player::BehaviorAttackInitialize() {
-	worldTransformWeapon_.rotation_.y = worldTransformBody_.rotation_.y;
-	worldTransformWeapon_.translation_.y = 1.0f;
-	WaitTime = WaitTimeBase;
-	weapon_Rotate = 0.5f;
-	isShakeDown = false;
-
-}
-
-void Player::BehaviorAttackUpdate() {
-
-	if (weapon_Rotate <= MinRotate){
-		isShakeDown = true;
-	} 
-	else if (weapon_Rotate >= MaxRotate) {
-		WaitTime -= 1;
-		weapon_Rotate = 1.58f;
-	}
-	
-	if (!isShakeDown && weapon_Rotate > MinRotate){
-		weapon_Rotate -= moveWeapon;
-	} 
-	else if (isShakeDown && weapon_Rotate < MaxRotate) {
-		weapon_Rotate += moveWeaponShakeDown;
-	}
-
-	worldTransformWeapon_.rotation_.x = weapon_Rotate;
-	worldTransformL_arm_.rotation_.x = arm_Rotate + weapon_Rotate;
-	worldTransformR_arm_.rotation_.x = arm_Rotate + weapon_Rotate;
-
-	if (WaitTime<=0) {
-		behavior_ = Behavior::kRoot;
-	}
-	//weapon_Rotate==0.0fの時arm_Rotate-3.15f
-
-	
 }
 
 void Player::InitializeFloatingGimmick() { 
@@ -417,7 +352,6 @@ void Player::UpdateMoveArm() {
 	    static_cast<float>(std::fmod(armParameter_, 2.0 * static_cast<float>(M_PI)));	
 
 	worldTransformL_arm_.rotation_.x = std::sin(armParameter_) * armAmplitude;
-	worldTransformR_arm_.rotation_.x = std::sin(armParameter_) * armAmplitude;
 	
 
 }
@@ -429,9 +363,7 @@ void Player::ApplyGlobalVariables() {
 
 	Head_offset_Base = adjustment_item->GetVector3Value(groupName2, "Head_offset");
 	L_arm_offset_Base = adjustment_item->GetVector3Value(groupName2, "ArmL_offset");
-	R_arm_offset_Base = adjustment_item->GetVector3Value(groupName2, "ArmR_offset");
 
-	Weapon_offset_Base = adjustment_item->GetVector3Value(groupName, "Weapon_offset");
 	floatingCycle_ = adjustment_item->GetIntValue(groupName, "floatingCycle");
 	floatingAmplitude = adjustment_item->GetfloatValue(groupName, "floatingAmplitude");
 	armAmplitude = adjustment_item->GetfloatValue(groupName, "armAmplitude");
@@ -476,7 +408,6 @@ void Player::BehaviorDashUpdate() {
 	worldTransformHead_.rotation_.y = worldTransformBody_.rotation_.y;
 
 	worldTransformL_arm_.rotation_.y = worldTransformBody_.rotation_.y;
-	worldTransformR_arm_.rotation_.y = worldTransformBody_.rotation_.y;
 
 	//既定の時間経過で通常状態に戻る
 	if (++workDash_.dashParameter_>=behaviorDashTime) {
@@ -573,10 +504,9 @@ void Player::BehaviorShotUpdate() {
 	worldTransformL_arm_.rotation_.x = 1.57f + (viewProjection_->rotation_.x * 1.1f);
 	worldTransformL_arm_.rotation_.y =worldTransformBody_.rotation_.y;
 	
-	worldTransformR_arm_.rotation_.y = worldTransformBody_.rotation_.y;
 
 	floatingAmplitude = 0.1f;
-	UpdateFloatingGimmick();
+	//UpdateFloatingGimmick();
 
 	worldTransform_.rotation_.y = worldTransformBody_.rotation_.y;
 
@@ -632,7 +562,6 @@ void Player::DrawImgui() {
 	ImGui::Begin("Player");
 	ImGui::DragFloat3("Body Translation", &worldTransformBody_.translation_.x);
 	ImGui::SliderFloat3("ArmL Translation", &worldTransformL_arm_.translation_.x, 3.0f, 10.0f);
-	ImGui::SliderFloat3("ArmR Translation", &worldTransformR_arm_.translation_.x, 3.0f, 10.0f);
 	ImGui::SliderInt("floatingCycle_", &floatingCycle_, 10, 180);
 	ImGui::SliderFloat("Amplitude", &floatingAmplitude, 0.1f, 1.0f);
 	ImGui::SliderFloat("DisGround", &disGround, 0.1f, 1.0f);
@@ -642,7 +571,6 @@ void Player::DrawImgui() {
 
 	ImGui::Begin("PlayerRotate");
 	ImGui::SliderFloat3("ArmL Rotate", &worldTransformL_arm_.rotation_.x, -3.0f, 3.0f);
-	ImGui::SliderFloat3("ArmR Rotate", &worldTransformR_arm_.rotation_.x, -3.0f, 3.0f);
 	ImGui::End();
 
 	
