@@ -153,7 +153,10 @@
     <ClCompile Include="Wall.cpp">
       <Filter>ソース ファイル\field</Filter>
     </ClCompile>
-    <ClCompile Include="Effect.cpp">
+    <ClCompile Include="BaseEffect.cpp">
+      <Filter>ソース ファイル\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="WaterFlowEffect.cpp">
       <Filter>ソース ファイル\Effect</Filter>
     </ClCompile>
   </ItemGroup>
@@ -287,7 +290,10 @@
     <ClInclude Include="Wall.h">
       <Filter>ヘッダー ファイル\field</Filter>
     </ClInclude>
-    <ClInclude Include="Effect.h">
+    <ClInclude Include="BaseEffect.h">
+      <Filter>ヘッダー ファイル\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="WaterFlowEffect.h">
       <Filter>ヘッダー ファイル\Effect</Filter>
     </ClInclude>
   </ItemGroup>

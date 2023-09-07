@@ -1,14 +1,26 @@
 #pragma once
 #include "BaseEffect.h"
+#include "MyVector.h"
+#include "MyMatrix.h"
 
 class WaterFlowEffect : public BaseEffect {
+public:
+	// åˆæœŸåŒ–
+	void Initialize(Model* model) override;
 
-	// ‰Šú‰»
-	void Initialize(const Model* model) override;
-
-	// XV
+	// æ›´æ–°
 	void Update() override;
 
-	// •`‰æ
+	// æç”»
 	void Draw(const ViewProjection& viewProjection) override;
+
+public: //ã‚²ãƒƒã‚¿ãƒ¼ã‚»ãƒƒã‚¿ãƒ¼
+
+	inline void SetEmitterParent(const WorldTransform* parent) {emitter_.worldTransform.parent_ = parent;}
+	inline void const SetBulletVelocity(const Vector3* velocity) { bulletVelocity_ = velocity; }
+
+private:
+	int particlePopTime_;
+	const int particlePopCoolTime = 15;
+	const Vector3* bulletVelocity_;
 };

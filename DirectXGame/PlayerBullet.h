@@ -1,6 +1,7 @@
 #pragma once
 #include "Model.h"
 #include "WorldTransform.h"
+#include "WaterFlowEffect.h"
 #include <list>
 
 class Player;
@@ -15,7 +16,7 @@ public:
 	~PlayerBullet();
 
 	void Initialize(
-	    Model* model, Model* model2, const Vector3& position, const Vector3& rotate,
+	    Model* model, Model* model2, Model* model3, const Vector3& position, const Vector3& rotate,
 	    const Vector3& velocity);
 
 	void Update();
@@ -50,6 +51,7 @@ private:
 	// モデル
 	Model* model_ = nullptr;
 	Model* modelFin_ = nullptr;
+	Model* modelWaterFlow_ = nullptr;
 	
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
@@ -77,4 +79,7 @@ private:
 	Vector3 Fin_offset_Base = {0.0f, 0.0f, -1.0f};
 	WorldTransform worldTransformFin_;
 	float finRotate = 0.0f;
+
+	//水流エフェクト
+	WaterFlowEffect waterFlowEffect;
 };

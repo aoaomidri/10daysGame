@@ -1,29 +1,32 @@
 #include "BaseEffect.h"
 
-// ‰Šú‰»
-void BaseEffect::Initialize(const Model* model) {
+// åˆæœŸåŒ–
+void BaseEffect::Initialize(Model* model) {
 #ifdef _DEBUG
 	assert(model);
 #endif
-	model = model;
+
+	particleModel_ = model;
+	emitter_.worldTransform.Initialize();
+	isDraw_ = false;
 }
 
-// XV
+// æ›´æ–°
 void BaseEffect::Update() {
 	for (auto particleIt = particles_.begin(); particleIt != particles_.end(); particleIt++) {
 		Particle* particle = particleIt->get();
-		//—±Žq‚ÌˆÚ“®
+		//ç²’å­ã®ç§»å‹•
 		particle->worldTransform.translation_ += particle->speed;
-		//ƒ}ƒgƒŠƒbƒNƒX‚ÌXV
+		//ãƒžãƒˆãƒªãƒƒã‚¯ã‚¹ã®æ›´æ–°
 		particle->worldTransform.UpdateMatrix(particle->worldTransform.scale_);
 	}
 }
 
-// •`‰æ
+// æç”»
 void BaseEffect::Draw(const ViewProjection& viewProjection) {
 	for (auto particleIt = particles_.begin(); particleIt != particles_.end(); particleIt++) {
 		Particle* particle = particleIt->get();
-		//—±Žq‚Ì•`‰æ
+		//ç²’å­ã®æç”»
 		particleModel_->Draw(particle->worldTransform, viewProjection);
 	}
 }

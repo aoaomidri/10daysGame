@@ -68,7 +68,7 @@ void Player::Initialize(const std::vector<Model*>& models) {
 		PlayerBullet* newBullet = new PlayerBullet();
 		
 		newBullet->Initialize(
-		    models_[5], models_[6], GetWorldPosition(worldTransform_.matWorld_),
+		    models_[5], models_[6], models_[7], GetWorldPosition(worldTransform_.matWorld_),
 		    Vector3{0.0f, 0.0f, 0.0f}, velocity);
 		
 		newBullet->SetState(PlayerBullet::PlayerBulletState::Idle);

@@ -8,7 +8,7 @@
 #include "Vector3.h"
 
 struct Emitter {
-	Vector3 pos;
+	WorldTransform worldTransform;
 	Vector3 size;
 };
 
@@ -22,26 +22,30 @@ struct Particle {
 class BaseEffect {
 public:
 
-	// ‰Šú‰»
-	virtual void Initialize(const Model* model);
+	// åˆæœŸåŒ–
+	virtual void Initialize(Model* model);
 
-	// XV
+	// æ›´æ–°
 	virtual void Update();
 
-	// •`‰æ
+	// æç”»
 	virtual void Draw(const ViewProjection& viewProjection);
 
-public: //ƒQƒbƒ^[ƒZƒbƒ^[
-	inline void SetEmitterPos(Vector3 pos) { emmiter_.pos = pos; }
-	inline void SetEmitterSize(Vector3 size) { emmiter_.size = size; }
+public: //ã‚²ãƒƒã‚¿ãƒ¼ã‚»ãƒƒã‚¿ãƒ¼
+	inline void SetEmitterPos(Vector3 pos) { emitter_.worldTransform.translation_ = pos; }
+	inline void SetEmitterSize(Vector3 size) { emitter_.size = size; }
+
+	inline bool GetIsDraw() { return isDraw_; }
+	inline void SetIsDraw(bool isDraw) { isDraw_ = isDraw; }
 
 protected:
 	
-	//ƒ‚ƒfƒ‹
+	//ãƒ¢ãƒ‡ãƒ«
 	Model* particleModel_;
-	//ƒGƒ~ƒbƒ^[
-	Emitter emmiter_;
-	//ƒp[ƒeƒBƒNƒ‹
+	//ã‚¨ãƒŸãƒƒã‚¿ãƒ¼
+	Emitter emitter_;
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 	std::list<std::unique_ptr<Particle>> particles_;
-
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã‚’æç”»ã™ã‚‹ã‹
+	bool isDraw_;
 };

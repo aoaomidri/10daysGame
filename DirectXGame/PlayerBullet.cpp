@@ -6,12 +6,14 @@ PlayerBullet::~PlayerBullet() {
 }
 
 void PlayerBullet::Initialize(
-    Model* model,Model* model2, const Vector3& position, const Vector3& rotate, const Vector3& velocity) {
+    Model* model,Model* model2, Model* model3, const Vector3& position, const Vector3& rotate, const Vector3& velocity) {
 	assert(model);
 
 	model_ = model;
 	//model++;
 	modelFin_ = model2;
+	modelWaterFlow_ = model3;
+
 	textureHandle_ = TextureManager::Load("black.png");
 
 	worldTransform_.Initialize();
@@ -25,6 +27,10 @@ void PlayerBullet::Initialize(
 	worldTransformFin_.Initialize();
 	worldTransformFin_.translation_ = Fin_offset_Base;
 	worldTransformFin_.parent_ = &worldTransform_;
+
+	waterFlowEffect.Initialize(modelWaterFlow_);
+	waterFlowEffect.SetEmitterParent(&worldTransform_);
+	waterFlowEffect.SetBulletVelocity(&velocity_);
 }
 
 void PlayerBullet::Update() {
@@ -36,6 +42,8 @@ void PlayerBullet::Update() {
 		deathTimer_ = kLifeTime;
 		break;
 	case PlayerBullet::PlayerBulletState::Move:
+		waterFlowEffect.SetIsDraw(true);
+
 		if (--deathTimer_ <= 0) {
 			//isDead_ = true;
 			state_ = PlayerBulletState::Return;
@@ -61,6 +69,8 @@ void PlayerBullet::Update() {
 	default:
 		break;
 	}
+
+	waterFlowEffect.Update();
 	
 	worldTransform_.UpdateMatrix(scale);
 	FinAnimationUpdate();
@@ -84,6 +94,7 @@ void PlayerBullet::ReturnPlayer()
 	float distance = vector.Length(player_->GetOBB().center -
 	    worldTransform_.translation_);
 	if (distance <= 10.0f) {
+		waterFlowEffect.SetIsDraw(false);
 		state_ = PlayerBulletState::Idle;
 	}
 }
@@ -91,6 +102,7 @@ void PlayerBullet::ReturnPlayer()
 void PlayerBullet::Draw(const ViewProjection& viewProjection) {
 	model_->Draw(worldTransform_, viewProjection);
 	modelFin_->Draw(worldTransformFin_,viewProjection);
+	waterFlowEffect.Draw(viewProjection);
 }
 
 void PlayerBullet::OnCollision() { 
