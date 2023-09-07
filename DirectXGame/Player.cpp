@@ -166,7 +166,7 @@ void Player::Update() {
 	worldTransformWeapon_.UpdateMatrix(scale);
 
 	BulletNum = CheckBullet();
-
+	BulletMax = CheckBulletAll();
 	//行列更新
 	worldTransform_.UpdateMatrix(worldTransform_.scale_);
 
@@ -746,4 +746,14 @@ int Player::CheckBullet() {
 	}
 	return nowBullet;
 
+}
+
+int Player::CheckBulletAll() {
+	int nowBullet = 0;
+	for (PlayerBullet* bullet : bullets_) {
+		if (bullet->IsDead() == false) {
+			nowBullet++;
+		}
+	}
+	return nowBullet;
 }
