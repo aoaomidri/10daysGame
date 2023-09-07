@@ -619,7 +619,13 @@ void Player::BehaviorShotUpdate() {
 }
 
 void Player::OnCollision() { 
-	PlayerLife--;
+	for (PlayerBullet* bullet : bullets_) {
+		if (bullet->GetState() == PlayerBullet::PlayerBulletState::Idle) {
+			bullet->OnCollision();
+			return;
+		}
+	}
+	PlayerLife-=50;
 }
 
 void Player::DrawImgui() {

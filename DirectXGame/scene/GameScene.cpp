@@ -567,6 +567,16 @@ void GameScene::CheckAllCollisions() {
 	}
 #pragma endregion
 
+
+#pragma region 自機と敵の当たり判定
+	if (enemy_->isDead == false) {
+
+		if (IsCollisionOBBOBB(player_->GetOBB(), enemy_->GetOBB())) {
+				//bullet->OnCollision();
+				player_->OnCollision();
+			}
+	}
+#pragma endregion
 }
 
 bool GameScene::IsCollisionViewFrustum(const OBB& obb, const ViewingFrustum& viewingFrustum) {
