@@ -151,7 +151,7 @@ void PlayerBullet::ReturnPlayer()
 		state_ = PlayerBulletState::Idle;
 		worldTransform_.translation_.x = (float(rand()) / float(RAND_MAX) - 0.5f) * 10.0f;
 		worldTransform_.translation_.y = 2.0f + (float(rand()) / float(RAND_MAX) - 0.5f) * 10.0f;
-		worldTransform_.translation_.z = -5.0f;
+		worldTransform_.translation_.z = -11.0f;
 		worldTransform_.rotation_.x = 0.0f;
 		worldTransform_.rotation_.y = 0.0f;
 		worldTransform_.rotation_.z = 0.0f;
@@ -227,7 +227,7 @@ void PlayerBullet::StanceCancel() {
 	state_ = PlayerBulletState::Idle;
 	worldTransform_.translation_.x = (float(rand()) / float(RAND_MAX) - 0.5f) * 10.0f;
 	worldTransform_.translation_.y = 2.0f + (float(rand()) / float(RAND_MAX) - 0.5f) * 10.0f;
-	worldTransform_.translation_.z = -5.0f;
+	worldTransform_.translation_.z = -11.0f;
 	worldTransform_.rotation_.x = 0.0f;
 	worldTransform_.rotation_.y = 0.0f;
 	worldTransform_.rotation_.z = 0.0f;
