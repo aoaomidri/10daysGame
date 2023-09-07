@@ -39,6 +39,9 @@ void PlayerBullet::Update() {
 	case PlayerBullet::PlayerBulletState::Idle:
 		Idle();
 		break;
+	case PlayerBullet::PlayerBulletState::Stance:
+		deathTimer_ = kLifeTime;
+		break;
 	case PlayerBullet::PlayerBulletState::Move:
 		Move();
 		break;
@@ -70,7 +73,6 @@ void PlayerBullet::Idle()
 	*/
 	
 
-	deathTimer_ = kLifeTime;
 }
 
 void PlayerBullet::Move()
