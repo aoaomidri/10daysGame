@@ -124,6 +124,14 @@ private:
 		kLast,   // 最終形態
 	};
 
+	enum class Attack {
+		Normal,
+		Tackle
+
+	};
+
+	Attack attack_ = Attack::Tackle;
+
 	Behavior behavior_ = Behavior::kFirst;
 
 	std::optional<Behavior> behaviorRequest_ = std::nullopt;

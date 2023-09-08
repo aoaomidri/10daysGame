@@ -147,8 +147,6 @@ void Enemy::Update() {
 	worldTransformL_parts_.translation_ = worldTransform_.translation_ + L_parts_offset;
 	worldTransformR_parts_.translation_ = worldTransform_.translation_ + R_parts_offset;
 
-	//worldTransformL_parts_.rotation_.x += 1.0f / (static_cast<float>(M_PI) * 2.0f);
-	//worldTransformR_parts_.rotation_.x += 1.0f / (static_cast<float>(M_PI) * 2.0f);
 
 	 Vector3 vector = {
 	    target_->translation_.x - worldTransform_.translation_.x,
@@ -158,8 +156,6 @@ void Enemy::Update() {
 		//worldTransform_.rotation_.y = std::atan2(vector.x, vector.z);
 
 	} else {
-		/*worldTransform_.rotation_.y = vector_.LerpShortAngle(
-		    worldTransform_.rotation_.y, std::atan2(vector.x, vector.z), 0.01f);*/
 	}
 
 	worldTransformL_parts_.rotation_.y=worldTransform_.rotation_.y; 
@@ -441,6 +437,8 @@ void Enemy::Tackle(float tackleSpeed) {
 	 } else {
 		if (rotate > 0.01f) {
 			rotate -= 0.01f;
+		} else {
+			attack_ = Attack::Normal;
 		}
 	 }
 	 if (isTackle) {
@@ -458,9 +456,26 @@ void Enemy::BehaviorFirstInitialize() {
 }
 void Enemy::BehaviorFirstUpdate() {
 	 //// キャラクターの移動ベクトル
+	if (attack_ == Attack::Tackle) {
 
-	//Tackle(3.0f);
+		Tackle(3.0f);
+	} 
+	if (attack_==Attack::Normal) {
 	
+	
+		Vector3 vector = {
+		    target_->translation_.x - worldTransform_.translation_.x,
+		    target_->translation_.y - worldTransform_.translation_.y,
+		    target_->translation_.z - worldTransform_.translation_.z
+		};
+
+		 worldTransformL_parts_.rotation_.x += 1.0f / (static_cast<float>(M_PI) * 2.0f);
+		 worldTransformR_parts_.rotation_.x += 1.0f / (static_cast<float>(M_PI) * 2.0f);
+
+		worldTransform_.rotation_.y = std::atan2(vector.x, vector.z);
+
+
+	}
 	 /*if (enemyMoveCount >= enemyMoveCountMax) {
 		if (enemyMoveInterval>0) {
 			enemyMoveInterval--;
