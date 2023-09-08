@@ -36,6 +36,7 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	worldTransformBody_.translation_ = {0.0f, 4.0f, 0.0f};
 
 	worldTransformTail_.Initialize();
+	worldTransformTail_.parent_ = &worldTransformBody_;
 
 	worldTransformL_arm_.Initialize();
 
@@ -137,7 +138,7 @@ void Player::Update() {
 	Head_offset = vector.TransformNormal(Tail_offset_Base, PlayerRotateMatrix);
 	L_arm_offset = vector.TransformNormal(L_arm_offset_Base, PlayerRotateMatrix);
 	// 座標をコピーしてオフセット分ずらす
-	worldTransformTail_.translation_ = worldTransformBody_.translation_ + Head_offset;
+	worldTransformTail_.translation_ = Tail_offset_Base;
 	worldTransformL_arm_.translation_ = worldTransformBody_.translation_ + L_arm_offset;
 	
 
