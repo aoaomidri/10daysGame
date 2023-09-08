@@ -120,7 +120,7 @@ void Player::Update() {
 		break;
 	}
 
-
+	FinAnimationUpdate();
 
 	Matrix4x4 PlayerRotateMatrix = matrix.MakeRotateMatrix(worldTransformBody_.rotation_);
 
@@ -331,6 +331,11 @@ void Player::UpdateFloatingGimmick() {
 	worldTransformBody_.translation_.y =
 	    std::sin(floatingParameter_) * floatingAmplitude + disGround;
 	
+}
+
+void Player::FinAnimationUpdate() {
+		finRotate += 0.05f;
+		worldTransformTail_.rotation_.y = (std::sin(finRotate)) * float(M_PI) / 4.0f;
 }
 
 void Player::initializeMoveArm() {

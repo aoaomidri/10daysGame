@@ -254,4 +254,10 @@ private:
 	//現在の弾を調べる関数
 	int CheckBullet();
 	int CheckBulletAll();
+
+	//プレイヤーの尻尾を動か変数、関数
+
+	float finRotate;
+		
+	void FinAnimationUpdate();
 };
