@@ -71,6 +71,8 @@ void Player::Initialize(const std::vector<Model*>& models) {
 		bullets_.push_back(newBullet);
 		
 	}
+	//基本挙動初期化
+	BehaviorRootInitialize();
 }
 
 void Player::Update() {
@@ -179,7 +181,7 @@ void Player::DrawUI() {
 void Player::BehaviorRootInitialize() { 
 	move = {0.0f,0.0f,0.0f};
 	worldTransformL_arm_.rotation_ = {0};
-	
+	kCharacterSpeed = kCharacterSpeedBase;
 }
 
 void Player::BehaviorRootUpdate() {
@@ -192,7 +194,7 @@ void Player::BehaviorRootUpdate() {
 		}
 	}
 
-	kCharacterSpeed = kCharacterSpeedBase;
+	//kCharacterSpeed = kCharacterSpeedBase;
 
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		const float threshold = 0.7f;
@@ -379,9 +381,11 @@ void Player::ApplyGlobalVariables() {
 void Player::BehaviorDashInitialize() { 
 	workDash_.dashParameter_ = 0;
 	worldTransformBody_.rotation_.y = target_angle;
+	kCharacterSpeed = kDashSpeed;
 }
 
 void Player::BehaviorDashUpdate() { 
+	/*
 	Matrix4x4 newRotateMatrix_ = matrix.MakeRotateMatrixY(worldTransformBody_.rotation_);
 	move = {0, 0, kCharacterSpeed * kDashSpeed};
 
@@ -418,6 +422,12 @@ void Player::BehaviorDashUpdate() {
 	//既定の時間経過で通常状態に戻る
 	if (++workDash_.dashParameter_>=behaviorDashTime) {
 		dashCoolTime = kDashCoolTime;
+		behaviorRequest_ = Behavior::kRoot;
+	}
+	*/
+	BehaviorRootUpdate();
+	if ((!(joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) ||
+	     input_->TriggerKey(DIK_SPACE))) {
 		behaviorRequest_ = Behavior::kRoot;
 	}
 }

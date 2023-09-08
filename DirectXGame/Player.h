@@ -125,7 +125,8 @@ private:
 	//目標角度
 	float target_angle = 0.0f;
 	//ダッシュ時のスピード倍率
-	const float kDashSpeed = 15.0f;	
+	const float kDashSpeed = 8.0f;	
+
 	// 行列の作成
 	MyMatrix matrix;
 	// ベクトルの計算
