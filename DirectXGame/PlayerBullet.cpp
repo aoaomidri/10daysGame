@@ -39,6 +39,8 @@ void PlayerBullet::Initialize(
 	worldTransformHerd_.translation_.x = (float(rand()) / float(RAND_MAX) - 0.5f) * 10.0f;
 	worldTransformHerd_.translation_.y = 2.0f + (float(rand()) / float(RAND_MAX) - 0.5f) * 10.0f;
 	worldTransformHerd_.translation_.z = -11.0f;
+
+	idleFollow = (float(rand()) / float(RAND_MAX)+1.0f)*idleFollow;
 }
 
 void PlayerBullet::SetPlayer(Player* player) {
