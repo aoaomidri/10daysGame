@@ -26,6 +26,8 @@ public:
 
 	void Move();
 
+	void Stance();
+
 	void ReturnPlayer();
 
 	void Idle();
