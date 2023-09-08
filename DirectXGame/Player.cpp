@@ -65,7 +65,7 @@ void Player::Initialize(const std::vector<Model*>& models) {
 		    models_[3], models_[4], models_[5], GetWorldPosition(worldTransform_.matWorld_),
 		    Vector3{0.0f, 0.0f, 0.0f}, velocity);
 		
-		newBullet->SetState(PlayerBullet::PlayerBulletState::Return);
+		//newBullet->SetState(PlayerBullet::PlayerBulletState::Return);
 		newBullet->SetPlayer(this);
 		// 弾を登録する
 		bullets_.push_back(newBullet);

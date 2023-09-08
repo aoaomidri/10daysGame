@@ -256,7 +256,8 @@ void GameScene::Initialize() {
 	//プレイヤー弾に敵のworldTransformをセット
 	const std::list<PlayerBullet*>& playerBullets = player_->GetBullets();
 	for (PlayerBullet* bullet : playerBullets) {
-		bullet->setTarget(&enemy_->GetWorldTransform());
+		//bullet->setTarget(&enemy_->GetWorldTransform());
+		bullet->setEnemy(&enemy_->GetWorldTransform());
 	}
 
 #ifdef _DEBUG

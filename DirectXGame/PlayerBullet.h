@@ -35,8 +35,10 @@ public:
 	bool IsDead() const { return isDead_; }
 
 	void setTarget(const WorldTransform* target) { target_ = target; };
+	void setEnemy(const WorldTransform* target) { enemy_ = target; };
 
 	Vector3 GetWorldPosition();
+	Vector3 GetTargetWorldPosition();
 	inline PlayerBulletState GetState() { return state_; };
 	inline void SetState(PlayerBulletState state) { state_ = state; };
 	void SetPlayer(Player* player);
@@ -94,7 +96,11 @@ private:
 	WorldTransform worldTransformRoll_;
 
 	const WorldTransform* target_ = nullptr;
-
+	const WorldTransform* enemy_ = nullptr;
 	//水流エフェクト
 	WaterFlowEffect waterFlowEffect;
+
+	//idle状態で目指す位置
+	WorldTransform worldTransformHerd_;
+	float idleFollow = 0.05f;
 };
