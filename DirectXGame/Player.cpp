@@ -706,7 +706,8 @@ Vector3 Player::GetWorldPosition(Matrix4x4 mat) {
 int Player::CheckBullet() { 
 	int nowBullet = 0;
 	for (PlayerBullet* bullet : bullets_) {
-		if (bullet->GetState() == PlayerBullet::PlayerBulletState::Idle) {
+		if (bullet->GetState() == PlayerBullet::PlayerBulletState::Idle ||
+		    bullet->GetState() == PlayerBullet::PlayerBulletState::Stance) {
 			nowBullet++;
 		}
 	}
