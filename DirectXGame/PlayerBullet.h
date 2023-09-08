@@ -26,6 +26,8 @@ public:
 
 	void Move();
 
+	void Stance();
+
 	void ReturnPlayer();
 
 	void Idle();
@@ -102,5 +104,5 @@ private:
 
 	//idle状態で目指す位置
 	WorldTransform worldTransformHerd_;
-	float idleFollow = 0.05f;
+	float idleFollow = 0.020f;
 };

@@ -39,6 +39,8 @@ void PlayerBullet::Initialize(
 	worldTransformHerd_.translation_.x = (float(rand()) / float(RAND_MAX) - 0.5f) * 10.0f;
 	worldTransformHerd_.translation_.y = 2.0f + (float(rand()) / float(RAND_MAX) - 0.5f) * 10.0f;
 	worldTransformHerd_.translation_.z = -11.0f;
+
+	idleFollow = (float(rand()) / float(RAND_MAX)+1.0f)*idleFollow;
 }
 
 void PlayerBullet::SetPlayer(Player* player) {
@@ -56,7 +58,7 @@ void PlayerBullet::Update() {
 		waterFlowEffect.SetIsPop(false);
 		break;
 	case PlayerBullet::PlayerBulletState::Stance:
-
+		Stance();
 		deathTimer_ = kLifeTime;
 		break;
 	case PlayerBullet::PlayerBulletState::Move:
@@ -97,6 +99,10 @@ void PlayerBullet::Idle()
 	worldTransform_.rotation_.x = std::atan2(-velocity_.y, besage);
 
 	worldTransform_.AddTransform(velocity_);
+}
+
+void PlayerBullet::Stance() {
+
 }
 
 void PlayerBullet::Move()
@@ -246,6 +252,8 @@ void PlayerBullet::SetShotIdle(const Vector3& position) {
 void PlayerBullet::StanceCancel() {
 	state_ = PlayerBulletState::Idle;
 	worldTransform_.parent_ = nullptr;
+	Vector3 position = GetWorldPosition();
+	worldTransform_.translation_ = position;
 	/* worldTransform_.translation_.x = (float(rand()) / float(RAND_MAX) - 0.5f) * 10.0f;
 	worldTransform_.translation_.y = 2.0f + (float(rand()) / float(RAND_MAX) - 0.5f) * 10.0f;
 	worldTransform_.translation_.z = -11.0f;
