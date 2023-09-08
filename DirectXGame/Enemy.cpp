@@ -42,6 +42,23 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 
 	input_ = Input::GetInstance();
 
+	Adjustment_Item* adjustment_item = Adjustment_Item::GetInstance();
+	const char* groupName = "Enemy";
+	// グループを追加
+	adjustment_item->CreateGroup(groupName);
+
+	
+	//adjustment_item->AddItem(groupName, "EnemyLife", EnemyLife);
+	adjustment_item->AddItem(groupName, "TackleSpeed", tackleSpeedBase);
+
+}
+
+void Enemy::ApplyGlobalVariables() {
+	Adjustment_Item* adjustment_item = Adjustment_Item::GetInstance();
+	const char* groupName = "Enemy";
+
+	//EnemyLife = adjustment_item->GetfloatValue(groupName, "EnemyLife");
+	tackleSpeedBase = adjustment_item->GetfloatValue(groupName, "tackleSpeed");
 }
 
 void Enemy::Update() {

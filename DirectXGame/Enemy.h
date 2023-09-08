@@ -3,6 +3,7 @@
 #include"EnemyEffect.h"
 #include"EnemyBullet.h"
 #include<optional>
+#include"Adjustment_Item.h"
 #include"Input.h"
 
 class Enemy : public BaseCharacter{
@@ -102,6 +103,8 @@ private:
 
 	int tackleMoveCountMax = 3;
 
+	float tackleSpeedBase = 3.0f;
+
 	void Fire(float bulletSpeed);
 
 	void TripleFire(float bulletSpeed);
@@ -163,6 +166,8 @@ public:
 
 	// 描画
 	void Draw(const ViewProjection& viewProjection) override;
+
+	void ApplyGlobalVariables();
 
 	///< summary>
 	/// 射撃攻撃
