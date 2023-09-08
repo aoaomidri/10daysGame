@@ -85,11 +85,30 @@ private:
 	
 	int moveCount = 0;
 
+	//タックルに関連する関数
+	float rotate;
+
+	bool isTackle = false;
+
+	int tackleTimer;
+
+	int tackleTimerMax = 90;
+
+	int tackleMoveCount;
+
+	int tackleMoveTime;
+
+	int tackleMoveInterval = 120;
+
+	int tackleMoveCountMax = 3;
+
 	void Fire(float bulletSpeed);
 
 	void TripleFire(float bulletSpeed);
 
 	void randFire(float bulletSpeed);
+
+	void Tackle(float tackleSpeed);
 
 	void NormalAttack();
 
