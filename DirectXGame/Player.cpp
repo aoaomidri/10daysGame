@@ -25,7 +25,7 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	adjustment_item->AddItem(groupName, "floatingCycle", floatingCycle_);
 	adjustment_item->AddItem(groupName, "floatingAmplitude", floatingAmplitude);
 	adjustment_item->AddItem(groupName, "armAmplitude", armAmplitude);
-	adjustment_item->AddItem(groupName2, "Head_offset", Tail_offset_Base);
+	adjustment_item->AddItem(groupName2, "Tail_offset", Tail_offset_Base);
 	adjustment_item->AddItem(groupName2, "ArmL_offset", L_arm_offset_Base);
 
 
