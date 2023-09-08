@@ -25,7 +25,7 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	adjustment_item->AddItem(groupName, "floatingCycle", floatingCycle_);
 	adjustment_item->AddItem(groupName, "floatingAmplitude", floatingAmplitude);
 	adjustment_item->AddItem(groupName, "armAmplitude", armAmplitude);
-	adjustment_item->AddItem(groupName2, "Head_offset", Head_offset_Base);
+	adjustment_item->AddItem(groupName2, "Tail_offset", Tail_offset_Base);
 	adjustment_item->AddItem(groupName2, "ArmL_offset", L_arm_offset_Base);
 
 
@@ -35,7 +35,8 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	worldTransformBody_.Initialize();
 	worldTransformBody_.translation_ = {0.0f, 4.0f, 0.0f};
 
-	worldTransformHead_.Initialize();
+	worldTransformTail_.Initialize();
+	worldTransformTail_.parent_ = &worldTransformBody_;
 
 	worldTransformL_arm_.Initialize();
 
@@ -64,12 +65,14 @@ void Player::Initialize(const std::vector<Model*>& models) {
 		    models_[3], models_[4], models_[5], GetWorldPosition(worldTransform_.matWorld_),
 		    Vector3{0.0f, 0.0f, 0.0f}, velocity);
 		
-		newBullet->SetState(PlayerBullet::PlayerBulletState::Idle);
+		newBullet->SetState(PlayerBullet::PlayerBulletState::Return);
 		newBullet->SetPlayer(this);
 		// 弾を登録する
 		bullets_.push_back(newBullet);
 		
 	}
+	//基本挙動初期化
+	BehaviorRootInitialize();
 }
 
 void Player::Update() {
@@ -120,7 +123,7 @@ void Player::Update() {
 		break;
 	}
 
-
+	FinAnimationUpdate();
 
 	Matrix4x4 PlayerRotateMatrix = matrix.MakeRotateMatrix(worldTransformBody_.rotation_);
 
@@ -134,16 +137,16 @@ void Player::Update() {
 	    worldTransform_.translation_.x, worldTransform_.translation_.y + 4.5f,
 	    worldTransform_.translation_.z};
 
-	Head_offset = vector.TransformNormal(Head_offset_Base, PlayerRotateMatrix);
+	Head_offset = vector.TransformNormal(Tail_offset_Base, PlayerRotateMatrix);
 	L_arm_offset = vector.TransformNormal(L_arm_offset_Base, PlayerRotateMatrix);
 	// 座標をコピーしてオフセット分ずらす
-	worldTransformHead_.translation_ = worldTransformBody_.translation_ + Head_offset;
+	worldTransformTail_.translation_ = Tail_offset_Base;
 	worldTransformL_arm_.translation_ = worldTransformBody_.translation_ + L_arm_offset;
 	
 
 	// 座標を転送
 	worldTransformBody_.UpdateMatrix(bodyScale);
-	worldTransformHead_.UpdateMatrix(headScale);
+	worldTransformTail_.UpdateMatrix(tailScale);
 	worldTransformL_arm_.UpdateMatrix(leftArmScale);
 
 	BulletNum = CheckBullet();
@@ -159,7 +162,7 @@ void Player::Update() {
 
 void Player::Draw(const ViewProjection& viewProjection) {
 	models_[0]->Draw(worldTransformBody_, viewProjection);
-	//models_[1]->Draw(worldTransformHead_, viewProjection);
+	models_[1]->Draw(worldTransformTail_, viewProjection);
 	//models_[2]->Draw(worldTransformL_arm_, viewProjection);
 
 	for (PlayerBullet* bullet : bullets_) {
@@ -178,7 +181,7 @@ void Player::DrawUI() {
 void Player::BehaviorRootInitialize() { 
 	move = {0.0f,0.0f,0.0f};
 	worldTransformL_arm_.rotation_ = {0};
-	
+	kCharacterSpeed = kCharacterSpeedBase;
 }
 
 void Player::BehaviorRootUpdate() {
@@ -191,7 +194,7 @@ void Player::BehaviorRootUpdate() {
 		}
 	}
 
-	kCharacterSpeed = kCharacterSpeedBase;
+	//kCharacterSpeed = kCharacterSpeedBase;
 
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		const float threshold = 0.7f;
@@ -263,7 +266,7 @@ void Player::BehaviorRootUpdate() {
 	
 	worldTransformBody_.rotation_.y =
 	    vector.LerpShortAngle(worldTransformBody_.rotation_.y, target_angle, 0.1f);
-	worldTransformHead_.rotation_.y = worldTransformBody_.rotation_.y;
+	worldTransformTail_.rotation_.y = worldTransformBody_.rotation_.y;
 
 	worldTransformL_arm_.rotation_.y = worldTransformBody_.rotation_.y;
 	//UpdateFloatingGimmick();
@@ -333,6 +336,11 @@ void Player::UpdateFloatingGimmick() {
 	
 }
 
+void Player::FinAnimationUpdate() {
+		finRotate += 0.05f;
+		worldTransformTail_.rotation_.y = (std::sin(finRotate)) * float(M_PI) / 4.0f;
+}
+
 void Player::initializeMoveArm() {
 	armParameter_ = 0.0f;
 	armPeriod = 75;
@@ -361,7 +369,7 @@ void Player::ApplyGlobalVariables() {
 	const char* groupName = "Player";
 	const char* groupName2 = "PlayerPrats";
 
-	Head_offset_Base = adjustment_item->GetVector3Value(groupName2, "Head_offset");
+	Tail_offset_Base = adjustment_item->GetVector3Value(groupName2, "Head_offset");
 	L_arm_offset_Base = adjustment_item->GetVector3Value(groupName2, "ArmL_offset");
 
 	floatingCycle_ = adjustment_item->GetIntValue(groupName, "floatingCycle");
@@ -373,9 +381,11 @@ void Player::ApplyGlobalVariables() {
 void Player::BehaviorDashInitialize() { 
 	workDash_.dashParameter_ = 0;
 	worldTransformBody_.rotation_.y = target_angle;
+	kCharacterSpeed = kDashSpeed;
 }
 
 void Player::BehaviorDashUpdate() { 
+	/*
 	Matrix4x4 newRotateMatrix_ = matrix.MakeRotateMatrixY(worldTransformBody_.rotation_);
 	move = {0, 0, kCharacterSpeed * kDashSpeed};
 
@@ -405,13 +415,19 @@ void Player::BehaviorDashUpdate() {
 
 	worldTransform_.AddTransform(move);
 	worldTransformBody_.AddTransform(move);
-	worldTransformHead_.rotation_.y = worldTransformBody_.rotation_.y;
+	worldTransformTail_.rotation_.y = worldTransformBody_.rotation_.y;
 
 	worldTransformL_arm_.rotation_.y = worldTransformBody_.rotation_.y;
 
 	//既定の時間経過で通常状態に戻る
 	if (++workDash_.dashParameter_>=behaviorDashTime) {
 		dashCoolTime = kDashCoolTime;
+		behaviorRequest_ = Behavior::kRoot;
+	}
+	*/
+	BehaviorRootUpdate();
+	if ((!(joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) ||
+	     input_->TriggerKey(DIK_SPACE))) {
 		behaviorRequest_ = Behavior::kRoot;
 	}
 }
@@ -497,7 +513,7 @@ void Player::BehaviorShotUpdate() {
 	}
 
 	
-	worldTransformHead_.rotation_.y = worldTransformBody_.rotation_.y;
+	worldTransformTail_.rotation_.y = worldTransformBody_.rotation_.y;
 
 	worldTransformL_arm_.rotation_.x = 1.57f + (viewProjection_->rotation_.x * 1.1f);
 	worldTransformL_arm_.rotation_.y =worldTransformBody_.rotation_.y;
@@ -571,7 +587,9 @@ void Player::DrawImgui() {
 	ImGui::SliderFloat3("ArmL Rotate", &worldTransformL_arm_.rotation_.x, -3.0f, 3.0f);
 	ImGui::End();
 
-	
+	ImGui::Begin("FPS");
+	ImGui::Text("Frame rate: %6.2f fps", ImGui::GetIO().Framerate);
+	ImGui::End();
 
 }
 

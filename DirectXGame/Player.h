@@ -106,7 +106,7 @@ private:
 
 	// ワールド変換データ
 	WorldTransform worldTransformBody_;
-	WorldTransform worldTransformHead_;
+	WorldTransform worldTransformTail_;
 	WorldTransform worldTransformL_arm_;
 
 	// 3Dレティクル用ワールドトランスフォーム
@@ -125,7 +125,8 @@ private:
 	//目標角度
 	float target_angle = 0.0f;
 	//ダッシュ時のスピード倍率
-	const float kDashSpeed = 15.0f;	
+	const float kDashSpeed = 8.0f;	
+
 	// 行列の作成
 	MyMatrix matrix;
 	// ベクトルの計算
@@ -143,7 +144,7 @@ private:
 
 	Vector3 scale = {size, size, size};
 	
-	Vector3 headScale = {0.9f, 0.9f, 0.9f};
+	Vector3 tailScale = {0.9f, 0.9f, 0.9f};
 
 	Vector3 bodyScale = {0.9f, 0.9f, 0.9f};
 
@@ -186,7 +187,7 @@ private:
 	Vector3 Head_offset;
 	Vector3 L_arm_offset;
 
-	Vector3 Head_offset_Base = {0.0f, 4.5f, 0.0f};
+	Vector3 Tail_offset_Base = {0.0f, 0.0f, -3.0f};
 	Vector3 L_arm_offset_Base = {1.4f, 3.5f, 0.0f};
 
 
@@ -254,4 +255,10 @@ private:
 	//現在の弾を調べる関数
 	int CheckBullet();
 	int CheckBulletAll();
+
+	//プレイヤーの尻尾を動か変数、関数
+
+	float finRotate;
+		
+	void FinAnimationUpdate();
 };
