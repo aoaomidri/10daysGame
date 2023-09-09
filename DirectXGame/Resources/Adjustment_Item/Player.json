@@ -1,6 +1,7 @@
 {
     "Player": {
         "CharacterSpeed": 0.5,
+        "DashSpeed": 1.5,
         "Weapon_offset": [
             0.0,
             3.5,

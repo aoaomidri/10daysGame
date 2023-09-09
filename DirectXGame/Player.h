@@ -94,6 +94,13 @@ public:
 
 	const WorldTransform& GetLArmWorldTransform() { return worldTransformL_arm_; };
 
+	// 振る舞い
+	enum class Behavior {
+		kRoot, // 通常状態
+		kDash, // ダッシュ中
+		kShot, // 射撃攻撃中
+	};
+
 private:
 
 	const float MoveMax = 237.00000f;
@@ -125,7 +132,7 @@ private:
 	//目標角度
 	float target_angle = 0.0f;
 	//ダッシュ時のスピード倍率
-	const float kDashSpeed = 8.0f;	
+	float DashSpeed;	
 
 	// 行列の作成
 	MyMatrix matrix;
@@ -204,13 +211,6 @@ private:
 	int WaitTime = 0;
 
 	bool isShakeDown = false;
-
-	//振る舞い
-	enum class Behavior {
-		kRoot,		//通常状態
-		kDash,		//ダッシュ中
-		kShot,		//射撃攻撃中
-	};
 	
 	Behavior behavior_ = Behavior::kRoot;
 
@@ -261,4 +261,9 @@ private:
 	float finRotate;
 		
 	void FinAnimationUpdate();
+
+public:
+
+	Behavior GetBehavior() { return behavior_; };
+
 };

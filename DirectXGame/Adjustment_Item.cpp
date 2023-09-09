@@ -39,12 +39,12 @@ void Adjustment_Item::Update() {
 			//int32_t型の値を保持していれば
 			if (std::holds_alternative<int32_t>(item)) {
 				int32_t* ptr = std::get_if<int32_t>(&item);
-				ImGui::SliderInt(itemName.c_str(), ptr, 0, 120);
+				ImGui::DragInt(itemName.c_str(), ptr, 1.0f);
 			}
 			//float型の値を保存していれば
 			else if (std::holds_alternative<float>(item)) {
 				float* ptr = std::get_if<float>(&item);
-				ImGui::SliderFloat(itemName.c_str(), ptr, 0.0f, 1.0f, "%0.1f");
+				ImGui::DragFloat(itemName.c_str(), ptr, 0.1f);
 			}
 			//Vector3型の値を保持していれば
 			else if (std::holds_alternative<Vector3>(item)) {

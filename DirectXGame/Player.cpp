@@ -25,6 +25,9 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	adjustment_item->AddItem(groupName, "floatingCycle", floatingCycle_);
 	adjustment_item->AddItem(groupName, "floatingAmplitude", floatingAmplitude);
 	adjustment_item->AddItem(groupName, "armAmplitude", armAmplitude);
+	adjustment_item->AddItem(groupName, "DashSpeed", DashSpeed);
+
+
 	adjustment_item->AddItem(groupName2, "Tail_offset", Tail_offset_Base);
 	adjustment_item->AddItem(groupName2, "ArmL_offset", L_arm_offset_Base);
 
@@ -65,7 +68,7 @@ void Player::Initialize(const std::vector<Model*>& models) {
 		    models_[3], models_[4], models_[5], GetWorldPosition(worldTransform_.matWorld_),
 		    Vector3{0.0f, 0.0f, 0.0f}, velocity);
 		
-		newBullet->SetState(PlayerBullet::PlayerBulletState::Return);
+		//newBullet->SetState(PlayerBullet::PlayerBulletState::Return);
 		newBullet->SetPlayer(this);
 		// 弾を登録する
 		bullets_.push_back(newBullet);
@@ -376,15 +379,19 @@ void Player::ApplyGlobalVariables() {
 	floatingAmplitude = adjustment_item->GetfloatValue(groupName, "floatingAmplitude");
 	armAmplitude = adjustment_item->GetfloatValue(groupName, "armAmplitude");
 	kCharacterSpeedBase = adjustment_item->GetfloatValue(groupName, "CharacterSpeed");
+	DashSpeed = adjustment_item->GetfloatValue(groupName, "DashSpeed");
+	
 }
 
 void Player::BehaviorDashInitialize() { 
 	workDash_.dashParameter_ = 0;
 	worldTransformBody_.rotation_.y = target_angle;
-	kCharacterSpeed = kDashSpeed;
+	
 }
 
 void Player::BehaviorDashUpdate() { 
+
+	kCharacterSpeed = DashSpeed;
 	/*
 	Matrix4x4 newRotateMatrix_ = matrix.MakeRotateMatrixY(worldTransformBody_.rotation_);
 	move = {0, 0, kCharacterSpeed * kDashSpeed};
@@ -641,7 +648,7 @@ void Player::ShotReticle(const Matrix4x4& matView, const Matrix4x4& matProjectio
 }
 
 void Player::Attack() {
-	if (joyState.Gamepad.bRightTrigger != 0 || (joyState.Gamepad.wButtons&&XINPUT_GAMEPAD_B)) {
+	if (joyState.Gamepad.bRightTrigger != 0/* || (joyState.Gamepad.wButtons&&XINPUT_GAMEPAD_B)*/) {
 		bulletTime += 1;
 		if (bulletTime % bulletInterval == 1) {
 			
@@ -706,7 +713,8 @@ Vector3 Player::GetWorldPosition(Matrix4x4 mat) {
 int Player::CheckBullet() { 
 	int nowBullet = 0;
 	for (PlayerBullet* bullet : bullets_) {
-		if (bullet->GetState() == PlayerBullet::PlayerBulletState::Idle) {
+		if (bullet->GetState() == PlayerBullet::PlayerBulletState::Idle ||
+		    bullet->GetState() == PlayerBullet::PlayerBulletState::Stance) {
 			nowBullet++;
 		}
 	}

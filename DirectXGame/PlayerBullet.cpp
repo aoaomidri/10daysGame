@@ -34,11 +34,18 @@ void PlayerBullet::Initialize(
 	waterFlowEffect.Initialize(modelWaterFlow_);
 	waterFlowEffect.SetEmitterParent(&worldTransform_);
 	waterFlowEffect.SetBulletVelocity(&velocity_);
+
+	worldTransformHerd_.Initialize();
+	worldTransformHerd_.translation_.x = (float(rand()) / float(RAND_MAX) - 0.5f) * 10.0f;
+	worldTransformHerd_.translation_.y = 2.0f + (float(rand()) / float(RAND_MAX) - 0.5f) * 10.0f;
+	worldTransformHerd_.translation_.z = -11.0f;
+
+	idleFollow = (float(rand()) / float(RAND_MAX)+1.0f)*idleFollow;
 }
 
 void PlayerBullet::SetPlayer(Player* player) {
 	player_ = player; 
-	worldTransform_.parent_ = &player->GetWorldTransform();
+	//worldTransform_.parent_ = &player->GetWorldTransform();
 };
 
 void PlayerBullet::Update() {
@@ -51,7 +58,7 @@ void PlayerBullet::Update() {
 		waterFlowEffect.SetIsPop(false);
 		break;
 	case PlayerBullet::PlayerBulletState::Stance:
-
+		Stance();
 		deathTimer_ = kLifeTime;
 		break;
 	case PlayerBullet::PlayerBulletState::Move:
@@ -72,23 +79,41 @@ void PlayerBullet::Update() {
 	worldTransformRoll_.UpdateMatrix(finScale);
 	FinAnimationUpdate();
 	worldTransformFin_.UpdateMatrix(finScale);
+	worldTransformHerd_.UpdateMatrix(finScale);
+
+#ifdef _DEBUG
+	ImGui::Begin("Bullet");
+	ImGui::SliderFloat("FollowSpeed", &idleSpeed, 0.0f, 1.0f, "%.2f");
+	ImGui::End();
+#endif
 }
 
 
 void PlayerBullet::Idle() 
 {
-	//worldTransform_.translation_ = player_->GetOBB().center;
+	worldTransformHerd_.parent_ = &player_->GetWorldTransform(); 
+	target_ = &worldTransformHerd_;	
 	
-	/*
-	theta += float(M_PI) / 120.0f;
-	static float n = 3.0f;
-	static float d = 2.0f;
-	float a = n / d;
-	worldTransform_.translation_.x += (sinf(a * theta)) * cosf(theta) * 5.0f;
-	worldTransform_.translation_.y += 2.0f;
-	worldTransform_.translation_.z += (sinf(a * theta)) * sinf(theta) * 5.0f - 3.0f;
-	*/
+	static MyVector vector;
+	static MyMatrix matrix;
+
+	if (player_->GetBehavior() == Player::Behavior::kDash){
+		idleFollow = idleSpeed;
+	} else {
+		idleFollow = 0.02f;
+	}
 	
+	velocity_ = GetTargetWorldPosition() - worldTransform_.translation_;
+	velocity_ = vector.Multiply(idleFollow,velocity_);
+	worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
+	Vector3 velocityXZ{velocity_.x, 0.0f, velocity_.z};
+	float besage = vector.Length(velocityXZ);
+	worldTransform_.rotation_.x = std::atan2(-velocity_.y, besage);
+
+	worldTransform_.AddTransform(velocity_);
+}
+
+void PlayerBullet::Stance() {
 
 }
 
@@ -103,7 +128,7 @@ void PlayerBullet::Move()
 	static MyMatrix matrix;
 	if (player_->GetcheckCamera() == 1) {
 	
-	Vector3 toEnemy = target_->translation_ - worldTransform_.translation_;	
+	Vector3 toEnemy = enemy_->translation_ - worldTransform_.translation_;	
 
 		velocity_ = vector.Slerp(velocity_, toEnemy, 0.05f) * kAttackSpeed;
 	}
@@ -130,7 +155,7 @@ void PlayerBullet::Move()
 void PlayerBullet::ReturnPlayer()
 {
 	static MyVector vector;
-	Vector3 toPlayer = player_->GetOBB().center -
+	Vector3 toPlayer = GetTargetWorldPosition() -
 	                   worldTransform_.translation_;
 
 	velocity_ = vector.Slerp(velocity_, toPlayer, 0.05f) * kReturnSpeed;
@@ -145,17 +170,19 @@ void PlayerBullet::ReturnPlayer()
 	worldTransformRoll_.rotation_.z = 0.0f;
 	
 
-	float distance = vector.Length(player_->GetOBB().center -
+	float distance = vector.Length(GetTargetWorldPosition() -
 	    worldTransform_.translation_);
 	if (distance <= 10.0f) {
 		state_ = PlayerBulletState::Idle;
+		/*
 		worldTransform_.translation_.x = (float(rand()) / float(RAND_MAX) - 0.5f) * 10.0f;
 		worldTransform_.translation_.y = 2.0f + (float(rand()) / float(RAND_MAX) - 0.5f) * 10.0f;
 		worldTransform_.translation_.z = -11.0f;
 		worldTransform_.rotation_.x = 0.0f;
 		worldTransform_.rotation_.y = 0.0f;
 		worldTransform_.rotation_.z = 0.0f;
-		worldTransform_.parent_ = &player_->GetWorldTransform();
+		//worldTransform_.parent_ = &player_->GetWorldTransform();
+		*/
 	}
 }
 
@@ -195,6 +222,15 @@ Vector3 PlayerBullet::GetWorldPosition() {
 	return worldPos;
 }
 
+Vector3 PlayerBullet::GetTargetWorldPosition() {
+	Vector3 worldPos(0, 0, 0);
+	worldPos.x = target_->matWorld_.m[3][0];
+	worldPos.y = target_->matWorld_.m[3][1];
+	worldPos.z = target_->matWorld_.m[3][2];
+
+	return worldPos;
+}
+
 void PlayerBullet::FinAnimationUpdate()
 { 
 	finRotate += 0.5f;
@@ -218,6 +254,8 @@ void PlayerBullet::SetShotIdle(const Vector3& position) {
 	worldTransform_.translation_.y += 3.0f;
 	worldTransform_.translation_.z = 0.0f;
 	worldTransform_.rotation_.x = -float(M_PI) / 2.0f;
+	worldTransform_.rotation_.y = 0.0f;
+	worldTransform_.rotation_.z = 0.0f;
 	worldTransform_.parent_ = &player_->GetLArmWorldTransform();
 	// worldTransform_.rotation_ = rotate;
 	// worldTransform_.parent_ = nullptr;
@@ -225,11 +263,15 @@ void PlayerBullet::SetShotIdle(const Vector3& position) {
 
 void PlayerBullet::StanceCancel() {
 	state_ = PlayerBulletState::Idle;
-	worldTransform_.translation_.x = (float(rand()) / float(RAND_MAX) - 0.5f) * 10.0f;
+	worldTransform_.parent_ = nullptr;
+	Vector3 position = GetWorldPosition();
+	worldTransform_.translation_ = position;
+	/* worldTransform_.translation_.x = (float(rand()) / float(RAND_MAX) - 0.5f) * 10.0f;
 	worldTransform_.translation_.y = 2.0f + (float(rand()) / float(RAND_MAX) - 0.5f) * 10.0f;
 	worldTransform_.translation_.z = -11.0f;
 	worldTransform_.rotation_.x = 0.0f;
 	worldTransform_.rotation_.y = 0.0f;
 	worldTransform_.rotation_.z = 0.0f;
 	worldTransform_.parent_ = &player_->GetWorldTransform();
+	*/
 }

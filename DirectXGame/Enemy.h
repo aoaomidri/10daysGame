@@ -3,6 +3,7 @@
 #include"EnemyEffect.h"
 #include"EnemyBullet.h"
 #include<optional>
+#include"Adjustment_Item.h"
 #include"Input.h"
 
 class Enemy : public BaseCharacter{
@@ -85,11 +86,32 @@ private:
 	
 	int moveCount = 0;
 
+	//タックルに関連する関数
+	float rotate;
+
+	bool isTackle = false;
+
+	int tackleTimer;
+
+	int tackleTimerMax = 90;
+
+	int tackleMoveCount;
+
+	int tackleMoveTime;
+
+	int tackleMoveInterval = 120;
+
+	int tackleMoveCountMax = 3;
+
+	float tackleSpeedBase = 3.0f;
+
 	void Fire(float bulletSpeed);
 
 	void TripleFire(float bulletSpeed);
 
 	void randFire(float bulletSpeed);
+
+	void Tackle(float tackleSpeed);
 
 	void NormalAttack();
 
@@ -104,6 +126,14 @@ private:
 		kThird,   // 第三形態
 		kLast,   // 最終形態
 	};
+
+	enum class Attack {
+		Normal,
+		Tackle
+
+	};
+
+	Attack attack_ = Attack::Tackle;
 
 	Behavior behavior_ = Behavior::kFirst;
 
@@ -136,6 +166,8 @@ public:
 
 	// 描画
 	void Draw(const ViewProjection& viewProjection) override;
+
+	void ApplyGlobalVariables();
 
 	///< summary>
 	/// 射撃攻撃

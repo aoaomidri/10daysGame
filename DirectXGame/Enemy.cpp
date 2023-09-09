@@ -42,6 +42,23 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 
 	input_ = Input::GetInstance();
 
+	Adjustment_Item* adjustment_item = Adjustment_Item::GetInstance();
+	const char* groupName = "Enemy";
+	// グループを追加
+	adjustment_item->CreateGroup(groupName);
+
+	
+	//adjustment_item->AddItem(groupName, "EnemyLife", EnemyLife);
+	adjustment_item->AddItem(groupName, "TackleSpeed", tackleSpeedBase);
+
+}
+
+void Enemy::ApplyGlobalVariables() {
+	Adjustment_Item* adjustment_item = Adjustment_Item::GetInstance();
+	const char* groupName = "Enemy";
+
+	//EnemyLife = adjustment_item->GetfloatValue(groupName, "EnemyLife");
+	tackleSpeedBase = adjustment_item->GetfloatValue(groupName, "tackleSpeed");
 }
 
 void Enemy::Update() {
@@ -66,12 +83,16 @@ void Enemy::Update() {
 	ImGui::DragFloat3("Position", &worldTransform_.translation_.x, 0.01f);
 	ImGui::DragInt("chackCollision", &chackCollision);
 	ImGui::DragFloat3("rotate", &worldTransform_.rotation_.x, 0.01f);
+	ImGui::DragFloat3("PartsRotate", &worldTransformL_parts_.rotation_.x, 0.01f);
+	ImGui::DragFloat3("Move", &move.x, 0.01f);
 	ImGui::Text(
 	    "targetTranslation = %.1f, %.1f, %.1f", target_->translation_.x, target_->translation_.y,
 	    target_->translation_.z);
+
 	ImGui::Text("EnemyLife = %d", EnemyLife);
 	ImGui::Text("EnemyMoveCount = %d", enemyMoveCount);
 	ImGui::Text("EnemyMoveInterval = %d", enemyMoveInterval);
+	ImGui::Text("isTackle = %d", isTackle);
 	ImGui::Text("EnemyLifePer = %.1f", enemyLifePer);
 	ImGui::End();
 
@@ -110,7 +131,7 @@ void Enemy::Update() {
 	switch (behavior_) {
 	case Behavior::kFirst:
 	default:
-		BehaviorFirstUpdate();
+		//BehaviorFirstUpdate();
 		break;
 	case Behavior::kSecond:
 		BehaviorSecondUpdate();
@@ -143,19 +164,15 @@ void Enemy::Update() {
 	worldTransformL_parts_.translation_ = worldTransform_.translation_ + L_parts_offset;
 	worldTransformR_parts_.translation_ = worldTransform_.translation_ + R_parts_offset;
 
-	worldTransformL_parts_.rotation_.x += 1.0f / (static_cast<float>(M_PI) * 2.0f);
-	worldTransformR_parts_.rotation_.x += 1.0f / (static_cast<float>(M_PI) * 2.0f);
 
 	 Vector3 vector = {
 	    target_->translation_.x - worldTransform_.translation_.x,
 	    target_->translation_.y - worldTransform_.translation_.y,
 	    target_->translation_.z - worldTransform_.translation_.z};
 	if (!isRotate) {
-		worldTransform_.rotation_.y = std::atan2(vector.x, vector.z);
+		//worldTransform_.rotation_.y = std::atan2(vector.x, vector.z);
 
 	} else {
-		worldTransform_.rotation_.y = vector_.LerpShortAngle(
-		    worldTransform_.rotation_.y, std::atan2(vector.x, vector.z), 0.01f);
 	}
 
 	worldTransformL_parts_.rotation_.y=worldTransform_.rotation_.y; 
@@ -234,7 +251,7 @@ void Enemy::Fire(float bulletSpeed) {
 		Vector3 velocity = {0, 0, 0};
 		Vector3 enemyPos = GetMyWorldPosition();
 		Vector3 vector = {
-		    target_->translation_.x - enemyPos.x, target_->translation_.y - enemyPos.y + 3.5f,
+		    target_->translation_.x - enemyPos.x, target_->translation_.y - enemyPos.y + 1.05f,
 		    target_->translation_.z - enemyPos.z};
 		float bulletNorm =
 		    sqrt((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
@@ -385,6 +402,69 @@ void Enemy::FlyAttack(float bulletSpeed) {
 
 }
 
+void Enemy::Tackle(float tackleSpeed) { 
+	/*tackleMoveCount = 0;
+	 rotate = 0;*/
+	 // 弾の速度
+	 float kTackleSpeed = tackleSpeed;
+
+	 worldTransform_.rotation_.y += rotate;
+	 worldTransformL_parts_.rotation_.x = 1.57f;
+	 worldTransformR_parts_.rotation_.x = 1.57f;
+	 if (tackleMoveCount < tackleMoveCountMax) {
+		if (rotate < 2.0f) {
+			rotate += 0.01f;
+		} else {			
+
+			if (isTackle == false) {
+
+				Vector3 enemyPos = GetMyWorldPosition();
+				Vector3 vector = {
+					target_->translation_.x - enemyPos.x,
+					target_->translation_.y - enemyPos.y + 5.0f,
+					target_->translation_.z - enemyPos.z};
+				float bulletNorm =
+					sqrt((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
+
+				if (bulletNorm != 0.0f) {
+
+					move = {
+						((vector.x / bulletNorm) * kTackleSpeed),
+						0 /*(vector.y / bulletNorm) * kTackleSpeed*/,
+						(vector.z / bulletNorm) * kTackleSpeed};
+				}
+				tackleMoveTime++;
+				if (tackleMoveTime == tackleMoveInterval) {
+					tackleMoveTime = 0;
+
+					isTackle = true;
+				}
+			}
+			if (isTackle == true) {
+
+				tackleTimer++;
+				if (tackleTimer == tackleTimerMax) {
+					tackleTimer = 0;
+					tackleMoveCount++;
+					isTackle = false;
+				}
+			}
+			
+		}
+	 } else {
+		if (rotate > 0.01f) {
+			rotate -= 0.01f;
+		} else {
+			attack_ = Attack::Normal;
+		}
+	 }
+	 if (isTackle) {
+		worldTransform_.AddTransform(move);
+	 }
+	
+
+}
+
 void Enemy::BehaviorFirstInitialize() { 
 	move = {0.5f, 0.0f, 0.5f};
 	fireCount = 0;
@@ -393,9 +473,27 @@ void Enemy::BehaviorFirstInitialize() {
 }
 void Enemy::BehaviorFirstUpdate() {
 	 //// キャラクターの移動ベクトル
+	if (attack_ == Attack::Tackle) {
 
-	/*
-	 if (enemyMoveCount >= enemyMoveCountMax) {
+		Tackle(3.0f);
+	} 
+	if (attack_==Attack::Normal) {
+	
+	
+		Vector3 vector = {
+		    target_->translation_.x - worldTransform_.translation_.x,
+		    target_->translation_.y - worldTransform_.translation_.y,
+		    target_->translation_.z - worldTransform_.translation_.z
+		};
+
+		 worldTransformL_parts_.rotation_.x += 1.0f / (static_cast<float>(M_PI) * 2.0f);
+		 worldTransformR_parts_.rotation_.x += 1.0f / (static_cast<float>(M_PI) * 2.0f);
+
+		worldTransform_.rotation_.y = std::atan2(vector.x, vector.z);
+
+
+	}
+	 /*if (enemyMoveCount >= enemyMoveCountMax) {
 		if (enemyMoveInterval>0) {
 			enemyMoveInterval--;
 		kFireInterval = 60;
@@ -425,8 +523,8 @@ void Enemy::BehaviorFirstUpdate() {
 
 	 if (EnemyLife <= 170.0f) {
 		behaviorRequest_ = Behavior::kSecond;
-	 }
-	 */
+	 }*/
+	 
 }
 void Enemy::BehaviorSecondInitialize() {
 	 move = {0.5f, 0.0f, 0.5f};
