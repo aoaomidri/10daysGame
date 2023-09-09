@@ -104,5 +104,6 @@ private:
 
 	//idle状態で目指す位置
 	WorldTransform worldTransformHerd_;
+	float idleSpeed = 0.050f;
 	float idleFollow = 0.020f;
 };

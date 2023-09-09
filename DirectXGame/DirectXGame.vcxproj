@@ -118,6 +118,7 @@
     <ClCompile Include="EnemyCamera.cpp" />
     <ClCompile Include="EnemyEffect.cpp" />
     <ClCompile Include="FollowCamera.cpp" />
+    <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyMatrix.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="EnemyCamera.h" />
     <ClInclude Include="EnemyEffect.h" />
     <ClInclude Include="FollowCamera.h" />
+    <ClInclude Include="GameCamera.h" />
     <ClInclude Include="Ground.h" />
     <ClInclude Include="input\Input.h" />
     <ClInclude Include="math\Matrix4x4.h" />

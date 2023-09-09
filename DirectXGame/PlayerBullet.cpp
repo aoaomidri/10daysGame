@@ -80,16 +80,28 @@ void PlayerBullet::Update() {
 	FinAnimationUpdate();
 	worldTransformFin_.UpdateMatrix(finScale);
 	worldTransformHerd_.UpdateMatrix(finScale);
+
+#ifdef _DEBUG
+	ImGui::Begin("Bullet");
+	ImGui::SliderFloat("FollowSpeed", &idleSpeed, 0.0f, 1.0f, "%.2f");
+	ImGui::End();
+#endif
 }
 
 
 void PlayerBullet::Idle() 
 {
 	worldTransformHerd_.parent_ = &player_->GetWorldTransform(); 
-	target_ = &worldTransformHerd_;
+	target_ = &worldTransformHerd_;	
 	
 	static MyVector vector;
 	static MyMatrix matrix;
+
+	if (player_->GetBehavior() == Player::Behavior::kDash){
+		idleFollow = idleSpeed;
+	} else {
+		idleFollow = 0.02f;
+	}
 	
 	velocity_ = GetTargetWorldPosition() - worldTransform_.translation_;
 	velocity_ = vector.Multiply(idleFollow,velocity_);

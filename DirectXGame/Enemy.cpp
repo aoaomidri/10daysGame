@@ -131,7 +131,7 @@ void Enemy::Update() {
 	switch (behavior_) {
 	case Behavior::kFirst:
 	default:
-		BehaviorFirstUpdate();
+		//BehaviorFirstUpdate();
 		break;
 	case Behavior::kSecond:
 		BehaviorSecondUpdate();
