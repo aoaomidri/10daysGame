@@ -4,6 +4,7 @@
 #include <assert.h>
 #include "WorldTransform.h"
 #include "Model.h"
+#include "Sprite.h"
 #include "Vector2.h"
 #include "Vector3.h"
 
@@ -19,11 +20,19 @@ struct Particle {
 	bool isActive;
 };
 
+struct SpriteParticle {
+	Sprite* sprite;
+	Vector3 speed;
+	int activeTime;
+	bool isActive;
+};
+
 class BaseEffect {
 public:
 
 	// 初期化
 	virtual void Initialize(Model* model);
+	virtual void Initialize(uint32_t textureHandle);
 
 	// 更新
 	virtual void Update();
@@ -42,10 +51,13 @@ protected:
 	
 	//モデル
 	Model* particleModel_;
+	//テクスチャハンドル
+	uint32_t textureHandle_;
 	//エミッター
 	Emitter emitter_;
 	//パーティクル
 	std::list<std::unique_ptr<Particle>> particles_;
+	std::list<std::unique_ptr<SpriteParticle>> spriteParticles_;
 	//パーティクルを描画するか
 	bool isDraw_;
 };

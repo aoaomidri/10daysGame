@@ -78,6 +78,7 @@ void GameScene::TextureInitialize() {
 	textureHandleNumber[9] = TextureManager::Load("Number/number9.png");
 	textureHandleNumber[10] = TextureManager::Load("Number/slash.png");
 
+	textureParticleBubble = TextureManager::Load("ParticleBubble.png");
 }
 
 void GameScene::MakeTexture() {
@@ -149,7 +150,6 @@ void GameScene::MakeTexture() {
 
 	slashSprite_ = Sprite::Create(textureHandleNumber[10], {1170, 640}, {1, 1, 1, 1}, {0.5f, 0.5f});
 	slashSprite_->SetSize({144.0f, 144.0f});
-
 }
 
 void GameScene::SoundInitialize() {

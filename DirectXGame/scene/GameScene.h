@@ -142,6 +142,8 @@ private: // メンバ変数
 
 	uint32_t textureHandleNumber[11] = {0};
 
+	uint32_t textureParticleBubble;
+
 	//音楽データハンドル
 	uint32_t TitleBGMDataHandle_ = 0;
 	uint32_t MainBGMDataHandle_ = 0;

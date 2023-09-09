@@ -1,12 +1,16 @@
 #include "SceneTransition.h"
 
 // 初期化
-void SceneTransition::Initialize(Model* model) {
+void SceneTransition::Initialize(uint32_t textureHandle) {
+	BaseEffect::Initialize(textureHandle);
 
+	emitter_.size = {50, 720};
+	isDraw_ = true;
 }
 
 // 更新
 void SceneTransition::Update() {
+	
 
 }
 
