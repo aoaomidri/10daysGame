@@ -115,7 +115,7 @@ private:
 	OBB obb = {
 	    .center{0.0f,0.0f,0.0f},
 	    .orientations = {{1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}},
-	    .size{3.5f,5.0f,1.5f},
+	    .size{1.5f,2.0f,2.0f},
 	};
 
 	// ワールド変換データ

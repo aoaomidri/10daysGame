@@ -10,6 +10,7 @@ class Enemy : public BaseCharacter{
 private:
 	//エネミーのパーツの座標
 	WorldTransform worldTransformL_parts_;
+	WorldTransform worldTransformHitBox_;
 	//WorldTransform worldTransformR_parts_;
 
 	WorldTransform worldTransformAir;
@@ -51,7 +52,7 @@ private:
 	OBB obb = {
 	    .center{0.0f, 0.0f,0.0f},
 	    .orientations = {{1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}},
-	    .size{15.0f,10.0f,50.0f},
+	    .size{15.0f,20.0f,50.0f},
 	};
 
 	std::list<EnemyEffect*> effect_;

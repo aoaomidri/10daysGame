@@ -25,6 +25,9 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 	enemyMoveCount = 600;
 	enemyMoveInterval = 90;
 
+	worldTransformHitBox_.Initialize();
+	
+
 	worldTransformL_parts_.Initialize();
 	worldTransformL_parts_.translation_ = Fin_offset_Base;
 	worldTransformL_parts_.rotation_ = {0.0f, 0.0f, 0.0f};
@@ -180,8 +183,11 @@ void Enemy::Update() {
 	//worldTransformR_parts_.rotation_.y=worldTransform_.rotation_.y;
 
 	worldTransformL_parts_.translation_ = Fin_offset_Base;
+	
+
 	FinAnimationUpdate();
 	worldTransform_.UpdateMatrix(scale);
+	worldTransformHitBox_.UpdateMatrix(obb.size);
 	worldTransformL_parts_.UpdateMatrix(scaleChild);
 	//worldTransformR_parts_.UpdateMatrix(scale);
 
@@ -194,7 +200,11 @@ void Enemy::Update() {
 	obb.center = {
 	    worldTransform_.translation_.x + OBB_offset.x,
 	    worldTransform_.translation_.y + OBB_offset.y,
-	    worldTransform_.translation_.z + OBB_offset.z};
+	    worldTransform_.translation_.z + OBB_offset.z
+	};
+
+	worldTransformHitBox_.translation_ = obb.center;
+	worldTransformHitBox_.rotation_ = worldTransform_.rotation_;
 	
 
 	for (EnemyBullet* bullet: bullets_) {
@@ -219,6 +229,8 @@ void Enemy::Draw(const ViewProjection& viewProjection) {
 		models_[0]->Draw(worldTransform_, viewProjection);
 		models_[1]->Draw(worldTransformL_parts_, viewProjection);
 		//models_[2]->Draw(worldTransformR_parts_, viewProjection);
+
+		model_->Draw(worldTransformHitBox_, viewProjection);
 	}
 
 	for (EnemyBullet* bullet:bullets_) {
