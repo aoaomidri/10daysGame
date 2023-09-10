@@ -73,6 +73,8 @@ public:
 	//弾を一つ生成してリストに追加する
 	void AddBullet();
 
+	void AddBullet(int n);
+
 	Vector3 GetWorldPosition(Matrix4x4 mat);
 
 	float GetPlayerLife() { return PlayerLife; }
@@ -90,6 +92,8 @@ public:
 	void SetcheckCameraHit() { checkCamera = 1; }
 
 	void SetcheckCameraNoHit() { checkCamera = 0; }
+
+	void SetWorldTransformEnemy(const WorldTransform* worldTransform) {worldTransformEnemy_ = worldTransform;};
 
 	void OnCollision();
 	
@@ -249,8 +253,6 @@ private:
 	// 発射タイマー
 	int32_t ChargeTimer = 0;
 
-	//最初に生成する弾の数
-	const int kBulletNum = 0;
 	// 待機中の弾の数
 	int BulletNum = 0;
 	//弾の総数
@@ -271,8 +273,15 @@ private:
 	//一度に生成する弾の数
 	const int kCreateBulletNum = 5;
 
+	//敵の座標
+	const WorldTransform* worldTransformEnemy_;
+
 public:
 
 	Behavior GetBehavior() { return behavior_; };
 
+	// 最初に生成する弾の数
+	const int kBulletNum = 0;
+
 };
+

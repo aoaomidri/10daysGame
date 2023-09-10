@@ -266,12 +266,9 @@ void GameScene::Initialize() {
 
 	player_->SetViewProjection(&followCamera_->GetViewProjection());
 
-	//プレイヤー弾に敵のworldTransformをセット
-	const std::list<PlayerBullet*>& playerBullets = player_->GetBullets();
-	for (PlayerBullet* bullet : playerBullets) {
-		//bullet->setTarget(&enemy_->GetWorldTransform());
-		bullet->setEnemy(&enemy_->GetWorldTransform());
-	}
+	player_->SetWorldTransformEnemy(&enemy_->GetWorldTransform());
+	player_->AddBullet(player_->kBulletNum);
+	
 
 #ifdef _DEBUG
 	////軸方向表示の表示を有効にする

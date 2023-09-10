@@ -56,20 +56,13 @@ void Player::Initialize(const std::vector<Model*>& models) {
 
 	PlayerLife = kPlayerLifeMax;
 
-	for (int index = 0;index < kBulletNum;index++)
-	{
-		//const float kBulletSpeed = 0.0f;
-		
-		AddBullet();
-		
-	}
 	//基本挙動初期化
 	BehaviorRootInitialize();
 }
 
 void Player::Update() {
 	ApplyGlobalVariables();
-
+	bulletCreateCoolTime--;
 	// デスフラグの立った球を削除
 	bullets_.remove_if([](PlayerBullet* bullet) {
 		if (bullet->IsDead()) {
@@ -302,15 +295,11 @@ void Player::BehaviorRootUpdate() {
 		behaviorRequest_ = Behavior::kShot;
 	}
 
-	bulletCreateCoolTime--;
 	if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) {
 		if (bulletCreateCoolTime<=0)
 		{
 			bulletCreateCoolTime = kBulletCreateCoolTime;
-			for (int index = 0;index <kCreateBulletNum;index++)
-			{
-				AddBullet();
-			}
+			AddBullet(kCreateBulletNum);
 		}
 	}
 }
@@ -731,7 +720,7 @@ int Player::CheckBullet() {
 int Player::CheckBulletAll() {
 	int nowBullet = 0;
 	for (PlayerBullet* bullet : bullets_) {
-		if (bullet->IsDead() == false) {
+		if (bullet->IsDead() == false && bullet->GetState() != PlayerBullet::PlayerBulletState::Death) {
 			nowBullet++;
 		}
 	}
@@ -749,6 +738,15 @@ void Player::AddBullet(){
 
 	// newBullet->SetState(PlayerBullet::PlayerBulletState::Return);
 	newBullet->SetPlayer(this);
+	newBullet->setEnemy(worldTransformEnemy_);
 	// 弾を登録する
 	bullets_.push_back(newBullet);
+}
+void Player::AddBullet(int n)
+{
+	for (int index = 0; index < n; index++) {
+		// const float kBulletSpeed = 0.0f;
+
+		AddBullet();
+	}
 }
