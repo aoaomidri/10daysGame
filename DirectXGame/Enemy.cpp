@@ -194,7 +194,7 @@ void Enemy::Update() {
 	}
 
 	obb.center = {
-	    worldTransform_.translation_.x, worldTransform_.translation_.y + 7.0f,
+	    worldTransform_.translation_.x, worldTransform_.translation_.y,
 	    worldTransform_.translation_.z};
 	
 

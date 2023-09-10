@@ -170,6 +170,8 @@ void PlayerBullet::Move()
 		// isDead_ = true;
 		state_ = PlayerBulletState::Return;
 		t = 0.0f;
+		isInvincible_ = true;
+		invincibleTime_ = kAttackEndInvincible;
 	}
 	static MyVector vector;
 	static MyMatrix matrix;
