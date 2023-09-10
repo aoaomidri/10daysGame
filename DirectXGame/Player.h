@@ -269,7 +269,7 @@ private:
 
 	//弾追加のクールタイム
 	int bulletCreateCoolTime = 0;
-	int kBulletCreateCoolTime = 30;
+	int kBulletCreateCoolTime = 600;
 	//一度に生成する弾の数
 	const int kCreateBulletNum = 5;
 
@@ -281,7 +281,7 @@ public:
 	Behavior GetBehavior() { return behavior_; };
 
 	// 最初に生成する弾の数
-	const int kBulletNum = 0;
+	const int kBulletNum = 50;
 
 };
 
