@@ -195,7 +195,7 @@ void Enemy::Update() {
 
 	obb.center = {
 	    worldTransform_.translation_.x, worldTransform_.translation_.y,
-	    worldTransform_.translation_.z};
+	    worldTransform_.translation_.z + 5.0f};
 	
 
 	for (EnemyBullet* bullet: bullets_) {
@@ -485,7 +485,7 @@ void Enemy::BehaviorFirstUpdate() {
 	 //// キャラクターの移動ベクトル
 	if (attack_ == Attack::Tackle) {
 
-		Tackle(3.0f);
+		//Tackle(3.0f);
 	} 
 	if (attack_==Attack::Normal) {
 	

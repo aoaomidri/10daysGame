@@ -51,7 +51,7 @@ private:
 	OBB obb = {
 	    .center{0.0f, 0.0f,0.0f},
 	    .orientations = {{1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}},
-	    .size{5.0f,10.0f,40.0f},
+	    .size{15.0f,10.0f,50.0f},
 	};
 
 	std::list<EnemyEffect*> effect_;
