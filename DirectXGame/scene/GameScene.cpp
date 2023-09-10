@@ -177,7 +177,9 @@ void GameScene::Initialize() {
 	//モデル生成
 	modelSkyDome_.reset(Model::CreateFromOBJ("skyDome", true));
 	modelGround_.reset(Model::CreateFromOBJ("Ground", true));
-	modelWall_.reset(Model::CreateFromOBJ("Wall", true));
+	//modelWall_.reset(Model::CreateFromOBJ("Wall", true));
+	modelRock_.reset(Model::CreateFromOBJ("Rock", true));
+
 	modelPlayerBody_.reset(Model::CreateFromOBJ("float_Body", true));
 	modelPlayerTail_.reset(Model::CreateFromOBJ("float_Tail", true));
 	modelPlayerL_arm_.reset(Model::CreateFromOBJ("float_L_arm", true));
@@ -230,13 +232,21 @@ void GameScene::Initialize() {
 	//地面の初期化
 	ground_->Initialize(groundModels_);
 
-	//壁の生成
-	wall_ = std::make_unique<Wall>();
-	//壁のモデル配列
-	std::vector<Model*> wallModels_ = {
-	    modelWall_.get(), modelWall_.get(), modelWall_.get(), modelWall_.get()};
-	//壁の初期化
-	wall_->Initialize(wallModels_);
+	////壁の生成
+	//wall_ = std::make_unique<Wall>();
+	////壁のモデル配列
+	//std::vector<Model*> wallModels_ = {
+	//    modelWall_.get(), modelWall_.get(), modelWall_.get(), modelWall_.get()};
+	////壁の初期化
+	//wall_->Initialize(wallModels_);
+
+	// 岩の生成
+	rock_ = std::make_unique<Rock>();
+	// 岩のモデル配列
+	std::vector<Model*> rockModels_ = {
+	    modelRock_.get(), modelRock_.get(), modelRock_.get(), modelRock_.get()};
+	// 岩の初期化
+	rock_->Initialize(rockModels_);
 
 	// デバッグカメラの生成
 	debugCamera_ = std::make_unique<DebugCamera>(1280, 720);
@@ -408,6 +418,8 @@ void GameScene::Draw() {
 		ground_->Draw(viewProjection_);
 
 		//wall_->Draw(viewProjection_);
+
+		rock_->Draw(viewProjection_);
 	}
 	/// </summary>
 
@@ -1148,7 +1160,9 @@ void GameScene::MainUpdate() {
 
 	ground_->Update();
 
-	wall_->Update();
+	//wall_->Update();
+
+	rock_->Update();
 
 	followCamera_->Update();
 

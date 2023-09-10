@@ -165,6 +165,9 @@
     <ClCompile Include="GameCamera.cpp">
       <Filter>ソース ファイル\camera</Filter>
     </ClCompile>
+    <ClCompile Include="Rock.cpp">
+      <Filter>ソース ファイル\field</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="3d\ViewProjection.h">
@@ -307,6 +310,9 @@
     </ClInclude>
     <ClInclude Include="GameCamera.h">
       <Filter>ヘッダー ファイル\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Rock.h">
+      <Filter>ヘッダー ファイル\field</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

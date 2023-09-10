@@ -13,6 +13,7 @@
 #include"SkyDome.h"
 #include"Ground.h"
 #include"Wall.h"
+#include"Rock.h"
 #include "WaterFlowEffect.h"
 #include "DebugCamera.h"
 #include"FollowCamera.h"
@@ -164,6 +165,8 @@ private: // メンバ変数
 	std::unique_ptr<Model> modelGround_;
 
 	std::unique_ptr<Model> modelWall_;
+
+	std::unique_ptr<Model> modelRock_;
 	/*プレイヤーのモデル*/
 	std::unique_ptr<Model> modelPlayerBody_;
 	std::unique_ptr<Model> modelPlayerTail_;
@@ -209,6 +212,9 @@ private: // メンバ変数
 
 	//壁
 	std::unique_ptr<Wall> wall_;
+
+	//岩
+	std::unique_ptr<Rock> rock_;
 
 	// コントローラーの入力
 	XINPUT_STATE joyState;
