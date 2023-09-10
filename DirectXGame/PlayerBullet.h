@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "Model.h"
 #include "WorldTransform.h"
 #include "WaterFlowEffect.h"
@@ -12,7 +12,8 @@ public:
 		Idle,
 		Stance,
 		Move,
-		Return
+		Return,
+		Death
 	};
 	~PlayerBullet();
 
@@ -31,6 +32,8 @@ public:
 	void ReturnPlayer();
 
 	void Idle();
+
+	void Death();
 
 	void Draw(const ViewProjection& viewProjection);
 
@@ -113,4 +116,18 @@ private:
 	const float kFollowArea = 20.0f;
 	//追従を切る範囲
 	const float kFollowOutArea = 2.0f;
+
+	//モデルの色(texture)
+	uint32_t color_;
+	uint32_t textureHandleWhite_;
+	uint32_t textureHandleRed_;
+
+	//無敵判定
+	bool isInvincible_ = false;
+
+	//攻撃終了時の無敵時間
+	const int kAttackEndInvincible = 10;
+	int invincibleTime_;
+
+	Vector3 rotate_;
 };

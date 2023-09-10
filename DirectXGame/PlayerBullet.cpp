@@ -1,4 +1,4 @@
-#include "PlayerBullet.h"
+﻿#include "PlayerBullet.h"
 #include "Player.h"
 #include <assert.h>
 #include "MyVector.h"
@@ -15,6 +15,9 @@ void PlayerBullet::Initialize(
 	modelWaterFlow_ = model3;
 
 	textureHandle_ = TextureManager::Load("black.png");
+	textureHandleWhite_ = TextureManager::Load("./Resources/BulletBody/White.png");
+	textureHandleRed_ = TextureManager::Load("./Resources/BulletBody/Red.png");
+	color_ = textureHandleWhite_;
 
 	worldTransform_.Initialize();
 
@@ -67,6 +70,12 @@ void PlayerBullet::Update() {
 	case PlayerBullet::PlayerBulletState::Return:
 		ReturnPlayer();
 		break;
+	case PlayerBullet::PlayerBulletState::Death:
+		Death();
+		waterFlowEffect.SetIsDraw(false);
+		waterFlowEffect.SetIsPop(false);
+		break;
+
 	default:
 		break;
 	}
@@ -77,9 +86,19 @@ void PlayerBullet::Update() {
 
 	worldTransform_.UpdateMatrix(scale);
 	worldTransformRoll_.UpdateMatrix(finScale);
-	FinAnimationUpdate();
+	if (state_ != PlayerBulletState::Death)
+	{
+		FinAnimationUpdate();
+	}
 	worldTransformFin_.UpdateMatrix(finScale);
 	worldTransformHerd_.UpdateMatrix(finScale);
+
+	//無敵時間の処理
+	if (--invincibleTime_<0)
+	{
+		isInvincible_ = false;
+	}
+
 
 #ifdef _DEBUG
 	ImGui::Begin("Bullet");
@@ -212,23 +231,49 @@ void PlayerBullet::ReturnPlayer()
 	}
 }
 
+void PlayerBullet::Death(){ 
+	static MyVector vector;
+	color_ = textureHandleRed_;
+	rotate_ = Vector3{0.0f, 0.0f, float(M_PI)/2.0f};
+	t += 0.02f;
+	worldTransformRoll_.rotation_ = vector.Multiply(min(t,1.0f), rotate_);
+	worldTransform_.translation_.y -= 0.2f;
+	if (t >= 1.0f)
+	{
+		scale = vector.Multiply((1.0f-(t-1.0f)), scale);
+	}
+	if (t>=2.0f)
+	{
+		isDead_ = true;
+	}
+}
+
 void PlayerBullet::Draw(const ViewProjection& viewProjection) {
-	model_->Draw(worldTransformRoll_, viewProjection);
-	modelFin_->Draw(worldTransformFin_,viewProjection);
+	model_->Draw(worldTransformRoll_, viewProjection,color_);
+	modelFin_->Draw(worldTransformFin_, viewProjection, color_);
 	waterFlowEffect.Draw(viewProjection);
 }
 
 void PlayerBullet::OnCollision() { 
 	//isDead_ = true;
+	if (state_ == PlayerBulletState::Death)
+	{
+		return;
+	}
 	if (state_ == PlayerBulletState::Move)
 	{
 		velocity_.x *= -1.0f;
 		velocity_.y *= -1.0f;
 		velocity_.z *= -1.0f;
-	}
-	else
+		isInvincible_ = true;
+		invincibleTime_ = kAttackEndInvincible;
+	} else if (!isInvincible_)
 	{
-		isDead_ = true;
+		//isDead_ = true;
+		state_ = PlayerBulletState::Death;
+		t = 0.0f;
+		rotate_ = worldTransform_.rotation_;
+		return;
 	}
 	state_ = PlayerBulletState::Return;
 }
