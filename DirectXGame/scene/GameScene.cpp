@@ -83,7 +83,7 @@ void GameScene::TextureInitialize() {
 void GameScene::MakeTexture() {
 	// テクスチャ生成
 	titleSprite_ = Sprite::Create(textureHandleTitle, {640, 200}, {1, 1, 1, 1}, {0.5f, 0.5f});
-	titleSprite_->SetSize({672, 130});
+	titleSprite_->SetSize({640, 256});
 
 	sprite_[0] = Sprite::Create(textureHandleBackGround, {0, 0});
 	sprite_[13] = Sprite::Create(textureHandleBackGround2, {0, 0});
@@ -447,7 +447,7 @@ void GameScene::DrawTexture() {
 	if (scene_ == Scene::Title || scene_ == Scene::Control) {
 
 		sprite_[0]->Draw();
-		// titleSprite_->Draw();
+		titleSprite_->Draw();
 		sprite_[1]->Draw();
 		sprite_[1]->SetColor({0, 0, 0, 0.1f});
 		sprite_[3]->Draw();
