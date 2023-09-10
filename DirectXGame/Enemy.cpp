@@ -158,11 +158,9 @@ void Enemy::Update() {
 	// ImGui::End();
 
 	Matrix4x4 EnemyRotateMatrix = matrix.MakeRotateMatrix(worldTransform_.rotation_);
-	Vector3 L_parts_offset = {7.0f, 7.0f, 0.0f};
-	Vector3 R_parts_offset = {-7.0f, 7.0f, 0.0f};
+	Vector3 OBB_offset = {0.0f, 0.0f, 5.0f};
 
-	L_parts_offset = vector_.TransformNormal(L_parts_offset, EnemyRotateMatrix);
-	R_parts_offset = vector_.TransformNormal(R_parts_offset, EnemyRotateMatrix);
+	OBB_offset = vector_.TransformNormal(OBB_offset, EnemyRotateMatrix);
 
 	//worldTransformL_parts_.translation_ = worldTransform_.translation_ + L_parts_offset;
 	//worldTransformR_parts_.translation_ = worldTransform_.translation_ + R_parts_offset;
@@ -194,8 +192,9 @@ void Enemy::Update() {
 	}
 
 	obb.center = {
-	    worldTransform_.translation_.x, worldTransform_.translation_.y,
-	    worldTransform_.translation_.z + 5.0f};
+	    worldTransform_.translation_.x + OBB_offset.x,
+	    worldTransform_.translation_.y + OBB_offset.y,
+	    worldTransform_.translation_.z + OBB_offset.z};
 	
 
 	for (EnemyBullet* bullet: bullets_) {
