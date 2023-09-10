@@ -12,7 +12,7 @@ public:
 
 private:
 
-	float size = 20.0f;
+	float size = 27.0f;
 
 	Vector3 scale = {size, 1.0f, size};
 };

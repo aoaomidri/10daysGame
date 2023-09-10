@@ -2,6 +2,7 @@
 
 void Ground::Initialize(const std::vector<Model*>& models) { 
 	BaseField::Initialize(models); 
+	worldTransform_.translation_.y = -50.0f;
 }
 
 void Ground::Update() { 
