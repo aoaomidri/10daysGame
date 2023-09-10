@@ -134,7 +134,7 @@ void Enemy::Update() {
 	switch (behavior_) {
 	case Behavior::kFirst:
 	default:
-		//BehaviorFirstUpdate();
+		BehaviorFirstUpdate();
 		break;
 	case Behavior::kSecond:
 		BehaviorSecondUpdate();
@@ -419,7 +419,7 @@ void Enemy::Tackle(float tackleSpeed) {
 	 float kTackleSpeed = tackleSpeed;
 
 	 worldTransform_.rotation_.y += rotate;
-	 worldTransformL_parts_.rotation_.x = 1.57f;
+	 //worldTransformL_parts_.rotation_.x = 1.57f;
 	 //worldTransformR_parts_.rotation_.x = 1.57f;
 	 if (tackleMoveCount < tackleMoveCountMax) {
 		if (rotate < 2.0f) {
@@ -496,7 +496,7 @@ void Enemy::BehaviorFirstUpdate() {
 		    target_->translation_.z - worldTransform_.translation_.z
 		};
 
-		 worldTransformL_parts_.rotation_.x += 1.0f / (static_cast<float>(M_PI) * 2.0f);
+		// worldTransformL_parts_.rotation_.x += 1.0f / (static_cast<float>(M_PI) * 2.0f);
 		 //worldTransformR_parts_.rotation_.x += 1.0f / (static_cast<float>(M_PI) * 2.0f);
 
 		worldTransform_.rotation_.y = std::atan2(vector.x, vector.z);

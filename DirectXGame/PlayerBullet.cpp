@@ -239,6 +239,8 @@ void PlayerBullet::Death(){
 	static MyVector vector;
 	color_ = textureHandleRed_;
 	rotate_ = Vector3{0.0f, 0.0f, float(M_PI)/2.0f};
+	isInvincible_ = true;
+	invincibleTime_ = kAttackEndInvincible;
 	t += 0.02f;
 	worldTransformRoll_.rotation_ = vector.Multiply(min(t,1.0f), rotate_);
 	worldTransform_.translation_.y -= 0.2f;
