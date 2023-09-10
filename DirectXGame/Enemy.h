@@ -10,7 +10,7 @@ class Enemy : public BaseCharacter{
 private:
 	//エネミーのパーツの座標
 	WorldTransform worldTransformL_parts_;
-	WorldTransform worldTransformR_parts_;
+	//WorldTransform worldTransformR_parts_;
 
 	WorldTransform worldTransformAir;
 
@@ -30,6 +30,15 @@ private:
 	float size = 5.0f;
 
 	Vector3 scale = {size, size, size};
+	Vector3 scaleChild = {1.0f, 1.0f, 1.0f};
+
+
+	//ひれ
+	Vector3 Fin_offset_Base = {0.0f, 0.0f, -8.72f};
+	float finRotate = 0.0f;
+	float theta = 0.0f;
+	void FinAnimationUpdate();
+
 	// キャラクターの移動速さ
 	float kCharacterSpeed = 0.5f;
 

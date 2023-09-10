@@ -26,9 +26,11 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 	enemyMoveInterval = 90;
 
 	worldTransformL_parts_.Initialize();
-	worldTransformL_parts_.rotation_ = {1.57f, 0.0f, 0.0f};
-	worldTransformR_parts_.Initialize();
-	worldTransformR_parts_.rotation_ = {1.57f, 0.0f, 0.0f};
+	worldTransformL_parts_.translation_ = Fin_offset_Base;
+	worldTransformL_parts_.rotation_ = {0.0f, 0.0f, 0.0f};
+	worldTransformL_parts_.parent_ = &worldTransform_;
+	//worldTransformR_parts_.Initialize();
+	//worldTransformR_parts_.rotation_ = {1.57f, 0.0f, 0.0f};
 
 	worldTransformAir.Initialize();
 
@@ -85,6 +87,7 @@ void Enemy::Update() {
 	ImGui::DragFloat3("rotate", &worldTransform_.rotation_.x, 0.01f);
 	ImGui::DragFloat3("PartsRotate", &worldTransformL_parts_.rotation_.x, 0.01f);
 	ImGui::DragFloat3("Move", &move.x, 0.01f);
+	ImGui::DragFloat3("Fin", &Fin_offset_Base.x, 0.01f);
 	ImGui::Text(
 	    "targetTranslation = %.1f, %.1f, %.1f", target_->translation_.x, target_->translation_.y,
 	    target_->translation_.z);
@@ -161,8 +164,8 @@ void Enemy::Update() {
 	L_parts_offset = vector_.TransformNormal(L_parts_offset, EnemyRotateMatrix);
 	R_parts_offset = vector_.TransformNormal(R_parts_offset, EnemyRotateMatrix);
 
-	worldTransformL_parts_.translation_ = worldTransform_.translation_ + L_parts_offset;
-	worldTransformR_parts_.translation_ = worldTransform_.translation_ + R_parts_offset;
+	//worldTransformL_parts_.translation_ = worldTransform_.translation_ + L_parts_offset;
+	//worldTransformR_parts_.translation_ = worldTransform_.translation_ + R_parts_offset;
 
 
 	 Vector3 vector = {
@@ -175,12 +178,14 @@ void Enemy::Update() {
 	} else {
 	}
 
-	worldTransformL_parts_.rotation_.y=worldTransform_.rotation_.y; 
-	worldTransformR_parts_.rotation_.y=worldTransform_.rotation_.y;
+	//worldTransformL_parts_.rotation_.y=worldTransform_.rotation_.y; 
+	//worldTransformR_parts_.rotation_.y=worldTransform_.rotation_.y;
 
+	worldTransformL_parts_.translation_ = Fin_offset_Base;
+	FinAnimationUpdate();
 	worldTransform_.UpdateMatrix(scale);
-	worldTransformL_parts_.UpdateMatrix(scale);
-	worldTransformR_parts_.UpdateMatrix(scale);
+	worldTransformL_parts_.UpdateMatrix(scaleChild);
+	//worldTransformR_parts_.UpdateMatrix(scale);
 
 	for (int i = 0; i < 3; i++) {
 		obb.orientations[i].x = EnemyRotateMatrix.m[i][0];
@@ -204,12 +209,17 @@ void Enemy::Update() {
 	enemyLifePer = 1280.0f * (EnemyLife / kMaxEnemyLife);
 }
 
+void Enemy::FinAnimationUpdate() {
+	finRotate += 0.05f;
+	worldTransformL_parts_.rotation_.y = (std::sin(finRotate)) * float(M_PI) / 4.0f;
+}
+
 void Enemy::Draw(const ViewProjection& viewProjection) {
 	if (isDead == false)
 	{
 		models_[0]->Draw(worldTransform_, viewProjection);
 		models_[1]->Draw(worldTransformL_parts_, viewProjection);
-		models_[2]->Draw(worldTransformR_parts_, viewProjection);
+		//models_[2]->Draw(worldTransformR_parts_, viewProjection);
 	}
 
 	for (EnemyBullet* bullet:bullets_) {
@@ -410,7 +420,7 @@ void Enemy::Tackle(float tackleSpeed) {
 
 	 worldTransform_.rotation_.y += rotate;
 	 worldTransformL_parts_.rotation_.x = 1.57f;
-	 worldTransformR_parts_.rotation_.x = 1.57f;
+	 //worldTransformR_parts_.rotation_.x = 1.57f;
 	 if (tackleMoveCount < tackleMoveCountMax) {
 		if (rotate < 2.0f) {
 			rotate += 0.01f;
@@ -487,7 +497,7 @@ void Enemy::BehaviorFirstUpdate() {
 		};
 
 		 worldTransformL_parts_.rotation_.x += 1.0f / (static_cast<float>(M_PI) * 2.0f);
-		 worldTransformR_parts_.rotation_.x += 1.0f / (static_cast<float>(M_PI) * 2.0f);
+		 //worldTransformR_parts_.rotation_.x += 1.0f / (static_cast<float>(M_PI) * 2.0f);
 
 		worldTransform_.rotation_.y = std::atan2(vector.x, vector.z);
 
