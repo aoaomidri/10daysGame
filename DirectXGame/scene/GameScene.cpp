@@ -78,7 +78,7 @@ void GameScene::TextureInitialize() {
 	textureHandleNumber[9] = TextureManager::Load("Number/number9.png");
 	textureHandleNumber[10] = TextureManager::Load("Number/slash.png");
 
-	textureParticleBubble = TextureManager::Load("ParticleBubble.png");
+	textureParticleFish = TextureManager::Load("fish.png");
 }
 
 void GameScene::MakeTexture() {
