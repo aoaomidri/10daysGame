@@ -33,7 +33,7 @@ void GameCamera::SetTarget(const WorldTransform* target) {
 }
 
 void GameCamera::Update() {
-	viewProjection_.rotation_.y += 0.005f;
+	viewProjection_.rotation_.y += rotateSpeed;
 
 	/*viewProjection_.rotation_.y =
 	    vector_->LerpShortAngle(viewProjection_.rotation_.y, destinationAngleY_, 0.1f);
