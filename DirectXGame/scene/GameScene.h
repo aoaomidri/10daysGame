@@ -81,6 +81,8 @@ private://メンバ関数
 	/*一の位の値を調べる*/
 	int CheckOensPlaceNumber(int num);
 
+	void DrawTexture();
+
 
 private: // メンバ変数
 	DirectXCommon* dxCommon_ = nullptr;

@@ -422,16 +422,26 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
+	
+	DrawTexture();
+
+	// スプライト描画後処理
+	Sprite::PostDraw();
+
+#pragma endregion
+}
+
+void GameScene::DrawTexture() {
 	if (scene_ == Scene::Title || scene_ == Scene::Control) {
-		
+
 		sprite_[0]->Draw();
-		//titleSprite_->Draw();
+		// titleSprite_->Draw();
 		sprite_[1]->Draw();
 		sprite_[1]->SetColor({0, 0, 0, 0.1f});
 		sprite_[3]->Draw();
 		sprite_[4]->Draw();
 	}
-	if (scene_==Scene::Control) {
+	if (scene_ == Scene::Control) {
 		sprite_[1]->SetColor({0, 0, 0, 0.8f});
 		conSprite_[0]->Draw();
 		conSprite_[1]->Draw();
@@ -442,19 +452,19 @@ void GameScene::Draw() {
 		conSprite_[6]->Draw();
 	}
 
-	if (scene_ == Scene::Main || scene_ == Scene::Pose||scene_==Scene::GameOver) {
+	if (scene_ == Scene::Main || scene_ == Scene::Pose || scene_ == Scene::GameOver) {
 		sprite_[2]->SetSize({(enemy_->GetEnemyLifePer()), 36.0f});
-		if (enemy_->GetEnemyLife()==170) {
+		if (enemy_->GetEnemyLife() == 170) {
 			colorChangeEN = {1, 1, 0, 0.5};
 		} else if (enemy_->GetEnemyLife() == 80) {
 			colorChangeEN = {1, 0, 0, 0.5};
-		} 
+		}
 		sprite_[2]->SetColor(colorChangeEN);
 
 		sprite_[2]->Draw();
-		
-		sprite_[12]->SetSize({(player_->GetPlayerLifePer() * 256.0f), 36.0f});
-		sprite_[12]->Draw();
+
+		/*sprite_[12]->SetSize({(player_->GetPlayerLifePer() * 256.0f), 36.0f});
+		sprite_[12]->Draw();*/
 
 		NumberSprite_[0]->SetTextureHandle(
 		    textureHandleNumber[CheckTensPlaceNumber(player_->GetBulletNum())]);
@@ -471,7 +481,6 @@ void GameScene::Draw() {
 		NumberSprite_[2]->Draw();
 		NumberSprite_[2]->SetPosition(numberTensPlacePosDOWN);
 
-
 		NumberSprite_[3]->SetTextureHandle(
 		    textureHandleNumber[CheckOensPlaceNumber(player_->GetBulletNumMax())]);
 		NumberSprite_[3]->Draw();
@@ -479,13 +488,13 @@ void GameScene::Draw() {
 
 		slashSprite_->Draw();
 
-		PLSprite_->Draw();
+		//PLSprite_->Draw();
 		ENSprite_->Draw();
 
 		player_->DrawUI();
 	}
 
-	if (scene_==Scene::Pose) {
+	if (scene_ == Scene::Pose) {
 		sprite_[1]->SetColor({0, 0, 0, 0.8f});
 		sprite_[1]->Draw();
 		sprite_[5]->Draw();
@@ -504,18 +513,12 @@ void GameScene::Draw() {
 		sprite_[10]->Draw();
 		sprite_[11]->Draw();
 	}
-	if (scene_==Scene::End) {
+	if (scene_ == Scene::End) {
 		sprite_[13]->Draw();
 		sprite_[3]->Draw();
 		sprite_[4]->Draw();
 		sprite_[8]->Draw();
-		
 	}
-
-	// スプライト描画後処理
-	Sprite::PostDraw();
-
-#pragma endregion
 }
 
 void GameScene::CheckAllCollisions() {
