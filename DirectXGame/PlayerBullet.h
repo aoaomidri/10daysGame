@@ -113,7 +113,7 @@ private:
 	float idleFollow = 0.020f;
 
 	//待機中に追従するか
-	bool isMove_ = false;
+	bool isMove_ = true;
 	//追従を再開する範囲
 	const float kFollowArea = 20.0f;
 	//追従を切る範囲

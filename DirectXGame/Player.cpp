@@ -60,18 +60,7 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	{
 		//const float kBulletSpeed = 0.0f;
 		
-		Vector3 velocity{0.0f,0.0f,0.0f};
-		// 弾を生成し、初期化
-		PlayerBullet* newBullet = new PlayerBullet();
-		
-		newBullet->Initialize(
-		    models_[3], models_[4], models_[5], GetWorldPosition(worldTransform_.matWorld_),
-		    Vector3{0.0f, 0.0f, 0.0f}, velocity);
-		
-		//newBullet->SetState(PlayerBullet::PlayerBulletState::Return);
-		newBullet->SetPlayer(this);
-		// 弾を登録する
-		bullets_.push_back(newBullet);
+		AddBullet();
 		
 	}
 	//基本挙動初期化
@@ -311,6 +300,18 @@ void Player::BehaviorRootUpdate() {
 	}*/
 	if (joyState.Gamepad.bLeftTrigger != 0) {
 		behaviorRequest_ = Behavior::kShot;
+	}
+
+	bulletCreateCoolTime--;
+	if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) {
+		if (bulletCreateCoolTime<=0)
+		{
+			bulletCreateCoolTime = kBulletCreateCoolTime;
+			for (int index = 0;index <kCreateBulletNum;index++)
+			{
+				AddBullet();
+			}
+		}
 	}
 }
 
@@ -590,6 +591,11 @@ void Player::DrawImgui() {
 	ImGui::DragInt("checkCamera", &checkCamera);
 	ImGui::End();
 
+	ImGui::Begin("BulletCreateCoolTime");
+	ImGui::Text("CoolTime %d",bulletCreateCoolTime/60);
+	ImGui::DragInt("CoolTimeMax", &kBulletCreateCoolTime);
+	ImGui::End();
+
 	ImGui::Begin("PlayerRotate");
 	ImGui::SliderFloat3("ArmL Rotate", &worldTransformL_arm_.rotation_.x, -3.0f, 3.0f);
 	ImGui::End();
@@ -730,4 +736,19 @@ int Player::CheckBulletAll() {
 		}
 	}
 	return nowBullet;
+}
+
+void Player::AddBullet(){
+	Vector3 velocity{0.0f, 0.0f, 0.0f};
+	// 弾を生成し、初期化
+	PlayerBullet* newBullet = new PlayerBullet();
+
+	newBullet->Initialize(
+	    models_[3], models_[4], models_[5], GetWorldPosition(worldTransform_.matWorld_),
+	    Vector3{0.0f, 0.0f, 0.0f}, velocity);
+
+	// newBullet->SetState(PlayerBullet::PlayerBulletState::Return);
+	newBullet->SetPlayer(this);
+	// 弾を登録する
+	bullets_.push_back(newBullet);
 }

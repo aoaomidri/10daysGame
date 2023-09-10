@@ -70,6 +70,9 @@ public:
 	// 弾リストを取得
 	const std::list<PlayerBullet*>& GetBullets() { return bullets_; }
 
+	//弾を一つ生成してリストに追加する
+	void AddBullet();
+
 	Vector3 GetWorldPosition(Matrix4x4 mat);
 
 	float GetPlayerLife() { return PlayerLife; }
@@ -261,6 +264,12 @@ private:
 	float finRotate;
 		
 	void FinAnimationUpdate();
+
+	//弾追加のクールタイム
+	int bulletCreateCoolTime = 0;
+	int kBulletCreateCoolTime = 900;
+	//一度に生成する弾の数
+	const int kCreateBulletNum = 5;
 
 public:
 
