@@ -44,6 +44,7 @@ void PlayerBullet::Initialize(
 	worldTransformHerd_.translation_.z = -11.0f;
 
 	idleFollow = (float(rand()) / float(RAND_MAX)+1.0f)*idleFollow;
+	idleSpeed = idleFollow * 2.0f;
 }
 
 void PlayerBullet::SetPlayer(Player* player) {
@@ -117,12 +118,13 @@ void PlayerBullet::Idle()
 	static MyMatrix matrix;
 	if (isMove_)
 	{
+		
 		if (player_->GetBehavior() == Player::Behavior::kDash) {
 			idleFollow = idleSpeed;
 		} else {
-			idleFollow = 0.02f;
+			//idleFollow = idleSpeed/2.0f;
 		}
-
+		
 		velocity_ = GetTargetWorldPosition() - worldTransform_.translation_;
 		velocity_ = vector.Multiply(idleFollow, velocity_);
 		worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
@@ -338,6 +340,7 @@ void PlayerBullet::SetShotIdle(const Vector3& position) {
 
 void PlayerBullet::StanceCancel() {
 	state_ = PlayerBulletState::Idle;
+	isMove_ = true;
 	worldTransform_.parent_ = nullptr;
 	Vector3 position = GetWorldPosition();
 	worldTransform_.translation_ = position;

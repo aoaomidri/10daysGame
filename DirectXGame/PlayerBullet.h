@@ -77,7 +77,7 @@ private:
 
 	Vector3 velocity_;
 	// 寿命
-	static const int32_t kLifeTime = 60;
+	static const int32_t kLifeTime = 30;
 	// デスタイマー
 	int32_t deathTimer_ = kLifeTime;
 	// デスフラグ
@@ -90,7 +90,7 @@ private:
 	float t = 0.0f;
 
 	//攻撃時の速度
-	const float kAttackSpeed =2.0f;
+	const float kAttackSpeed =5.0f;
 
 	//戻ってくるときの速度
 	const float kReturnSpeed = 1.2f;

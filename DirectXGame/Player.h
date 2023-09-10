@@ -250,7 +250,7 @@ private:
 	int32_t ChargeTimer = 0;
 
 	//最初に生成する弾の数
-	const int kBulletNum = 50;
+	const int kBulletNum = 0;
 	// 待機中の弾の数
 	int BulletNum = 0;
 	//弾の総数
@@ -267,7 +267,7 @@ private:
 
 	//弾追加のクールタイム
 	int bulletCreateCoolTime = 0;
-	int kBulletCreateCoolTime = 900;
+	int kBulletCreateCoolTime = 30;
 	//一度に生成する弾の数
 	const int kCreateBulletNum = 5;
 
