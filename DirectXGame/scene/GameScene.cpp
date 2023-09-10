@@ -261,6 +261,9 @@ void GameScene::Initialize() {
 	//エネミーのワールドトランスフォームをカメラにセット
 	enemyCamera_->SetTarget(&enemy_->GetWorldTransform());
 
+	gameCamera_ = std::make_unique<GameCamera>();
+	gameCamera_->Initialize();
+
 	player_->SetViewProjection(&followCamera_->GetViewProjection());
 
 	//プレイヤー弾に敵のworldTransformをセット
@@ -353,6 +356,16 @@ void GameScene::Update() {
 		preJoyState = joyState;
 	}
 
+	if (scene_ == Scene::Title || scene_ == Scene::Control) {
+		viewProjection_.matView = gameCamera_->GetViewProjection().matView;
+		viewProjection_.matProjection = gameCamera_->GetViewProjection().matProjection;
+		viewProjection_.TransferMatrix();
+
+	} else {
+		viewProjection_.matView = followCamera_->GetViewProjection().matView;
+		viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
+		viewProjection_.TransferMatrix();
+	}
 	
 
 	#ifdef _DEBUG
@@ -407,6 +420,18 @@ void GameScene::Draw() {
 
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
+	if (scene_ == Scene::Title || scene_ == Scene::Control) {
+		skyDome_->Draw(viewProjection_);
+
+		ground_->Draw(viewProjection_);
+
+		// wall_->Draw(viewProjection_);
+
+		rock_->Draw(viewProjection_);
+
+	} 
+	
+
 	if (scene_ == Scene::Main || scene_ == Scene::Pose || scene_ == Scene::GameOver) {
 
 		player_->Draw(viewProjection_);
@@ -446,7 +471,7 @@ void GameScene::Draw() {
 void GameScene::DrawTexture() {
 	if (scene_ == Scene::Title || scene_ == Scene::Control) {
 
-		sprite_[0]->Draw();
+		//sprite_[0]->Draw();
 		titleSprite_->Draw();
 		sprite_[1]->Draw();
 		sprite_[1]->SetColor({0, 0, 0, 0.1f});
@@ -454,7 +479,7 @@ void GameScene::DrawTexture() {
 		sprite_[4]->Draw();
 	}
 	if (scene_ == Scene::Control) {
-		sprite_[1]->SetColor({0, 0, 0, 0.8f});
+		sprite_[1]->SetColor({0, 0, 0, 0.98f});
 		conSprite_[0]->Draw();
 		conSprite_[1]->Draw();
 		conSprite_[2]->Draw();
@@ -1123,6 +1148,8 @@ void GameScene::TitleInitialize() {
 }
 
 void GameScene::TitleUpdate() {
+	gameCamera_->Update();
+
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) &&
 		    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_B)) {
@@ -1179,9 +1206,9 @@ void GameScene::MainUpdate() {
 	    }
 	}*/
 
-	if (input_->TriggerKey(DIK_RETURN)) {
+	/*if (input_->TriggerKey(DIK_RETURN)) {
 		isDebugCameraActive_ = !isDebugCameraActive_;
-	}
+	}*/
 	ImGui::Begin("SELECTMODE");
 	ImGui::Text("select = %d", selectMode);
 	ImGui::End();
@@ -1192,16 +1219,7 @@ void GameScene::MainUpdate() {
 
 #endif // _DEBUG
 
-	if (isDebugCameraActive_) {
-		// デバッグカメラの更新
-		viewProjection_.matView = enemyCamera_->GetViewProjection().matView;
-		viewProjection_.matProjection = enemyCamera_->GetViewProjection().matProjection;
-		viewProjection_.TransferMatrix();
-	} else {
-		viewProjection_.matView = followCamera_->GetViewProjection().matView;
-		viewProjection_.matProjection = followCamera_->GetViewProjection().matProjection;
-		viewProjection_.TransferMatrix();
-	}
+	
 
 	CheckAllCollisions();
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {

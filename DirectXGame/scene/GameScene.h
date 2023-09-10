@@ -18,6 +18,7 @@
 #include "DebugCamera.h"
 #include"FollowCamera.h"
 #include"EnemyCamera.h"
+#include"GameCamera.h"
 #include<filesystem>
 #include<sstream>
 #include<memory>
@@ -203,6 +204,9 @@ private: // メンバ変数
 
 	//エネミーのカメラ
 	std::unique_ptr<EnemyCamera> enemyCamera_;
+
+	//ゲーム共通カメラ
+	std::unique_ptr<GameCamera> gameCamera_;
 
 	//天球
 	std::unique_ptr<SkyDome> skyDome_;

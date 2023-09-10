@@ -4,6 +4,8 @@
 void GameCamera::Initialize() {
 	viewProjection_.farZ = 2000.0f;
 	viewProjection_.nearZ = 0.01f;
+
+	viewProjection_.rotation_.y = 0.0f;
 	viewProjection_.Initialize();
 	destinationAngleX_ = 0.2f;
 
@@ -31,12 +33,12 @@ void GameCamera::SetTarget(const WorldTransform* target) {
 }
 
 void GameCamera::Update() {
+	viewProjection_.rotation_.y += 0.005f;
 
-
-	viewProjection_.rotation_.y =
+	/*viewProjection_.rotation_.y =
 	    vector_->LerpShortAngle(viewProjection_.rotation_.y, destinationAngleY_, 0.1f);
 	viewProjection_.rotation_.x =
-	    vector_->LerpShortAngle(viewProjection_.rotation_.x, destinationAngleX_, 0.1f);
+	    vector_->LerpShortAngle(viewProjection_.rotation_.x, destinationAngleX_, 0.1f);*/
 
 	if (target_) {
 		// 追従座標の補完
@@ -60,11 +62,11 @@ void GameCamera::Update() {
 
 	// ビュー行列の更新
 	viewProjection_.UpdateMatrix();
-#ifdef _DEBUG
-	ImGui::Begin("Camera");
-	ImGui::DragFloat3("Rotate", &viewProjection_.rotation_.x, 0.1f);
-	ImGui::End();
-#endif
+//#ifdef _DEBUG
+//	ImGui::Begin("Camera");
+//	ImGui::DragFloat3("Rotate", &viewProjection_.rotation_.x, 0.1f);
+//	ImGui::End();
+//#endif
 }
 
 Vector3 GameCamera::offsetCalculation(const Vector3& offset) const {
