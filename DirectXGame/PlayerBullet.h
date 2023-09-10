@@ -54,6 +54,8 @@ public:
 	// 衝突したら呼び出す関数
 	void OnCollision();
 
+	bool IsInvincible() { return isInvincible_; };
+
 	float radius = 1.0f;
 
 private:
@@ -126,7 +128,7 @@ private:
 	bool isInvincible_ = false;
 
 	//攻撃終了時の無敵時間
-	const int kAttackEndInvincible = 10;
+	const int kAttackEndInvincible = 30;
 	int invincibleTime_;
 
 	Vector3 rotate_;

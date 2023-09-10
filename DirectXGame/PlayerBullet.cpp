@@ -262,9 +262,11 @@ void PlayerBullet::OnCollision() {
 	}
 	if (state_ == PlayerBulletState::Move)
 	{
+		/*
 		velocity_.x *= -1.0f;
 		velocity_.y *= -1.0f;
 		velocity_.z *= -1.0f;
+		*/
 		isInvincible_ = true;
 		invincibleTime_ = kAttackEndInvincible;
 	} else if (!isInvincible_)
@@ -273,6 +275,8 @@ void PlayerBullet::OnCollision() {
 		state_ = PlayerBulletState::Death;
 		t = 0.0f;
 		rotate_ = worldTransform_.rotation_;
+		isInvincible_ = true;
+		invincibleTime_ = kAttackEndInvincible;
 		return;
 	}
 	state_ = PlayerBulletState::Return;

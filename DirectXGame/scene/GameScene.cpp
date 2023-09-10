@@ -555,8 +555,12 @@ void GameScene::CheckAllCollisions() {
 				{
 					enemy_->OnCollision();
 				}
+				if (bullet->GetState() == PlayerBullet::PlayerBulletState::Move ||
+					!bullet->IsInvincible())
+				{
+					ENSEHandle_ = audio_->PlayWave(SEDataHandle_);
+				}
 				bullet->OnCollision();
-				ENSEHandle_ = audio_->PlayWave(SEDataHandle_);
 			}
 		}
 	}
