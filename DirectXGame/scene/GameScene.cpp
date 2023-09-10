@@ -128,8 +128,8 @@ void GameScene::MakeTexture() {
 	conSprite_[2] = Sprite::Create(textureHandleCon[2], {140, 60}, {1, 1, 1, 1}, {0.5f, 0.5f});
 	conSprite_[3] = Sprite::Create(textureHandleCon[3], {780, 230}, {1, 1, 1, 1}, {0.5f, 0.5f});
 	conSprite_[4] = Sprite::Create(textureHandleCon[4], {500, 160}, {1, 1, 1, 1}, {0.5f, 0.5f});
-	conSprite_[5] = Sprite::Create(textureHandleCon[5], {480, 310}, {1, 1, 1, 1}, {0.5f, 0.5f});
-	conSprite_[6] = Sprite::Create(textureHandleCon[6], {800, 380}, {1, 1, 1, 1}, {0.5f, 0.5f});
+	conSprite_[5] = Sprite::Create(textureHandleCon[5], {450, 310}, {1, 1, 1, 1}, {0.5f, 0.5f});
+	conSprite_[6] = Sprite::Create(textureHandleCon[6], {830, 380}, {1, 1, 1, 1}, {0.5f, 0.5f});
 
 	PLSprite_ = Sprite::Create(textureHandlePL, {500, 670}, {1, 1, 1, 1}, {0.5f, 0.5f});
 	ENSprite_ = Sprite::Create(textureHandleEN, {50, 70}, {1, 1, 1, 1}, {0.5f, 0.5f});
