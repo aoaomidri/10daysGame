@@ -96,21 +96,47 @@ void PlayerBullet::Idle()
 	
 	static MyVector vector;
 	static MyMatrix matrix;
+	if (isMove_)
+	{
+		if (player_->GetBehavior() == Player::Behavior::kDash) {
+			idleFollow = idleSpeed;
+		} else {
+			idleFollow = 0.02f;
+		}
 
-	if (player_->GetBehavior() == Player::Behavior::kDash){
-		idleFollow = idleSpeed;
-	} else {
-		idleFollow = 0.02f;
+		velocity_ = GetTargetWorldPosition() - worldTransform_.translation_;
+		velocity_ = vector.Multiply(idleFollow, velocity_);
+		worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
+		Vector3 velocityXZ{velocity_.x, 0.0f, velocity_.z};
+		float besage = vector.Length(velocityXZ);
+		worldTransform_.rotation_.x = std::atan2(-velocity_.y, besage);
+
+		worldTransform_.AddTransform(velocity_);
+
 	}
-	
-	velocity_ = GetTargetWorldPosition() - worldTransform_.translation_;
-	velocity_ = vector.Multiply(idleFollow,velocity_);
-	worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
-	Vector3 velocityXZ{velocity_.x, 0.0f, velocity_.z};
-	float besage = vector.Length(velocityXZ);
-	worldTransform_.rotation_.x = std::atan2(-velocity_.y, besage);
+	else
+	{
+		velocity_ = player_->GetWorldPosition(player_->GetWorldTransform().matWorld_) -
+		            worldTransform_.translation_;
+		worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
+		//Vector3 velocityXZ{velocity_.x, 0.0f, velocity_.z};
+		//float besage = vector.Length(velocityXZ);
+		//worldTransform_.rotation_.x = std::atan2(-velocity_.y, besage);
 
-	worldTransform_.AddTransform(velocity_);
+	}
+
+	float distance = vector.Length(player_->GetWorldPosition(player_->GetWorldTransform().matWorld_) - worldTransform_.translation_);
+	//float speed = vector.Length(velocity_);
+	//isMove_ = true;
+	if (distance > kFollowArea+0.1f)
+	{
+		isMove_ = true;
+	}
+	distance = vector.Length(GetTargetWorldPosition() - worldTransform_.translation_);
+	if (distance <= kFollowOutArea)
+	{
+		isMove_ = false;
+	}
 }
 
 void PlayerBullet::Stance() {
