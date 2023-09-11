@@ -1231,7 +1231,7 @@ void GameScene::MainUpdate() {
 		sceneRequest_ = Scene::End;
 	}
 
-	if (player_->GetPlayerLife() <= 0.0f) {
+	if (player_->IsDead()) {
 		sceneRequest_ = Scene::GameOver;
 	}
 

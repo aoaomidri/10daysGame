@@ -58,6 +58,9 @@ void Player::Initialize(const std::vector<Model*>& models) {
 
 	//基本挙動初期化
 	BehaviorRootInitialize();
+	
+	//hpが0以下になったときに一度だけ呼び出す
+	collDeath_ = true;
 }
 
 void Player::Update() {
@@ -89,6 +92,9 @@ void Player::Update() {
 		case Behavior::kShot:
 			BehaviorShotInitialize();
 			break;
+		case Behavior::kDead:
+			BehaviorDeathInitialize();
+			break;
 		}	
 		
 	}	
@@ -105,6 +111,9 @@ void Player::Update() {
 		break;
 	case Behavior::kShot:
 		BehaviorShotUpdate();
+		break;
+	case Behavior::kDead:
+		BehaviorDeathUpdate();
 		break;
 	}
 
@@ -143,6 +152,11 @@ void Player::Update() {
 		bullet->Update();
 	}	
 
+	//死亡アニメーション再生(まだデスフラグは立てない)
+	if (GetPlayerLife() <= 0.0f && collDeath_) {
+		behaviorRequest_ = Behavior::kDead;
+		collDeath_ = false;
+	}
 }
 
 void Player::Draw(const ViewProjection& viewProjection) {
@@ -557,6 +571,27 @@ void Player::BehaviorShotUpdate() {
 	// 座標を加算
 	worldTransform_.AddTransform(move);
 	worldTransformBody_.AddTransform(move);
+}
+
+void Player::BehaviorDeathInitialize()
+{
+	t = 0.0f;
+	rotate_ = worldTransformBody_.rotation_;
+}
+
+void Player::BehaviorDeathUpdate(){
+	//static MyVector myvector;
+	//color_ = textureHandleRed_;
+	rotate_ = Vector3{0.0f, 0.0f, float(M_PI) / 2.0f};
+	t += 0.02f;
+	worldTransformBody_.rotation_ = vector.Multiply(min(t, 1.0f), rotate_);
+	worldTransformBody_.translation_.y -= 0.2f;
+	if (t >= 1.0f) {
+		scale = vector.Multiply((1.0f - (t - 1.0f)), scale);
+	}
+	if (t >= 2.0f) {
+		isDead_ = true;
+	}
 }
 
 void Player::OnCollision() { 

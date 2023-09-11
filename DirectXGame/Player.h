@@ -46,14 +46,20 @@ public:
 	void BehaviorRootInitialize();
 	//ダッシュ行動初期化
 	void BehaviorDashInitialize();
-	//射撃攻撃行動初期化
+	// 射撃攻撃行動初期化
 	void BehaviorShotInitialize();
+	// 死亡アニメーション初期化
+	void BehaviorDeathInitialize();
+
 	// 通常行動更新
 	void BehaviorRootUpdate();
 	//ダッシュ行動更新
 	void BehaviorDashUpdate();
 	//射撃攻撃行動更新
 	void BehaviorShotUpdate();
+	// 死亡アニメーション更新
+	void BehaviorDeathUpdate();
+
 
 	void SetViewProjection(const ViewProjection* viewprojection) {
 		viewProjection_ = viewprojection;
@@ -99,6 +105,8 @@ public:
 	
 	void DrawImgui();
 
+	bool IsDead() { return isDead_; };
+
 	const WorldTransform& GetLArmWorldTransform() { return worldTransformL_arm_; };
 
 	// 振る舞い
@@ -106,6 +114,7 @@ public:
 		kRoot, // 通常状態
 		kDash, // ダッシュ中
 		kShot, // 射撃攻撃中
+		kDead, // 死亡アニメーション
 	};
 
 private:
@@ -275,6 +284,14 @@ private:
 
 	//敵の座標
 	const WorldTransform* worldTransformEnemy_;
+
+	// デスフラグ
+	bool isDead_ = false;
+
+	//死亡アニメーション用の奴
+	float t = 0.0f;
+	Vector3 rotate_;
+	bool collDeath_ = false;
 
 public:
 
