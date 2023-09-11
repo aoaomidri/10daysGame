@@ -348,7 +348,7 @@ void Player::BehaviorRootUpdate() {
 	}
 
 	if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) {
-		if (bulletCreateCoolTime<=0)
+		if (bulletCreateCoolTime<=0 && kBulletMax > GetBulletNumMax())
 		{
 			bulletCreateCoolTime = kBulletCreateCoolTime;
 			AddBullet(kCreateBulletNum);
@@ -824,6 +824,11 @@ void Player::AddBullet(){
 }
 void Player::AddBullet(int n)
 {
+	int num = GetBulletNumMax();
+	if (kBulletMax < num+n)
+	{
+		n = kBulletMax - num;
+	}
 	for (int index = 0; index < n; index++) {
 		// const float kBulletSpeed = 0.0f;
 

@@ -265,7 +265,7 @@ private:
 	// 待機中の弾の数
 	int BulletNum = 0;
 	//弾の総数
-	int BulletMax = 50;
+	int BulletMax = 0;
 	//現在の弾を調べる関数
 	int CheckBullet();
 	int CheckBulletAll();
@@ -316,6 +316,6 @@ public:
 
 	// 最初に生成する弾の数
 	const int kBulletNum = 50;
-
+	static const int kBulletMax = 99;
 };
 
