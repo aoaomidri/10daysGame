@@ -38,12 +38,7 @@ void FollowCamera::Update() {
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		
 
-		if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) {
-			/*if (distance <= -10.0f && distance >= -100.0f){
-				distance += (float)joyState.Gamepad.sThumbRY / SHRT_MAX;
-			} */		
-			
-		} else {
+		{
 			destinationAngleY_ += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * rotateSpeed;
 
 			if (destinationAngleX_>-1.57f&&destinationAngleX_<1.57f) {
