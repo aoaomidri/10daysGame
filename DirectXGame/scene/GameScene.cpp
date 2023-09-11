@@ -1170,16 +1170,12 @@ void GameScene::TitleUpdate() {
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) &&
 		    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_B)) {
-			//sceneRequest_ = Scene::Control;
-			sceneTransition_->Initialize(textureParticleFish);
-			sceneTransition_->SetStartTransition(true);
+			sceneRequest_ = Scene::Control;
+			
 		}
 	}
 
-	if (sceneTransition_->GetCompleteTransition()) {
-		sceneTransition_->SetCompleteTransition(false);
-		sceneRequest_ = Scene::Control;
-	}
+	
 }
 
 void GameScene::ControlInitialize() {
@@ -1191,9 +1187,14 @@ void GameScene::ControlUpdate() {
 		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) &&
 		    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_B)) {
 			//audio_->StopWave(TitleBGMHandle_);
-
-			sceneRequest_ = Scene::Main;
+			sceneTransition_->Initialize(textureParticleFish);
+			sceneTransition_->SetStartTransition(true);
+			
 		}
+	}
+	if (sceneTransition_->GetCompleteTransition()) {
+		sceneTransition_->SetCompleteTransition(false);
+		sceneRequest_ = Scene::Main;
 	}
 }
 
