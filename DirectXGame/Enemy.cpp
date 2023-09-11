@@ -18,7 +18,7 @@ Enemy::~Enemy() {
 void Enemy::Initialize(const std::vector<Model*>& models) { 
 	BaseCharacter::Initialize(models);
 	worldTransform_.translation_ = {0.0f, 5.0f, 150.0f};
-	worldTransform_.rotation_ = {0.0f, 0.0f, 0.0f};
+	worldTransform_.rotation_ = {0.0f, 3.14f, 0.0f};
 
 	move = {0.5f, 0.0f, 0.5f};
 
