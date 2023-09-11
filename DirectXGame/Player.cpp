@@ -63,9 +63,10 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	collDeath_ = true;
 
 	textureHandleEgg_ = TextureManager::Load("egg.png");
+	uint32_t textureback = TextureManager::Load("blackEgg.png");
 
-	spriteEnergy_ = Sprite::Create(textureHandleEgg_, {640.0f, 320.0f}, {1, 1, 1, 1}, {0.5f, 1.0f});
-	
+	spriteEnergy_ = Sprite::Create(textureHandleEgg_, energyPosition, {1, 1, 1, 1}, {0.5f, 1.0f});
+	spriteEnergiBack_ = Sprite::Create(textureback, energyPosition, {1, 1, 1, 1}, {0.5f, 1.0f});
 }
 
 void Player::Update() {
@@ -184,11 +185,18 @@ void Player::DrawUI() {
 		sprite2DReticle_->Draw();
 	}
 	ratio = float(kBulletCreateCoolTime-bulletCreateCoolTime) / float(kBulletCreateCoolTime);
+	energyColor_ = kGray;
+	if (ratio == 1.0f)
+	{
+		energyColor_ = kWhite;
+	}
+	spriteEnergy_->SetColor(energyColor_);
 	spriteEnergy_->SetPosition(energyPosition);
 	spriteEnergy_->SetAnchorPoint(ancor);
-	spriteEnergy_->SetSize({eggSize.x*2.0f, eggSize.y * ratio*2.0f});
-	//eggSize.y * ratio;
+	spriteEnergy_->SetSize({eggSize.x * 2.0f, eggSize.y * ratio * 2.0f});
+	spriteEnergiBack_->SetSize({eggSize.x * 2.0f, eggSize.y * 2.0f});
 	spriteEnergy_->SetTextureRect(Vector2{0.0f, 64.0f*(1.0f-ratio)}, {eggSize.x, eggSize.y*ratio});
+	spriteEnergiBack_->Draw();
 	spriteEnergy_->Draw();
 }
 
