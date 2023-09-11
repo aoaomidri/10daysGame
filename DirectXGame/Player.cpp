@@ -64,9 +64,10 @@ void Player::Initialize(const std::vector<Model*>& models) {
 
 	textureHandleEgg_ = TextureManager::Load("egg.png");
 	uint32_t textureback = TextureManager::Load("blackEgg.png");
-
+	uint32_t textureLB = TextureManager::Load("LB.png");
 	spriteEnergy_ = Sprite::Create(textureHandleEgg_, energyPosition, {1, 1, 1, 1}, {0.5f, 1.0f});
 	spriteEnergiBack_ = Sprite::Create(textureback, energyPosition, {1, 1, 1, 1}, {0.5f, 1.0f});
+	spriteEnergyButton_ = Sprite::Create(textureLB, energyPosition, {1, 1, 1, 1}, {0.5f, 0.5f});
 }
 
 void Player::Update() {
@@ -180,14 +181,11 @@ void Player::Draw(const ViewProjection& viewProjection) {
 	
 }
 
-void Player::DrawUI() { 
-	if (joyState.Gamepad.bLeftTrigger != 0) {
-		sprite2DReticle_->Draw();
-	}
-	ratio = float(kBulletCreateCoolTime-bulletCreateCoolTime) / float(kBulletCreateCoolTime);
+void Player::EnergyUpdate()
+{
+	ratio = float(kBulletCreateCoolTime - bulletCreateCoolTime) / float(kBulletCreateCoolTime);
 	energyColor_ = kGray;
-	if (ratio == 1.0f)
-	{
+	if (ratio == 1.0f) {
 		energyColor_ = kWhite;
 	}
 	spriteEnergy_->SetColor(energyColor_);
@@ -195,9 +193,25 @@ void Player::DrawUI() {
 	spriteEnergy_->SetAnchorPoint(ancor);
 	spriteEnergy_->SetSize({eggSize.x * 2.0f, eggSize.y * ratio * 2.0f});
 	spriteEnergiBack_->SetSize({eggSize.x * 2.0f, eggSize.y * 2.0f});
-	spriteEnergy_->SetTextureRect(Vector2{0.0f, 64.0f*(1.0f-ratio)}, {eggSize.x, eggSize.y*ratio});
+	spriteEnergy_->SetTextureRect(
+	    Vector2{0.0f, 64.0f * (1.0f - ratio)}, {eggSize.x, eggSize.y * ratio});
+
+	spriteEnergyButton_->SetSize(buttonSize);
+	spriteEnergyButton_->SetPosition(buttonPosition);
+	spriteEnergyButton_->SetColor(buttonColor_);
+}
+
+void Player::DrawUI() { 
+	if (joyState.Gamepad.bLeftTrigger != 0) {
+		sprite2DReticle_->Draw();
+	}
+	
 	spriteEnergiBack_->Draw();
 	spriteEnergy_->Draw();
+	if (ratio==1.0f)
+	{
+		spriteEnergyButton_->Draw();
+	}
 }
 
 void Player::BehaviorRootInitialize() { 
@@ -339,6 +353,7 @@ void Player::BehaviorRootUpdate() {
 			AddBullet(kCreateBulletNum);
 		}
 	}
+	EnergyUpdate();
 }
 
 void Player::InitializeFloatingGimmick() { 
@@ -655,6 +670,8 @@ void Player::DrawImgui() {
 	ImGui::DragFloat2("position",&energyPosition.x,1.0f);
 	ImGui::DragFloat2("Ancor", &ancor.x, 0.1f, 0.0f, 1.0f);
 	ImGui::DragFloat("ratio", &ratio, 0.1f, 0.0f, 1.0f);
+	ImGui::DragFloat2("buttonposition", &buttonPosition.x, 1.0f);
+	ImGui::DragFloat2("buttonSize", &buttonSize.x, 1.0f);
 	ImGui::End();
 }
 

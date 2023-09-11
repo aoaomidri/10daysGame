@@ -304,6 +304,11 @@ private:
 	const Vector4 kWhite{1.0f, 1.0f, 1.0f, 1.0f};
 	const Vector4 kGray{0.5f, 0.5f, 0.5f, 1.0f};
 	Vector4 energyColor_;
+	Sprite* spriteEnergyButton_;
+	Vector2 buttonPosition = {1180.0f,490.0f};
+	Vector2 buttonSize = {64.0f,64.0f};
+	Vector4 buttonColor_=kWhite;
+	void EnergyUpdate();
 
 public:
 
