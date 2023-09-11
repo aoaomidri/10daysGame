@@ -99,15 +99,15 @@ void GameScene::MakeTexture() {
 	sprite_[3] = Sprite::Create(textureHandleText[0], {570, 500}, {1, 1, 1, 1}, {0.5f, 0.5f});
 	sprite_[4] = Sprite::Create(textureHandleText[1], {750, 500}, {1, 1, 1, 1}, {0.5f, 0.5f});
 	sprite_[5] =
-	    Sprite::Create(textureHandleText[2], {640, 350}, {0.3f, 0.3f, 0.3f, 0.9f}, {0.5f, 0.5f});
+	    Sprite::Create(textureHandleText[2], {640, 350}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.5f, 0.5f});
 	sprite_[5]->SetSize({284.0f, 134.0f});
 
 	sprite_[6] =
-	    Sprite::Create(textureHandleText[3], {640, 550}, {0.3f, 0.3f, 0.3f, 0.9f}, {0.5f, 0.5f});
+	    Sprite::Create(textureHandleText[3], {640, 550}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.5f, 0.5f});
 	sprite_[6]->SetSize({284.0f, 134.0f});
 
 	sprite_[7] =
-	    Sprite::Create(textureHandleText[4], {640, 100}, {0.3f, 0.3f, 0.3f, 0.9f}, {0.5f, 0.5f});
+	    Sprite::Create(textureHandleText[4], {640, 100}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.5f, 0.5f});
 	sprite_[7]->SetSize({362.0f, 138.0f});
 	// 256//128
 	sprite_[8] = Sprite::Create(textureHandleText[5], {640, 200}, {1, 1, 1, 1}, {0.5f, 0.5f});
@@ -116,11 +116,11 @@ void GameScene::MakeTexture() {
 	sprite_[9] = Sprite::Create(textureHandleText[6], {450, 350}, {1, 1, 1, 1}, {0.5f, 0.5f});
 
 	sprite_[10] =
-	    Sprite::Create(textureHandleText[7], {640, 100}, {0.3f, 0.3f, 0.3f, 0.9f}, {0.5f, 0.5f});
+	    Sprite::Create(textureHandleText[7], {640, 100}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.5f, 0.5f});
 	sprite_[10]->SetSize({640.0f, 128.0f});
 
 	sprite_[11] =
-	    Sprite::Create(textureHandleText[8], {640, 350}, {0.3f, 0.3f, 0.3f, 0.9f}, {0.5f, 0.5f});
+	    Sprite::Create(textureHandleText[8], {640, 350}, {1.0f, 1.0f, 1.0f, 1.0f}, {0.5f, 0.5f});
 	sprite_[11]->SetSize({284.0f, 134.0f});
 
 	conSprite_[0] = Sprite::Create(textureHandleCon[0], {640, 360}, {1, 1, 1, 1}, {0.5f, 0.5f});
