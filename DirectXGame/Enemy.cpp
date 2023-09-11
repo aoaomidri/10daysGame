@@ -486,6 +486,10 @@ void Enemy::Tackle(float tackleSpeed) {
 			attack_ = Attack::Normal;
 		}
 	 }
+	 worldTransform_.rotation_.y = std::atan2(move.x, move.z);
+	 Vector3 velocityXZ{move.x, 0.0f, move.z};
+	 float besage = vector_.Length(velocityXZ);
+	 worldTransform_.rotation_.x = std::atan2(-move.y, besage);
 	 if (isTackle) {
 		worldTransform_.AddTransform(move);
 	 }
