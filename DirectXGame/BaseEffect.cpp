@@ -11,6 +11,16 @@ void BaseEffect::Initialize(Model* model) {
 	isDraw_ = false;
 }
 
+void BaseEffect::Initialize(uint32_t textureHandle) {
+#ifdef _DEBUG
+	assert(textureHandle);
+#endif
+
+	textureHandle_ = textureHandle;
+	emitter_.worldTransform.Initialize();
+	isDraw_ = false;
+}
+
 // 更新
 void BaseEffect::Update() {
 	emitter_.worldTransform.UpdateMatrix(emitter_.worldTransform.scale_);
@@ -29,5 +39,13 @@ void BaseEffect::Draw(const ViewProjection& viewProjection) {
 		Particle* particle = particleIt->get();
 		//粒子の描画
 		particleModel_->Draw(particle->worldTransform, viewProjection);
+	}
+}
+
+void BaseEffect::Draw() {
+	for (auto spriteParticlesIt = spriteParticles_.begin(); spriteParticlesIt != spriteParticles_.end(); spriteParticlesIt++) {
+		SpriteParticle* particle = spriteParticlesIt->get();
+		// 粒子の描画
+		particle->sprite->Draw();
 	}
 }

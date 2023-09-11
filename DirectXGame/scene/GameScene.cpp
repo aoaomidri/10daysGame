@@ -78,6 +78,7 @@ void GameScene::TextureInitialize() {
 	textureHandleNumber[9] = TextureManager::Load("Number/number9.png");
 	textureHandleNumber[10] = TextureManager::Load("Number/slash.png");
 
+	textureParticleFish = TextureManager::Load("fish.png");
 }
 
 void GameScene::MakeTexture() {
@@ -149,7 +150,6 @@ void GameScene::MakeTexture() {
 
 	slashSprite_ = Sprite::Create(textureHandleNumber[10], {1170, 640}, {1, 1, 1, 1}, {0.5f, 0.5f});
 	slashSprite_->SetSize({144.0f, 144.0f});
-
 }
 
 void GameScene::SoundInitialize() {
@@ -365,6 +365,8 @@ void GameScene::Update() {
 	}
 	
 
+	sceneTransition_->Update();
+
 	#ifdef _DEBUG
 	/*if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 	    if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_Y) {
@@ -553,6 +555,13 @@ void GameScene::DrawTexture() {
 		sprite_[4]->Draw();
 		sprite_[8]->Draw();
 	}
+
+	sceneTransition_->Draw();
+
+	// スプライト描画後処理
+	Sprite::PostDraw();
+
+#pragma endregion
 }
 
 void GameScene::CheckAllCollisions() {
@@ -1150,10 +1159,16 @@ void GameScene::TitleUpdate() {
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) &&
 		    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_B)) {
-			sceneRequest_ = Scene::Control;
+			//sceneRequest_ = Scene::Control;
+			sceneTransition_->Initialize(textureParticleFish);
+			sceneTransition_->SetStartTransition(true);
 		}
 	}
-	
+
+	if (sceneTransition_->GetCompleteTransition()) {
+		sceneTransition_->SetCompleteTransition(false);
+		sceneRequest_ = Scene::Control;
+	}
 }
 
 void GameScene::ControlInitialize() {
