@@ -522,7 +522,7 @@ void Enemy::BehaviorFirstUpdate() {
 		 //worldTransformR_parts_.rotation_.x += 1.0f / (static_cast<float>(M_PI) * 2.0f);
 
 		worldTransform_.rotation_.y = std::atan2(vector.x, vector.z);
-
+		worldTransformRoll_.rotation_.z = 0.0f; 
 
 	}
 	 /*if (enemyMoveCount >= enemyMoveCountMax) {
