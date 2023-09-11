@@ -310,6 +310,12 @@ private:
 	Vector4 buttonColor_=kWhite;
 	void EnergyUpdate();
 
+	//無敵判定
+	bool isInvincible_ = false;
+	// 被弾時の無敵時間
+	const int kHitInvincible = 30;
+	int invincibleTime_;
+
 public:
 
 	Behavior GetBehavior() { return behavior_; };

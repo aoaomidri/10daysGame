@@ -168,6 +168,12 @@ void Player::Update() {
 		behaviorRequest_ = Behavior::kDead;
 		collDeath_ = false;
 	}
+
+	// 無敵時間の処理
+	if (--invincibleTime_ < 0) {
+		isInvincible_ = false;
+	}
+
 	EnergyUpdate();
 }
 
@@ -633,13 +639,18 @@ void Player::BehaviorDeathUpdate(){
 }
 
 void Player::OnCollision() { 
-	for (PlayerBullet* bullet : bullets_) {
-		if (bullet->GetState() == PlayerBullet::PlayerBulletState::Idle) {
-			bullet->OnCollision();
-			return;
+	if (!isInvincible_)
+	{
+		isInvincible_ = true;
+		invincibleTime_ = kHitInvincible;
+		for (PlayerBullet* bullet : bullets_) {
+			if (bullet->GetState() == PlayerBullet::PlayerBulletState::Idle) {
+				bullet->OnCollision();
+				return;
+			}
 		}
+		PlayerLife -= 50;
 	}
-	PlayerLife-=50;
 }
 
 void Player::DrawImgui() {
