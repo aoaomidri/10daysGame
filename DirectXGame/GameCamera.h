@@ -29,7 +29,7 @@ private:
 	const float offset_t = 0.1f;
 
 	// 補完レート
-	float t = 0.1f;
+	float t = 0.05f;
 
 	// 目標角度
 	float destinationAngleY_ = 0.0f;
@@ -45,7 +45,11 @@ private:
 
 	float minRotate;
 
-	float rotateSpeed = 0.005f;
+	float rotateSpeed;
+
+	float nowRotate;
+
+	bool isSetRotate = true;
 
 	// 行列の作成
 	std::unique_ptr<MyMatrix> matrix_;
@@ -60,9 +64,17 @@ public:
 
 	void Reset();
 
+	void DrawImgui();
+
 	Vector3 offsetCalculation(const Vector3& offset) const;
 
+	void LostTarget() { target_ = nullptr; };
+
 	void SetTarget(const WorldTransform* target);
+
+	void SetViewProjection(const ViewProjection target) { viewProjection_ = target; };
+
+	float GetNowRotate() { return nowRotate; }
 
 	ViewProjection& GetViewProjection() { return viewProjection_; }
 

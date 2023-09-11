@@ -224,13 +224,13 @@ void Enemy::FinAnimationUpdate() {
 }
 
 void Enemy::Draw(const ViewProjection& viewProjection) {
-	if (isDead == false)
+	//if (isDead == false)
 	{
 		models_[0]->Draw(worldTransform_, viewProjection);
 		models_[1]->Draw(worldTransformL_parts_, viewProjection);
 		//models_[2]->Draw(worldTransformR_parts_, viewProjection);
 
-		model_->Draw(worldTransformHitBox_, viewProjection);
+		//model_->Draw(worldTransformHitBox_, viewProjection);
 	}
 
 	for (EnemyBullet* bullet:bullets_) {

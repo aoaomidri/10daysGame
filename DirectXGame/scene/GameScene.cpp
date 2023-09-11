@@ -353,7 +353,7 @@ void GameScene::Update() {
 		preJoyState = joyState;
 	}
 
-	if (scene_ == Scene::Title || scene_ == Scene::Control) {
+	if (scene_ == Scene::Title || scene_ == Scene::Control || enemy_->GetEnemyLife() <= 0.0f) {
 		viewProjection_.matView = gameCamera_->GetViewProjection().matView;
 		viewProjection_.matProjection = gameCamera_->GetViewProjection().matProjection;
 		viewProjection_.TransferMatrix();
@@ -1141,7 +1141,7 @@ bool GameScene::IsCollisionOBBOBB(const OBB& obb1, const OBB& obb2) {
 void GameScene::TitleInitialize() { 
 	//TitleBGMHandle_ = audio_->PlayWave(TitleBGMDataHandle_, true);
 	selectMode = 0;
-
+	gameCamera_->Initialize();
 }
 
 void GameScene::TitleUpdate() {
@@ -1188,13 +1188,15 @@ void GameScene::MainUpdate() {
 
 	ground_->Update();
 
-	//wall_->Update();
-
 	rock_->Update();
 
 	followCamera_->Update();
 
 	enemyCamera_->Update();
+
+	gameCamera_->DrawImgui();
+
+	gameCamera_->Update();
 
 #ifdef _DEBUG
 	/*if (Input::GetInstance()->GetJoystickState(0, joyState)) {
@@ -1228,6 +1230,17 @@ void GameScene::MainUpdate() {
 
 	if (enemy_->GetEnemyLife()<=0.0f) {
 		//audio_->StopWave(MainBGMHandle_);
+		//sceneRequest_ = Scene::End;
+		gameCamera_->SetTarget(&enemy_->GetWorldTransform());
+
+		viewProjection_.matView = gameCamera_->GetViewProjection().matView;
+		viewProjection_.matProjection = gameCamera_->GetViewProjection().matProjection;
+		
+	} else {
+		gameCamera_->SetViewProjection(followCamera_->GetViewProjection());
+	}
+
+	if (gameCamera_->GetNowRotate()>=6.28f) {
 		sceneRequest_ = Scene::End;
 	}
 
