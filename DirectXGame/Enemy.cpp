@@ -27,11 +27,12 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 
 	worldTransformHitBox_.Initialize();
 	
-
+	worldTransformRoll_.Initialize();
+	worldTransformRoll_.parent_ = &worldTransform_;
 	worldTransformL_parts_.Initialize();
 	worldTransformL_parts_.translation_ = Fin_offset_Base;
 	worldTransformL_parts_.rotation_ = {0.0f, 0.0f, 0.0f};
-	worldTransformL_parts_.parent_ = &worldTransform_;
+	worldTransformL_parts_.parent_ = &worldTransformRoll_;
 	//worldTransformR_parts_.Initialize();
 	//worldTransformR_parts_.rotation_ = {1.57f, 0.0f, 0.0f};
 
@@ -193,6 +194,7 @@ void Enemy::Update() {
 	FinAnimationUpdate();
 	worldTransform_.UpdateMatrix(scale);
 	worldTransformHitBox_.UpdateMatrix(obb.size);
+	worldTransformRoll_.UpdateMatrix(scaleChild);
 	worldTransformL_parts_.UpdateMatrix(scaleChild);
 	//worldTransformR_parts_.UpdateMatrix(scale);
 
@@ -231,7 +233,7 @@ void Enemy::FinAnimationUpdate() {
 void Enemy::Draw(const ViewProjection& viewProjection) {
 	//if (isDead == false)
 	{
-		models_[0]->Draw(worldTransform_, viewProjection);
+		models_[0]->Draw(worldTransformRoll_, viewProjection);
 		models_[1]->Draw(worldTransformL_parts_, viewProjection);
 		//models_[2]->Draw(worldTransformR_parts_, viewProjection);
 
@@ -434,7 +436,7 @@ void Enemy::Tackle(float tackleSpeed) {
 	 // 弾の速度
 	 float kTackleSpeed = tackleSpeed;
 
-	 worldTransform_.rotation_.y += rotate;
+	 worldTransformRoll_.rotation_.z += rotate;
 	 //worldTransformL_parts_.rotation_.x = 1.57f;
 	 //worldTransformR_parts_.rotation_.x = 1.57f;
 	 if (tackleMoveCount < tackleMoveCountMax) {
@@ -501,7 +503,7 @@ void Enemy::BehaviorFirstUpdate() {
 	 //// キャラクターの移動ベクトル
 	if (attack_ == Attack::Tackle) {
 
-		//Tackle(3.0f);
+		Tackle(3.0f);
 	} 
 	if (attack_==Attack::Normal) {
 	

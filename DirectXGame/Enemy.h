@@ -118,6 +118,7 @@ private:
 	//死んだ後の演出に関する変数
 	int deathTimer = 0;
 
+	WorldTransform worldTransformRoll_;
 
 	void Fire(float bulletSpeed);
 
@@ -227,6 +228,7 @@ public:
 
 	// effectモデル
 	Model* model_ = nullptr;
+
 
 
 	void OnCollision();
