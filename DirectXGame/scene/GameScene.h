@@ -242,7 +242,7 @@ private: // メンバ変数
 
 	XINPUT_STATE preJoyState;
 
-	Scene scene_ = Scene::Title;
+	Scene scene_ = Scene::End;
 
 	Scene BeforeScene_;
 

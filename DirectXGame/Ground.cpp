@@ -1,4 +1,5 @@
 #include "Ground.h"
+#include<imgui.h>
 
 void Ground::Initialize(const std::vector<Model*>& models) { 
 	BaseField::Initialize(models); 
@@ -6,6 +7,11 @@ void Ground::Initialize(const std::vector<Model*>& models) {
 }
 
 void Ground::Update() { 
+	#ifdef _DEBUG
+	ImGui::Begin("Ground");
+	ImGui::DragFloat3("Translation", &worldTransform_.translation_.x, 0.1f);
+	ImGui::End();
+#endif
 	worldTransform_.UpdateMatrix(scale);
 }
 

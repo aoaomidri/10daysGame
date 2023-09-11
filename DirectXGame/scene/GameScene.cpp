@@ -1157,7 +1157,15 @@ void GameScene::TitleInitialize() {
 }
 
 void GameScene::TitleUpdate() {
+	gameCamera_->DrawImgui();
+
 	gameCamera_->Update();
+
+	skyDome_->Update();
+
+	ground_->Update();
+
+	rock_->Update();
 
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) &&
