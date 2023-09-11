@@ -168,6 +168,7 @@ void Player::Update() {
 		behaviorRequest_ = Behavior::kDead;
 		collDeath_ = false;
 	}
+	EnergyUpdate();
 }
 
 void Player::Draw(const ViewProjection& viewProjection) {
@@ -353,7 +354,6 @@ void Player::BehaviorRootUpdate() {
 			AddBullet(kCreateBulletNum);
 		}
 	}
-	EnergyUpdate();
 }
 
 void Player::InitializeFloatingGimmick() { 
