@@ -260,6 +260,9 @@ void GameScene::Initialize() {
 		bullet->setEnemy(&enemy_->GetWorldTransform());
 	}
 
+	sceneTransition_ = std::make_unique<SceneTransition>();
+	sceneTransition_->Initialize(textureParticleFish);
+
 #ifdef _DEBUG
 	////軸方向表示の表示を有効にする
 	AxisIndicator::GetInstance()->SetVisible(true);
@@ -343,7 +346,7 @@ void GameScene::Update() {
 		preJoyState = joyState;
 	}
 
-	
+	sceneTransition_->Update();
 
 	#ifdef _DEBUG
 	/*if (Input::GetInstance()->GetJoystickState(0, joyState)) {
@@ -511,6 +514,8 @@ void GameScene::Draw() {
 		sprite_[8]->Draw();
 		
 	}
+
+	sceneTransition_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -1107,10 +1112,16 @@ void GameScene::TitleUpdate() {
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) &&
 		    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_B)) {
-			sceneRequest_ = Scene::Control;
+			//sceneRequest_ = Scene::Control;
+			sceneTransition_->Initialize(textureParticleFish);
+			sceneTransition_->SetStartTransition(true);
 		}
 	}
-	
+
+	if (sceneTransition_->GetCompleteTransition()) {
+		sceneTransition_->SetCompleteTransition(false);
+		sceneRequest_ = Scene::Control;
+	}
 }
 
 void GameScene::ControlInitialize() {

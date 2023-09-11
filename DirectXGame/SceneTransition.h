@@ -2,6 +2,8 @@
 #include "BaseEffect.h"
 #include "Sprite.h"
 
+class GameScene;
+
 class SceneTransition : public BaseEffect {
 public:
 	// 初期化
@@ -11,8 +13,23 @@ public:
 	void Update() override;
 
 	// 描画
-	void Draw(const ViewProjection& viewProjection) override;
+	void Draw() override;
+
+
+public: //ゲッターセッター
+
+	inline void SetStartTransition(bool startTransition) { startTransition_ = startTransition; }
+	inline bool GetStartTransition() { return startTransition_; }
+	inline void SetCompleteTransition(bool completeTransition) { completeTransition_ = completeTransition; }
+	inline bool GetCompleteTransition() { return completeTransition_; }
+
 
 private:
-	std::list<std::unique_ptr<Sprite>> sprites_;
+	int particlePopTime_;
+	const int particlePopCoolTime = 1;
+	bool IsPop_;
+	int transitionTime_;
+	const int kTransitionTime_ = 120;
+	bool startTransition_;
+	bool completeTransition_;
 };

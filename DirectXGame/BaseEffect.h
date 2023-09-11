@@ -22,7 +22,7 @@ struct Particle {
 
 struct SpriteParticle {
 	Sprite* sprite;
-	Vector3 speed;
+	Vector2 speed;
 	int activeTime;
 	bool isActive;
 };
@@ -39,6 +39,7 @@ public:
 
 	// 描画
 	virtual void Draw(const ViewProjection& viewProjection);
+	virtual void Draw();
 
 public: //ゲッターセッター
 	inline void SetEmitterPos(Vector3 pos) { emitter_.worldTransform.translation_ = pos; }

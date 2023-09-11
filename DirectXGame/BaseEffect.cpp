@@ -41,3 +41,11 @@ void BaseEffect::Draw(const ViewProjection& viewProjection) {
 		particleModel_->Draw(particle->worldTransform, viewProjection);
 	}
 }
+
+void BaseEffect::Draw() {
+	for (auto spriteParticlesIt = spriteParticles_.begin(); spriteParticlesIt != spriteParticles_.end(); spriteParticlesIt++) {
+		SpriteParticle* particle = spriteParticlesIt->get();
+		// 粒子の描画
+		particle->sprite->Draw();
+	}
+}

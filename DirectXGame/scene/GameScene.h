@@ -17,6 +17,7 @@
 #include "DebugCamera.h"
 #include"FollowCamera.h"
 #include"EnemyCamera.h"
+#include "SceneTransition.h"
 #include<filesystem>
 #include<sstream>
 #include<memory>
@@ -74,6 +75,17 @@ public: // メンバ関数
 
 	bool IsCollisionOBBOBB(const OBB& obb1, const OBB& obb2);
 
+
+public: // メンバクラス
+
+	enum class Scene {
+		Title,   // タイトル
+		Control, // 操作説明
+		Main,    // ゲーム
+		Pose,    // ポーズ画面
+		End,     // リザルト
+		GameOver // ゲームオーバー
+	};
 
 private://メンバ関数
 	/*十の位の値を調べる*/
@@ -210,25 +222,19 @@ private: // メンバ変数
 	//壁
 	std::unique_ptr<Wall> wall_;
 
+	//画面遷移
+	std::unique_ptr<SceneTransition> sceneTransition_;
+
 	// コントローラーの入力
 	XINPUT_STATE joyState;
 
 	XINPUT_STATE preJoyState;
 
-	enum class Scene {
-		Title,		//タイトル
-		Control,	//操作説明
-		Main,		//ゲーム
-		Pose,		//ポーズ画面
-		End,		//リザルト
-		GameOver	//ゲームオーバー
-	};
-
-	Scene scene_ = Scene::Main;
+	Scene scene_ = Scene::Title;
 
 	Scene BeforeScene_;
 
-	std::optional<Scene> sceneRequest_ = Scene::Main;
+	std::optional<Scene> sceneRequest_ = Scene::Title;
 
 	int selectMode = 0;
 
