@@ -111,7 +111,7 @@ void GameScene::MakeTexture() {
 	sprite_[7]->SetSize({362.0f, 138.0f});
 	// 256//128
 	sprite_[8] = Sprite::Create(textureHandleText[5], {640, 200}, {1, 1, 1, 1}, {0.5f, 0.5f});
-	sprite_[8]->SetSize({384.0f, 192.0f});
+	sprite_[8]->SetSize({576.0f, 192.0f});
 
 	sprite_[9] = Sprite::Create(textureHandleText[6], {450, 350}, {1, 1, 1, 1}, {0.5f, 0.5f});
 
