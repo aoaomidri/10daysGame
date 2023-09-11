@@ -622,7 +622,7 @@ void Player::BehaviorDeathUpdate(){
 	//color_ = textureHandleRed_;
 	rotate_ = Vector3{0.0f, 0.0f, float(M_PI) / 2.0f};
 	t += 0.02f;
-	worldTransformBody_.rotation_ = vector.Multiply(min(t, 1.0f), rotate_);
+	worldTransformBody_.rotation_.z = vector.Multiply(min(t, 1.0f), rotate_).z;
 	worldTransformBody_.translation_.y -= 0.2f;
 	if (t >= 1.0f) {
 		scale = vector.Multiply((1.0f - (t - 1.0f)), scale);
