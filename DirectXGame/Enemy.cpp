@@ -483,6 +483,7 @@ void Enemy::Tackle(float tackleSpeed) {
 		if (rotate > 0.01f) {
 			rotate -= 0.01f;
 		} else {
+			move = {1.0f, 0, 1.0f};
 			attack_ = Attack::Normal;
 		}
 	 }
@@ -491,6 +492,21 @@ void Enemy::Tackle(float tackleSpeed) {
 	 float besage = vector_.Length(velocityXZ);
 	 worldTransform_.rotation_.x = std::atan2(-move.y, besage);
 	 if (isTackle) {
+		if ((worldTransform_.translation_ + move).x > MoveMax) {
+			move.x = {0};
+			worldTransform_.translation_.x = MoveMax;
+		} else if ((worldTransform_.translation_ + move).x <= -MoveMax) {
+			move.x = {0};
+			worldTransform_.translation_.x = -MoveMax;
+		}
+
+		if ((worldTransform_.translation_ + move).z > MoveMax) {
+			move.z = {0};
+			worldTransform_.translation_.z = MoveMax;
+		} else if ((worldTransform_.translation_ + move).z <= -MoveMax) {
+			move.z = {0};
+			worldTransform_.translation_.z = -MoveMax;
+		}
 		worldTransform_.AddTransform(move);
 	 }
 	
@@ -511,51 +527,61 @@ void Enemy::BehaviorFirstUpdate() {
 	} 
 	if (attack_==Attack::Normal) {
 	
-	
-		Vector3 vector = {
-		    target_->translation_.x - worldTransform_.translation_.x,
-		    target_->translation_.y - worldTransform_.translation_.y,
-		    target_->translation_.z - worldTransform_.translation_.z
-		};
-
-		// worldTransformL_parts_.rotation_.x += 1.0f / (static_cast<float>(M_PI) * 2.0f);
-		 //worldTransformR_parts_.rotation_.x += 1.0f / (static_cast<float>(M_PI) * 2.0f);
-
-		worldTransform_.rotation_.y = std::atan2(vector.x, vector.z);
 		worldTransformRoll_.rotation_.z = 0.0f; 
 
-	}
-	 /*if (enemyMoveCount >= enemyMoveCountMax) {
-		if (enemyMoveInterval>0) {
-			enemyMoveInterval--;
-		kFireInterval = 60;
-		} else {
-			if (move.x > 0 && move.z < 0) {
-				move.x *= -1;
-			} else if (move.x < 0 && move.z < 0) {
-				move.z *= -1;
-			} else if (move.x < 0 && move.z > 0) {
-				move.x *= -1;
-			} else if (move.x > 0 && move.z > 0) {
-				move.z *= -1;
-			}
-			enemyMoveCount = 0;
-			if (enemyMoveInterval <= 0) {
-				kFireInterval = 45;
-				enemyMoveInterval = 240;
-			} 
+		if (move.x != 0.0f || move.z != 0.0f) {
+			worldTransform_.rotation_.y = std::atan2(move.x, move.z);
 		}
 
-	 } else {
-		enemyMoveCount++;
-		worldTransform_.AddTransform(move);
-	 }
-	
-	 NormalAttack();
+		if (enemyMoveCount >= enemyMoveCountMax) {
+			if (enemyMoveInterval > 0) {
+				enemyMoveInterval--;
+				kFireInterval = 60;
+			} else {
+				if (move.x > 0 && move.z < 0) {
+					move.x *= -1;
+				} else if (move.x < 0 && move.z < 0) {
+					move.z *= -1;
+				} else if (move.x < 0 && move.z > 0) {
+					move.x *= -1;
+				} else if (move.x > 0 && move.z > 0) {
+					move.z *= -1;
+				}
+				enemyMoveCount = 0;
+				if (enemyMoveInterval <= 0) {
+					kFireInterval = 45;
+					enemyMoveInterval = 240;
+				}
+			}
 
-	 if (EnemyLife <= 170.0f) {
-		behaviorRequest_ = Behavior::kSecond;
-	 }*/
+		} else {
+			enemyMoveCount++;
+			if ((worldTransform_.translation_ + move).x > MoveMax) {
+				move.x *= -1;
+				worldTransform_.translation_.x = MoveMax;
+			} else if ((worldTransform_.translation_ + move).x <= -MoveMax) {
+				move.x *= -1;
+				worldTransform_.translation_.x = -MoveMax;
+			}
+
+			if ((worldTransform_.translation_ + move).z > MoveMax) {
+				move.z *= -1;
+				worldTransform_.translation_.z = MoveMax;
+			} else if ((worldTransform_.translation_ + move).z <= -MoveMax) {
+				move.z *= -1;
+				worldTransform_.translation_.z = -MoveMax;
+			}
+			worldTransform_.AddTransform(move);
+		}
+
+		//NormalAttack();
+
+		if (EnemyLife <= 170.0f) {
+			behaviorRequest_ = Behavior::kSecond;
+		}
+
+	}
+	 
 	if (EnemyLife == 0.0f) {
 		behaviorRequest_ = Behavior::kDead;
 	}

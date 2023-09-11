@@ -33,6 +33,10 @@ private:
 	Vector3 scale = {size, size, size};
 	Vector3 scaleChild = {1.0f, 1.0f, 1.0f};
 
+	//移動制限
+	const float MoveMax = 237.00000f;
+
+
 
 	//ひれ
 	Vector3 Fin_offset_Base = {0.0f, 0.0f, -8.72f};
@@ -88,7 +92,7 @@ private:
 
 	int enemyMoveInterval = 180;
 
-	int enemyMoveCountMax = 300;
+	int enemyMoveCountMax = 480;
 
 	int fireCount;
 
