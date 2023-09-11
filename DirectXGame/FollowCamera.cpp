@@ -36,7 +36,22 @@ void FollowCamera::SetTarget(const WorldTransform* target) {
 void FollowCamera::Update() {
 
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
-		
+		const float threshold = 0.7f;
+		bool isMoveing = false;
+		float moveLength = 0.0f;
+
+		// 移動量
+		Vector3 move_ = {
+		    (float)joyState.Gamepad.sThumbRX / SHRT_MAX,
+		    (float)joyState.Gamepad.sThumbRY / SHRT_MAX,
+		    0.0f
+		};
+		moveLength = vector_->Length(move_);
+
+		if (moveLength > threshold) {
+			isMoveing = true;
+		}
+		if (isMoveing)
 
 		{
 			destinationAngleY_ += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * rotateSpeed;
