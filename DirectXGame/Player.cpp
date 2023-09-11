@@ -61,11 +61,20 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	
 	//hpが0以下になったときに一度だけ呼び出す
 	collDeath_ = true;
+
+	textureHandleEgg_ = TextureManager::Load("egg.png");
+
+	spriteEnergy_ = Sprite::Create(textureHandleEgg_, {640.0f, 320.0f}, {1, 1, 1, 1}, {0.5f, 1.0f});
+	
 }
 
 void Player::Update() {
 	ApplyGlobalVariables();
 	bulletCreateCoolTime--;
+	if (bulletCreateCoolTime<0)
+	{
+		bulletCreateCoolTime = 0;
+	}
 	// デスフラグの立った球を削除
 	bullets_.remove_if([](PlayerBullet* bullet) {
 		if (bullet->IsDead()) {
@@ -174,7 +183,13 @@ void Player::DrawUI() {
 	if (joyState.Gamepad.bLeftTrigger != 0) {
 		sprite2DReticle_->Draw();
 	}
-	
+	ratio = float(kBulletCreateCoolTime-bulletCreateCoolTime) / float(kBulletCreateCoolTime);
+	spriteEnergy_->SetPosition(energyPosition);
+	spriteEnergy_->SetAnchorPoint(ancor);
+	spriteEnergy_->SetSize({eggSize.x*2.0f, eggSize.y * ratio*2.0f});
+	//eggSize.y * ratio;
+	spriteEnergy_->SetTextureRect(Vector2{0.0f, 64.0f*(1.0f-ratio)}, {eggSize.x, eggSize.y*ratio});
+	spriteEnergy_->Draw();
 }
 
 void Player::BehaviorRootInitialize() { 
@@ -628,6 +643,11 @@ void Player::DrawImgui() {
 	ImGui::Text("Frame rate: %6.2f fps", ImGui::GetIO().Framerate);
 	ImGui::End();
 
+	ImGui::Begin("UIs");
+	ImGui::DragFloat2("position",&energyPosition.x,1.0f);
+	ImGui::DragFloat2("Ancor", &ancor.x, 0.1f, 0.0f, 1.0f);
+	ImGui::DragFloat("ratio", &ratio, 0.1f, 0.0f, 1.0f);
+	ImGui::End();
 }
 
 void Player::ShotReticle(const Matrix4x4& matView, const Matrix4x4& matProjection) {

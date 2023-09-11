@@ -293,6 +293,14 @@ private:
 	Vector3 rotate_;
 	bool collDeath_ = false;
 
+	//弾追加のゲージ用スプライト
+	Sprite* spriteEnergy_;
+	uint32_t textureHandleEgg_;
+	Vector2 ancor = {0.0f,1.0f};
+	float ratio = 1.0f;
+	Vector2 eggSize = {64.0f,64.0f};
+	Vector2 energyPosition = {1180.0f,550.0f};
+
 public:
 
 	Behavior GetBehavior() { return behavior_; };
