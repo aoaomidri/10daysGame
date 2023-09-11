@@ -1240,7 +1240,7 @@ void GameScene::MainUpdate() {
 		gameCamera_->SetViewProjection(followCamera_->GetViewProjection());
 	}
 
-	if (gameCamera_->GetNowRotate()>=6.28f) {
+	if (enemy_->GetEnemyDead()) {
 		sceneRequest_ = Scene::End;
 	}
 

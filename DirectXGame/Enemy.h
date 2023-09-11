@@ -115,6 +115,10 @@ private:
 
 	float tackleSpeedBase = 3.0f;
 
+	//死んだ後の演出に関する変数
+	int deathTimer = 0;
+
+
 	void Fire(float bulletSpeed);
 
 	void TripleFire(float bulletSpeed);
@@ -135,6 +139,7 @@ private:
 		kSecond, // 第二形態
 		kThird,   // 第三形態
 		kLast,   // 最終形態
+		kDead,   // 死亡アニメーション
 	};
 
 	enum class Attack {
@@ -157,6 +162,8 @@ private:
 	void BehaviorThirdInitialize();
 	// 最終形態行動初期化
 	void BehaviorLastInitialize();
+	// 死亡アニメーション初期化
+	void BehaviorDeadInitialize();
 	// 第一形態行動更新
 	void BehaviorFirstUpdate();
 	// 第二形態行動更新
@@ -165,6 +172,8 @@ private:
 	void BehaviorThirdUpdate();
 	// 最終形態行動更新
 	void BehaviorLastUpdate();
+	//  死亡アニメーション更新
+	void BehaviorDeadUpdate();
 
 public:
 	~Enemy();
@@ -192,6 +201,8 @@ public:
 	float GetEnemyLife() { return EnemyLife; }
 
 	float GetEnemyLifePer() { return enemyLifePer; }
+
+	bool GetEnemyDead() { return isDead; }
 
 	// 弾リストを取得
 	const std::list<EnemyBullet*>& GetBullets() { return bullets_; }

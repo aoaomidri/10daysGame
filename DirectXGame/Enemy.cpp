@@ -45,6 +45,8 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 
 	EnemyLife = kMaxEnemyLife;
 
+	isDead = false;
+
 	input_ = Input::GetInstance();
 
 	Adjustment_Item* adjustment_item = Adjustment_Item::GetInstance();
@@ -95,6 +97,7 @@ void Enemy::Update() {
 	    "targetTranslation = %.1f, %.1f, %.1f", target_->translation_.x, target_->translation_.y,
 	    target_->translation_.z);
 
+	ImGui::Text("DeathTimer = %d", deathTimer);
 	ImGui::Text("EnemyLife = %d", EnemyLife);
 	ImGui::Text("EnemyMoveCount = %d", enemyMoveCount);
 	ImGui::Text("EnemyMoveInterval = %d", enemyMoveInterval);
@@ -107,11 +110,7 @@ void Enemy::Update() {
 	}
 	#endif
 
-	if (EnemyLife == 0.0f) {
-		isDead = true;
-	} else {
-		isDead = false;
-	}
+	
 	if (behaviorRequest_) {
 		// 振る舞いを変更する
 		behavior_ = behaviorRequest_.value();
@@ -128,6 +127,9 @@ void Enemy::Update() {
 			break;
 		case Behavior::kLast:
 			BehaviorLastInitialize();
+			break;
+		case Behavior::kDead:
+			BehaviorDeadInitialize();
 			break;
 		}
 	}	
@@ -147,6 +149,9 @@ void Enemy::Update() {
 		break;
 	case Behavior::kLast:
 		BehaviorLastUpdate();
+		break;
+	case Behavior::kDead:
+		BehaviorDeadUpdate();
 		break;
 	}
 
@@ -545,7 +550,9 @@ void Enemy::BehaviorFirstUpdate() {
 	 if (EnemyLife <= 170.0f) {
 		behaviorRequest_ = Behavior::kSecond;
 	 }*/
-	 
+	if (EnemyLife == 0.0f) {
+		behaviorRequest_ = Behavior::kDead;
+	}
 }
 void Enemy::BehaviorSecondInitialize() {
 	 move = {0.5f, 0.0f, 0.5f};
@@ -656,4 +663,16 @@ void Enemy::BehaviorLastInitialize() {
 void Enemy::BehaviorLastUpdate() {
 
 
+}
+void Enemy::BehaviorDeadInitialize() { deathTimer = 0; }
+void Enemy::BehaviorDeadUpdate() { 
+	deathTimer++;
+	if (deathTimer>=100&&deathTimer%10==0) {
+		for (int i = 0; i < 7; i++) {
+			HitEffect();
+		}
+	}
+	if (deathTimer>=800) {
+		isDead = true;
+	}
 }
