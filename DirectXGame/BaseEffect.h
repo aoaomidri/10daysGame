@@ -33,6 +33,7 @@ public:
 	// 初期化
 	virtual void Initialize(Model* model);
 	virtual void Initialize(uint32_t textureHandle);
+	virtual void Initialize(Model* model, uint32_t textureHandle);
 
 	// 更新
 	virtual void Update();
@@ -47,6 +48,9 @@ public: //ゲッターセッター
 
 	inline bool GetIsDraw() { return isDraw_; }
 	inline void SetIsDraw(bool isDraw) { isDraw_ = isDraw; }
+
+	inline bool GetIsSpriteDraw() { return isDraw_; }
+	inline void SetIsSpriteDraw(bool isDraw) { isDraw_ = isDraw; }
 
 protected:
 	

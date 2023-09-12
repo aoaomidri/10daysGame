@@ -6,7 +6,7 @@ void SceneTransition::Initialize(uint32_t textureHandle) {
 	BaseEffect::Initialize(textureHandle);
 
 	emitter_.size = {50, 720};
-	emitter_.worldTransform.translation_ = {1350, 360, 0};
+	emitter_.worldTransform.translation_ = {1600, 360, 0};
 	isDraw_ = true;
 	transitionTime_ = 0;
 	startTransition_ = false;

@@ -70,8 +70,9 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	spriteEnergyButton_ = Sprite::Create(textureLB, energyPosition, {1, 1, 1, 1}, {0.5f, 0.5f});
 
 	//ダッシュエフェクト
+	textureConcentrationLine = TextureManager::Load("concentrationLine.png");
 	concentrationLine_ = std::make_unique<ConcentrationLine>();
-	concentrationLine_->Initialize(models_[5]);
+	concentrationLine_->Initialize(models_[5], textureConcentrationLine);
 	concentrationLine_->SetPlayerVelocity(&move);
 	concentrationLine_->SetPlayerWorldTransform(&worldTransform_);
 }
@@ -205,8 +206,10 @@ void Player::Update() {
 	//ダッシュエフェクト
 	if (behavior_ == Behavior::kDash) {
 		concentrationLine_->SetIsPop(true);
+		concentrationLine_->SetIsDrawSprite(true);
 	} else {
 		concentrationLine_->SetIsPop(false);
+		concentrationLine_->SetIsDrawSprite(false);
 	}
 
 	concentrationLine_->Update();
@@ -260,6 +263,8 @@ void Player::DrawUI() {
 	{
 		spriteEnergyButton_->Draw();
 	}
+
+	concentrationLine_->Draw();
 }
 
 void Player::BehaviorRootInitialize() { 

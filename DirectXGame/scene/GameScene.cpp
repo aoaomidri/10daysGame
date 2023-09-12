@@ -1187,9 +1187,10 @@ void GameScene::ControlUpdate() {
 		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) &&
 		    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_B)) {
 			//audio_->StopWave(TitleBGMHandle_);
-			sceneTransition_->Initialize(textureParticleFish);
-			sceneTransition_->SetStartTransition(true);
-			
+			if (!sceneTransition_->GetStartTransition()) {
+				sceneTransition_->Initialize(textureParticleFish);
+				sceneTransition_->SetStartTransition(true);
+			}
 		}
 	}
 	if (sceneTransition_->GetCompleteTransition()) {
