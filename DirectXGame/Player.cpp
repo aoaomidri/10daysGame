@@ -75,6 +75,9 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	concentrationLine_->Initialize(models_[5], textureConcentrationLine);
 	concentrationLine_->SetPlayerVelocity(&move);
 	concentrationLine_->SetPlayerWorldTransform(&worldTransform_);
+
+
+	textureLiner_ = TextureManager::Load("tracking.png");
 }
 
 void Player::Update() {
