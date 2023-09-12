@@ -4,6 +4,7 @@
 #include<optional>
 #include"PlayerBullet.h"
 #include"Adjustment_Item.h"
+#include "ConcentrationLine.h"
 #include <Sprite.h>
 
 class Player : public BaseCharacter {
@@ -315,6 +316,9 @@ private:
 	// 被弾時の無敵時間
 	const int kHitInvincible = 30;
 	int invincibleTime_;
+
+	//ダッシュのエフェクト
+	std::unique_ptr<ConcentrationLine> concentrationLine_;
 
 public:
 

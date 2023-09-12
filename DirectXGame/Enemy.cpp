@@ -58,7 +58,6 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 	
 	//adjustment_item->AddItem(groupName, "EnemyLife", EnemyLife);
 	adjustment_item->AddItem(groupName, "TackleSpeed", tackleSpeedBase);
-
 }
 
 void Enemy::ApplyGlobalVariables() {
