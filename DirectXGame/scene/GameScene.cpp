@@ -289,9 +289,7 @@ void GameScene::Update() {
 		// 各振る舞いごとの初期化を実行
 		switch (scene_) {
 		case Scene::Title:
-			if (BeforeScene_ != Scene::Control) {
 				TitleInitialize();
-			}
 			break;
 		case Scene::Control:
 			ControlInitialize();
@@ -1246,8 +1244,9 @@ void GameScene::MainUpdate() {
 #endif // _DEBUG
 
 	
-
-	CheckAllCollisions();
+	if (enemy_->GetEnemyLife()!=0) {
+		CheckAllCollisions();
+	}
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_START) &&
 		    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_START)) {

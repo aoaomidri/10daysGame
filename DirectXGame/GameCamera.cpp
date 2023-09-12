@@ -5,7 +5,7 @@ void GameCamera::Initialize() {
 	viewProjection_.farZ = 2000.0f;
 	viewProjection_.nearZ = 0.01f;
 	viewProjection_.translation_ = {0.0f, 0.0f, 0.0f};
-	viewProjection_.rotation_.y = 0.0f;
+	viewProjection_.rotation_ = {0.0f};
 	viewProjection_.Initialize();
 	destinationAngleX_ = 0.2f;
 
