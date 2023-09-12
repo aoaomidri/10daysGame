@@ -324,6 +324,7 @@ private:
 
 	//ダッシュのエフェクト
 	std::unique_ptr<ConcentrationLine> concentrationLine_;
+	uint32_t textureConcentrationLine;
 
 public:
 

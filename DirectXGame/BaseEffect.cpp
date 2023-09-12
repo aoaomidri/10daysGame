@@ -21,6 +21,18 @@ void BaseEffect::Initialize(uint32_t textureHandle) {
 	isDraw_ = false;
 }
 
+void BaseEffect::Initialize(Model* model, uint32_t textureHandle) {
+#ifdef _DEBUG
+	assert(model);
+	assert(textureHandle);
+#endif
+
+	particleModel_ = model;
+	textureHandle_ = textureHandle;
+	emitter_.worldTransform.Initialize();
+	isDraw_ = false;
+}
+
 // 更新
 void BaseEffect::Update() {
 	emitter_.worldTransform.UpdateMatrix(emitter_.worldTransform.scale_);

@@ -3,10 +3,16 @@
 #include "MyMatrix.h"
 
 // 初期化
-void ConcentrationLine::Initialize(Model* model) {
-	BaseEffect::Initialize(model);
+void ConcentrationLine::Initialize(Model* model, uint32_t textureHandle) {
+	BaseEffect::Initialize(model, textureHandle);
 	particlePopTime_ = 0;
 	isDraw_ = true;
+
+	spriteParticle_ = std::make_unique<SpriteParticle>();
+	spriteParticle_->sprite = Sprite::Create(textureHandle_, {0, 0}, {1, 1, 1, 1}, {0.5f, 0.5f});
+	spriteParticle_->sprite->SetPosition({640, 360});
+	spriteParticle_->activeTime = 0;
+	spriteParticle_->isActive = true;
 }
 
 // 更新
@@ -60,6 +66,12 @@ void ConcentrationLine::Update() {
 		}
 	}
 
+	if (spriteParticle_->isActive) {
+		Vector2 spritePos = spriteParticle_->sprite->GetPosition();
+		spritePos.x = static_cast<float>(rand() % 51 - 25);
+		spriteParticle_->sprite->SetPosition(spritePos);
+	}
+
 	BaseEffect::Update();
 }
 
@@ -67,5 +79,11 @@ void ConcentrationLine::Update() {
 void ConcentrationLine::Draw(const ViewProjection& viewProjection) {
 	if (isDraw_) {
 		BaseEffect::Draw(viewProjection);
+	}
+}
+
+void ConcentrationLine::Draw() {
+	if (spriteParticle_->isActive) {
+		BaseEffect::Draw();
 	}
 }
