@@ -654,6 +654,7 @@ void Player::BehaviorShotUpdate() {
 
 	L_arm_offset_Base.z = 0.5f;
 
+	isShotBullet_ = false;
 	Attack();
 
 	if ((worldTransform_.translation_ + move).x > MoveMax) {
@@ -823,7 +824,6 @@ void Player::Attack() {
 	if (joyState.Gamepad.bRightTrigger != 0/* || (joyState.Gamepad.wButtons&&XINPUT_GAMEPAD_B)*/) {
 		bulletTime += 1;
 		if (bulletTime % bulletInterval == 1) {
-			isShotBullet_ = true;
 
 			// 弾の速度
 			const float kBulletSpeed = 5.0f;
@@ -836,6 +836,7 @@ void Player::Attack() {
 			{
 				if (bullet->GetState() == PlayerBullet::PlayerBulletState::Stance)
 				{
+					isShotBullet_ = true;
 					bullet->SetShot(
 					    viewProjection_->rotation_, velocity, (HomingMode_ && GetcheckCamera()));
 					bullet->SetState(PlayerBullet::PlayerBulletState::Move);
@@ -846,7 +847,6 @@ void Player::Attack() {
 		}
 	} else {
 		bulletTime = 0;
-		isShotBullet_ = false;
 	}
 }
 /*
