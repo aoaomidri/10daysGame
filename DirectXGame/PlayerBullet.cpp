@@ -50,6 +50,8 @@ void PlayerBullet::Initialize(
 void PlayerBullet::SetPlayer(Player* player) {
 	player_ = player; 
 	//worldTransform_.parent_ = &player->GetWorldTransform();
+	worldTransformHerd_.parent_ = &player_->GetWorldTransform();
+	target_ = &worldTransformHerd_;
 };
 
 void PlayerBullet::Update() {

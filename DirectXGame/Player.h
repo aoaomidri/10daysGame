@@ -311,6 +311,25 @@ private:
 	Vector4 buttonColor_=kWhite;
 	void EnergyUpdate();
 
+	Sprite* spriteLiner_;
+	Sprite* spriteChaser_;
+	Sprite* spriteArrow_;
+	Sprite* spriteX_;
+
+	uint32_t textureLiner_;
+	uint32_t textureChaser_;
+	uint32_t textureArrow_;
+	uint32_t textureX_;
+
+	Vector2 changeUIBaseScale_{1.0f,1.0f};
+	float changeUIBaseRotation_=0.0f;
+	Vector2 changeUIBaseTranslation_{640, 320};
+	Vector2 liner_{640, 320};
+	Vector2 chaser_{640, 320};
+	Vector2 xButtom_{640, 320};
+	float arrowRotate_=0.0f;
+	float changeAnimation_ = 0.0f;
+
 	//無敵判定
 	bool isInvincible_ = false;
 	// 被弾時の無敵時間
@@ -331,7 +350,7 @@ public:
 	Behavior GetBehavior() { return behavior_; };
 
 	// 最初に生成する弾の数
-	const int kBulletNum = 50;
+	const int kBulletNum = 0;
 	static const int kBulletMax = 99;
 };
 
