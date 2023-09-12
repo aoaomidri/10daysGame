@@ -292,25 +292,6 @@ void GameScene::Initialize() {
 	isCountDown_ = true;
 	countDown_ = 0;
 
-	//カウントダウンの際にオブジェクトの位置が初期位置に移動させるよう
-	player_->Update();
-
-	enemy_->Update();
-
-	skyDome_->Update();
-
-	ground_->Update();
-
-	rock_->Update();
-
-	followCamera_->Update();
-
-	enemyCamera_->Update();
-
-	gameCamera_->DrawImgui();
-
-	gameCamera_->Update();
-
 #ifdef _DEBUG
 	////軸方向表示の表示を有効にする
 	AxisIndicator::GetInstance()->SetVisible(true);
@@ -1276,7 +1257,26 @@ void GameScene::MainInitialize() {
 
 void GameScene::MainUpdate() { 
 
-	if (isCountDown_) {
+	if (isCountDown_){
+		if (countDown_ == 0) {
+			player_->Update();
+
+			enemy_->Update();
+
+			skyDome_->Update();
+
+			ground_->Update();
+
+			rock_->Update();
+
+			followCamera_->Update();
+
+			enemyCamera_->Update();
+
+			gameCamera_->DrawImgui();
+
+			gameCamera_->Update();
+		}
 		countDown_++;
 	} 
 	else {
