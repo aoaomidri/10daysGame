@@ -77,7 +77,25 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	concentrationLine_->SetPlayerWorldTransform(&worldTransform_);
 
 
-	textureLiner_ = TextureManager::Load("tracking.png");
+	textureLiner_ = TextureManager::Load("straight.png");
+	textureChaser_ = TextureManager::Load("tracking.png");
+	textureArrow_ = TextureManager::Load("change.png");
+	textureX_ = TextureManager::Load("text/X.png");
+
+	changeUIBaseScale_={64.0f, 64.0f};
+	changeUIBaseRotation_ = 0.0f;
+	changeUIBaseTranslation_={120, 480};
+	liner_={0, 0};
+	chaser_={0, 0};
+	xButtom_={0, 0};
+
+	spriteLiner_ = Sprite::Create(textureLiner_, changeUIBaseTranslation_ + liner_, {1, 1, 1, 1}, {0.5f, 0.5f});
+	spriteChaser_ = Sprite::Create(
+	    textureChaser_, changeUIBaseTranslation_ + chaser_, {1, 1, 1, 1}, {0.5f, 0.5f});
+	spriteArrow_ = Sprite::Create(
+	    textureArrow_, changeUIBaseTranslation_, {1, 1, 1, 1}, {0.5f, 0.5f});
+	spriteX_ = Sprite::Create(
+	    textureX_, changeUIBaseTranslation_, {0.19f, 0.82f, 0.89f, 1}, {0.5f, 0.5f});
 }
 
 void Player::Update() {
@@ -198,9 +216,11 @@ void Player::Update() {
 	if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_X) &&
 	    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_X)) {
 		HomingMode_ = !HomingMode_;
+		changeAnimation_ = 0.0f;
 	}
 
 	EnergyUpdate();
+	ChangeUIUpdate();
 
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		preJoyState = joyState;
@@ -267,6 +287,19 @@ void Player::DrawUI() {
 	{
 		spriteEnergyButton_->Draw();
 	}
+
+	if (HomingMode_)
+	{
+		spriteLiner_->Draw();
+		spriteChaser_->Draw();
+	}
+	else
+	{
+		spriteChaser_->Draw();
+		spriteLiner_->Draw();
+	}
+	spriteArrow_->Draw();
+	spriteX_->Draw();
 }
 
 void Player::BehaviorRootInitialize() { 
@@ -724,6 +757,19 @@ void Player::DrawImgui() {
 	ImGui::DragFloat2("buttonposition", &buttonPosition.x, 1.0f);
 	ImGui::DragFloat2("buttonSize", &buttonSize.x, 1.0f);
 	ImGui::End();
+
+	
+	ImGui::Begin("change");
+	ImGui::DragFloat2("scale", &changeUIBaseScale_.x, 1.0f);
+	ImGui::DragFloat("rotate", &changeUIBaseRotation_, 1.0f);
+	ImGui::DragFloat2("position", &changeUIBaseTranslation_.x, 1.0f);
+	ImGui::DragFloat2("linerposition", &liner_.x, 1.0f);
+	ImGui::DragFloat2("chaserposition", &chaser_.x, 1.0f);
+	ImGui::DragFloat2("valid", &valid_.x, 1.0f);
+	ImGui::DragFloat2("notValid", &notValid_.x, 1.0f);
+
+	ImGui::End();
+
 }
 
 void Player::ShotReticle(const Matrix4x4& matView, const Matrix4x4& matProjection) {
@@ -874,5 +920,61 @@ void Player::AddBullet(int n)
 		// const float kBulletSpeed = 0.0f;
 
 		AddBullet();
+	}
+}
+
+void Player::ChangeUIUpdate() {
+	if (HomingMode_)
+	{
+		chaser_ = {
+		    (1.0f - changeAnimation_) * chaser_.x + (changeAnimation_ * valid_.x),
+		    (1.0f - changeAnimation_) * chaser_.y + (changeAnimation_ * valid_.y)};
+		liner_ = {
+		    (1.0f - changeAnimation_) * liner_.x + (changeAnimation_ * notValid_.x),
+		    (1.0f - changeAnimation_) * liner_.y + (changeAnimation_ * notValid_.y)};
+		spriteChaser_->SetColor(kWhite);
+		spriteLiner_->SetColor(kGray);
+	}
+	else
+	{
+		chaser_ = {
+		    (1.0f - changeAnimation_) * chaser_.x + (changeAnimation_ * notValid_.x),
+		    (1.0f - changeAnimation_) * chaser_.y + (changeAnimation_ * notValid_.y)};
+		liner_ = {
+		    (1.0f - changeAnimation_) * liner_.x + (changeAnimation_ * valid_.x),
+		    (1.0f - changeAnimation_) * liner_.y + (changeAnimation_ * valid_.y)};
+		spriteChaser_->SetColor(kGray);
+		spriteLiner_->SetColor(kWhite);
+	}
+
+	arrowRotate_ = float(M_PI)*2.0f*changeAnimation_;
+
+	//int fase = int(changeAnimation_ * 10.0f) / 5;
+	float size_ = 1.0f;
+	/* if (!fase)
+	{
+		size_ = 1.0f + (float(int(changeAnimation_ * 10.0f) % 5) /10.0f);
+	}
+	else
+	{
+		size_ = 1.0f + (1.0f-float(int(changeAnimation_ * 10.0f) % 5) / 10.0f);
+	}*/
+	spriteLiner_->SetPosition(changeUIBaseTranslation_ + liner_);
+	spriteChaser_->SetPosition(changeUIBaseTranslation_ + chaser_);
+	spriteArrow_->SetPosition(changeUIBaseTranslation_);
+	spriteX_->SetPosition(changeUIBaseTranslation_);
+
+	spriteLiner_->SetSize(changeUIBaseScale_);
+	spriteChaser_->SetSize(changeUIBaseScale_);
+	spriteArrow_->SetSize(changeUIBaseScale_);
+	Vector2 child = {changeUIBaseScale_.x * buttonScale_.x*size_, changeUIBaseScale_.y * buttonScale_.y*size_};
+	spriteX_->SetSize(child);
+
+	spriteArrow_->SetRotation(arrowRotate_);
+
+	changeAnimation_ += 1.0f / 30.0f;
+	if (changeAnimation_>1.0f)
+	{
+		changeAnimation_ = 1.0f;
 	}
 }

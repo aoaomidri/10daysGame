@@ -18,9 +18,9 @@ Enemy::~Enemy() {
 void Enemy::Initialize(const std::vector<Model*>& models) { 
 	BaseCharacter::Initialize(models);
 	worldTransform_.translation_ = {0.0f, 5.0f, 150.0f};
-	worldTransform_.rotation_ = {0.0f, 3.14f, 0.0f};
+	worldTransform_.rotation_ = {0.0f, 0.0f, 0.0f};
 
-	move = {0.5f, 0.0f, 0.5f};
+	move = {0.0f, 0.0f, -1.0f};
 
 	enemyMoveCount = 0;
 	enemyMoveInterval = 90;
@@ -29,6 +29,7 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 	
 	worldTransformRoll_.Initialize();
 	worldTransformRoll_.parent_ = &worldTransform_;
+	
 	worldTransformL_parts_.Initialize();
 	worldTransformL_parts_.translation_ = Fin_offset_Base;
 	worldTransformL_parts_.rotation_ = {0.0f, 0.0f, 0.0f};
