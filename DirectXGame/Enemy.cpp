@@ -22,7 +22,7 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 
 	move = {0.5f, 0.0f, 0.5f};
 
-	enemyMoveCount = 600;
+	enemyMoveCount = 0;
 	enemyMoveInterval = 90;
 
 	worldTransformHitBox_.Initialize();
@@ -491,6 +491,7 @@ void Enemy::Tackle(float tackleSpeed) {
 	 Vector3 velocityXZ{move.x, 0.0f, move.z};
 	 float besage = vector_.Length(velocityXZ);
 	 worldTransform_.rotation_.x = std::atan2(-move.y, besage);
+
 	 if (isTackle) {
 		if ((worldTransform_.translation_ + move).x > MoveMax) {
 			move.x = {0};
@@ -516,7 +517,7 @@ void Enemy::Tackle(float tackleSpeed) {
 void Enemy::BehaviorFirstInitialize() { 
 	move = {0.5f, 0.0f, 0.5f};
 	fireCount = 0;
-	enemyMoveCount = 600;
+	enemyMoveCount = 0;
 	enemyMoveInterval = 180;
 }
 void Enemy::BehaviorFirstUpdate() {
@@ -530,7 +531,8 @@ void Enemy::BehaviorFirstUpdate() {
 		worldTransformRoll_.rotation_.z = 0.0f; 
 
 		if (move.x != 0.0f || move.z != 0.0f) {
-			worldTransform_.rotation_.y = std::atan2(move.x, move.z);
+			worldTransform_.rotation_.y =
+			    vector_.LerpShortAngle(worldTransform_.rotation_.y, std::atan2(move.x, move.z),0.1f);
 		}
 
 		if (enemyMoveCount >= enemyMoveCountMax) {
@@ -579,9 +581,8 @@ void Enemy::BehaviorFirstUpdate() {
 		if (EnemyLife <= 170.0f) {
 			behaviorRequest_ = Behavior::kSecond;
 		}
-
+		
 	}
-	 
 	if (EnemyLife == 0.0f) {
 		behaviorRequest_ = Behavior::kDead;
 	}
@@ -639,6 +640,9 @@ void Enemy::BehaviorSecondUpdate() {
 	 if (EnemyLife <= 80.0f) {
 		behaviorRequest_ = Behavior::kThird;
 	}
+	 if (EnemyLife == 0.0f) {
+		behaviorRequest_ = Behavior::kDead;
+	 }
 }
 void Enemy::BehaviorThirdInitialize() {
 	fireCount = 0;
@@ -686,7 +690,9 @@ void Enemy::BehaviorThirdUpdate() {
 			movePos[i].z = {(rand() % 461 - 230) / 1.0f};
 		}
 	}
-
+	if (EnemyLife == 0.0f) {
+		behaviorRequest_ = Behavior::kDead;
+	}
 }
 void Enemy::BehaviorLastInitialize() {
 
