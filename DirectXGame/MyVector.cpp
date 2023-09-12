@@ -121,6 +121,13 @@ Vector3 MyVector::Multiply(float scalar, const Vector3& Vec) {
 	return result;
 }
 
+Vector2 MyVector::Multiply(float scalar, const Vector2& Vec) {
+	Vector2 result{};
+	result.x = Vec.x * scalar;
+	result.y = Vec.y * scalar;
+	return result;
+}
+
 float MyVector::LerpShortAngle(float a, float b, float t) { 
 	float diff = b - a;
 
@@ -145,6 +152,14 @@ float MyVector::Dot(const Vector3& v1, const Vector3& v2) {
 
 Vector3 MyVector::Lerp(const Vector3& v1, const Vector3& v2, float t) {
 	return v1 + Multiply(t, v2 - v1);
+}
+
+Vector2 MyVector::Lerp(const Vector2& v1, const Vector2& v2, float t) {
+	Vector2 v3;
+	v3.x = v1.x + (v2.x - v1.x) * t;
+	v3.y = v1.y + (v2.x - v1.x) * t;
+
+	return v3;
 }
 
 Vector3 MyVector::Slerp(const Vector3& v1, const Vector3& v2, float t) {

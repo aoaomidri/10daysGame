@@ -158,9 +158,13 @@ void GameScene::MakeTexture() {
 	countDownSprite_ = Sprite::Create(textureHandleCountDown, {0, 0}, {1, 1, 1, 1}, {0, 0});
 
 	countDownNum_[0] = Sprite::Create(textureHandleNumber[3], {640, 360}, {1, 1, 1, 1}, {0.5f, 0.5f});
+	countDownNum_[0]->SetSize({0, 0});
 	countDownNum_[1] = Sprite::Create(textureHandleNumber[2], {640, 360}, {1, 1, 1, 1}, {0.5f, 0.5f});
+	countDownNum_[1]->SetSize({0, 0});
 	countDownNum_[2] = Sprite::Create(textureHandleNumber[1], {640, 360}, {1, 1, 1, 1}, {0.5f, 0.5f});
+	countDownNum_[2]->SetSize({0, 0});
 	countDownNum_[3] = Sprite::Create(textureHandleNumber[0], {640, 360}, {1, 1, 1, 1}, {0.5f, 0.5f});
+	countDownNum_[3]->SetSize({0, 0});
 }
 
 void GameScene::SoundInitialize() {
@@ -595,17 +599,27 @@ void GameScene::DrawTexture() {
 		sprite_[8]->Draw();
 	}
 
+	static MyVector vector;
+	static MyMatrix matrix;
 	sceneTransition_->Draw();
 	if (countDown_ >= 60 * 3 && countDown_ < 60 * 3.5f) {
+		Vector2 textureSize = vector.Lerp(countDownNum_[0]->GetSize(), {144, 144}, 0.033f);
+		countDownNum_[0]->SetSize(textureSize);
 		countDownNum_[0]->Draw();
 	}
 	if (countDown_ >= 60 * 3.5f && countDown_ < 60 * 4.0f) {
+		Vector2 textureSize = vector.Lerp(countDownNum_[1]->GetSize(), {144, 144}, 0.033f);
+		countDownNum_[1]->SetSize(textureSize);
 		countDownNum_[1]->Draw();
 	}
 	if (countDown_ >= 60 * 4.0f && countDown_ < 60 * 4.5f) {
+		Vector2 textureSize = vector.Lerp(countDownNum_[2]->GetSize(), {144, 144}, 0.033f);
+		countDownNum_[2]->SetSize(textureSize);
 		countDownNum_[2]->Draw();
 	}
 	if (countDown_ >= 60 * 4.5f && countDown_ < 60 * 5.0f) {
+		Vector2 textureSize = vector.Lerp(countDownNum_[3]->GetSize(), {144, 144}, 0.033f);
+		countDownNum_[3]->SetSize(textureSize);
 		countDownNum_[3]->Draw();
 	}
 	if (countDown_ >= 60 * 5.0f) {
