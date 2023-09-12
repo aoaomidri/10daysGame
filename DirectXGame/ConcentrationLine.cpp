@@ -17,7 +17,7 @@ void ConcentrationLine::Update() {
 	emitter_.worldTransform.translation_ = playerWorldTransform_->translation_; // 後で治す
 
 
-	if (IsPop_ && (playerVelocity.x != 0.0f && playerVelocity.z != 0.0f)) {
+	if (IsPop_ && (playerVelocity.x != 0.0f || playerVelocity.z != 0.0f)) {
 		// パーティクルの発生
 		if (particlePopTime_ <= 0) {
 			Matrix4x4 playerRotate = matrix.MakeRotateMatrix(playerWorldTransform_->rotation_);
@@ -28,7 +28,6 @@ void ConcentrationLine::Update() {
 				particlePos.y = static_cast<float>(rand() % 5 - 2);
 				particlePos.z = 5;
 				particlePos = vector.TransformNormal(particlePos, playerRotate);
-
 
 				std::unique_ptr<Particle> particle = std::make_unique<Particle>();
 				particle->activeTime = 0;
