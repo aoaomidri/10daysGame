@@ -181,6 +181,16 @@ void Player::Update() {
 		isInvincible_ = false;
 	}
 
+	//弾を増やす
+	if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER && 
+		behavior_ != Behavior::kDead) {
+		if (bulletCreateCoolTime<=0 && kBulletMax > GetBulletNumMax())
+		{
+			bulletCreateCoolTime = kBulletCreateCoolTime;
+			AddBullet(kCreateBulletNum);
+		}
+	}
+
 	// 発射モード切り替え
 	if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_X) &&
 	    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_X)) {
@@ -206,8 +216,13 @@ void Player::Update() {
 }
 
 void Player::Draw(const ViewProjection& viewProjection) {
-	models_[0]->Draw(worldTransformBody_, viewProjection);
-	models_[1]->Draw(worldTransformTail_, viewProjection);
+	if (!isInvincible_ || invincibleTime_%2 == 0)
+	{
+		models_[0]->Draw(worldTransformBody_, viewProjection);
+		models_[1]->Draw(worldTransformTail_, viewProjection);
+	}
+	//models_[0]->Draw(worldTransformBody_, viewProjection);
+	//models_[1]->Draw(worldTransformTail_, viewProjection);
 	//models_[2]->Draw(worldTransformL_arm_, viewProjection);
 
 	for (PlayerBullet* bullet : bullets_) {
@@ -383,13 +398,6 @@ void Player::BehaviorRootUpdate() {
 		behaviorRequest_ = Behavior::kShot;
 	}
 
-	if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) {
-		if (bulletCreateCoolTime<=0 && kBulletMax > GetBulletNumMax())
-		{
-			bulletCreateCoolTime = kBulletCreateCoolTime;
-			AddBullet(kCreateBulletNum);
-		}
-	}
 }
 
 void Player::InitializeFloatingGimmick() { 
