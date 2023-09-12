@@ -755,23 +755,12 @@ void Player::Attack() {
 			Vector3 velocity = world3DReticlePos - GetWorldPosition(worldTransformL_arm_.matWorld_);
 			velocity = vector.NormalizePlus(velocity, kBulletSpeed);
 			
-			
-			/*
-			// 弾を生成し、初期化
-			PlayerBullet* newBullet = new PlayerBullet();
-			
-			newBullet->Initialize(
-			    models_[5], GetWorldPosition(worldTransformL_arm_.matWorld_),
-			    viewProjection_->rotation_, velocity);
-			// 弾を登録する
-			bullets_.push_back(newBullet);
-			*/
 			for (PlayerBullet* bullet : bullets_)
 			{
 				if (bullet->GetState() == PlayerBullet::PlayerBulletState::Stance)
 				{
 					bullet->SetShot(
-					    viewProjection_->rotation_, velocity,HomingMode_);
+					    viewProjection_->rotation_, velocity, (HomingMode_ && GetcheckCamera()));
 					bullet->SetState(PlayerBullet::PlayerBulletState::Move);
 					break;
 				}

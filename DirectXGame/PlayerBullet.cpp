@@ -319,17 +319,16 @@ void PlayerBullet::FinAnimationUpdate()
 
 void PlayerBullet::SetShot(const Vector3& rotate, const Vector3& velocity,bool isHoming)
 {
-	deathTimer_ = kLifeTime;
+	deathTimer_ = kAttackTimeNormal;
 	//worldTransform_.translation_ = position;
 	worldTransform_.translation_ = GetWorldPosition();
 
 	worldTransform_.rotation_ = rotate;
 	velocity_ = velocity;
 	worldTransform_.parent_ = nullptr;
-	//isHoming_ = false;
-	/* if (player_->GetcheckCamera() == 1) {
-		isHoming_ = true;
-	}*/
+	if (isHoming) {
+		deathTimer_ = kAttackTimeHoming;
+	}
 	isHoming_ = isHoming;
 };
 

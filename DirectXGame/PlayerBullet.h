@@ -78,6 +78,11 @@ private:
 	Vector3 velocity_;
 	// 寿命
 	static const int32_t kLifeTime = 30;
+
+	static const int32_t kAttackTimeNormal = 50;
+	static const int32_t kAttackTimeHoming = 30;
+
+
 	// デスタイマー
 	int32_t deathTimer_ = kLifeTime;
 	// デスフラグ
