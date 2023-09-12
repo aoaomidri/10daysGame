@@ -356,7 +356,7 @@ public:
 	Behavior GetBehavior() { return behavior_; };
 
 	// 最初に生成する弾の数
-	const int kBulletNum = 0;
+	const int kBulletNum = 15;
 	static const int kBulletMax = 99;
 };
 
