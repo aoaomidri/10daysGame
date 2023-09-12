@@ -82,7 +82,7 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	textureArrow_ = TextureManager::Load("change.png");
 	textureX_ = TextureManager::Load("text/X.png");
 
-	changeUIBaseScale_={64.0f, 64.0f};
+	changeUIBaseScale_={128.0f, 128.0f};
 	changeUIBaseRotation_ = 0.0f;
 	changeUIBaseTranslation_={120, 480};
 	liner_={0, 0};
