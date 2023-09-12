@@ -113,11 +113,12 @@ private: // メンバ変数
 
 	Sprite* titleSprite_ = nullptr;
 
-
-
 	Sprite* PLSprite_ = nullptr;
 	Sprite* ENSprite_ = nullptr;
 
+	Sprite* backBlackSprite_ = nullptr;
+	Sprite* countDownSprite_ = nullptr;
+	Sprite* countDownNum_[4];
 
 	Vector4 colorChangeEN = {0};
 	Vector4 colorChangePL = {0};
@@ -159,6 +160,8 @@ private: // メンバ変数
 	uint32_t textureHandleNumber[11] = {0};
 
 	uint32_t textureParticleFish;
+	uint32_t textureHandleBackBlack;
+	uint32_t textureHandleCountDown;
 
 	//音楽データハンドル
 	uint32_t TitleBGMDataHandle_ = 0;
@@ -241,6 +244,10 @@ private: // メンバ変数
 	XINPUT_STATE joyState;
 
 	XINPUT_STATE preJoyState;
+
+	//カウントダウン
+	bool isCountDown_;
+	int countDown_;
 
 	Scene scene_ = Scene::End;
 

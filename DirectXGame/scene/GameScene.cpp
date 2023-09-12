@@ -22,6 +22,7 @@ GameScene::~GameScene() {
 	delete titleSprite_;
 	delete PLSprite_;
 	delete ENSprite_;
+	delete backBlackSprite_;
 }
 
 int GameScene::CheckTensPlaceNumber(int num) { return num / 10; }
@@ -79,6 +80,8 @@ void GameScene::TextureInitialize() {
 	textureHandleNumber[10] = TextureManager::Load("Number/slash.png");
 
 	textureParticleFish = TextureManager::Load("fish.png");
+	textureHandleBackBlack = TextureManager::Load("backBlack.png");
+	textureHandleCountDown = TextureManager::Load("CountDownSprite.png");
 }
 
 void GameScene::MakeTexture() {
@@ -150,6 +153,14 @@ void GameScene::MakeTexture() {
 
 	slashSprite_ = Sprite::Create(textureHandleNumber[10], {1170, 640}, {1, 1, 1, 1}, {0.5f, 0.5f});
 	slashSprite_->SetSize({144.0f, 144.0f});
+
+	backBlackSprite_ = Sprite::Create(textureHandleBackBlack, {0, 0}, {1, 1, 1, 1}, {0, 0});
+	countDownSprite_ = Sprite::Create(textureHandleCountDown, {0, 0}, {1, 1, 1, 1}, {0, 0});
+
+	countDownNum_[0] = Sprite::Create(textureHandleNumber[3], {640, 360}, {1, 1, 1, 1}, {0.5f, 0.5f});
+	countDownNum_[1] = Sprite::Create(textureHandleNumber[2], {640, 360}, {1, 1, 1, 1}, {0.5f, 0.5f});
+	countDownNum_[2] = Sprite::Create(textureHandleNumber[1], {640, 360}, {1, 1, 1, 1}, {0.5f, 0.5f});
+	countDownNum_[3] = Sprite::Create(textureHandleNumber[0], {640, 360}, {1, 1, 1, 1}, {0.5f, 0.5f});
 }
 
 void GameScene::SoundInitialize() {
@@ -273,6 +284,28 @@ void GameScene::Initialize() {
 		sceneTransition_ = std::make_unique<SceneTransition>();
 		sceneTransition_->Initialize(textureParticleFish);
 	}
+
+	isCountDown_ = true;
+	countDown_ = 0;
+
+	//カウントダウンの際にオブジェクトの位置が初期位置に移動させるよう
+	player_->Update();
+
+	enemy_->Update();
+
+	skyDome_->Update();
+
+	ground_->Update();
+
+	rock_->Update();
+
+	followCamera_->Update();
+
+	enemyCamera_->Update();
+
+	gameCamera_->DrawImgui();
+
+	gameCamera_->Update();
 
 #ifdef _DEBUG
 	////軸方向表示の表示を有効にする
@@ -530,6 +563,10 @@ void GameScene::DrawTexture() {
 		//PLSprite_->Draw();
 		ENSprite_->Draw();
 
+		if (isCountDown_) {
+			backBlackSprite_->Draw();
+			countDownSprite_->Draw();
+		}
 	}
 
 	if (scene_ == Scene::Pose) {
@@ -559,6 +596,21 @@ void GameScene::DrawTexture() {
 	}
 
 	sceneTransition_->Draw();
+	if (countDown_ >= 60 * 3 && countDown_ < 60 * 3.5f) {
+		countDownNum_[0]->Draw();
+	}
+	if (countDown_ >= 60 * 3.5f && countDown_ < 60 * 4.0f) {
+		countDownNum_[1]->Draw();
+	}
+	if (countDown_ >= 60 * 4.0f && countDown_ < 60 * 4.5f) {
+		countDownNum_[2]->Draw();
+	}
+	if (countDown_ >= 60 * 4.5f && countDown_ < 60 * 5.0f) {
+		countDownNum_[3]->Draw();
+	}
+	if (countDown_ >= 60 * 5.0f) {
+		isCountDown_ = false;
+	}
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
@@ -1208,76 +1260,80 @@ void GameScene::MainInitialize() {
 }
 
 void GameScene::MainUpdate() { 
-	player_->Update();
 
-	enemy_->Update();
+	if (isCountDown_) {
+		countDown_++;
+	} 
+	else {
+		player_->Update();
 
-	skyDome_->Update();
+		enemy_->Update();
 
-	ground_->Update();
+		skyDome_->Update();
 
-	rock_->Update();
+		ground_->Update();
 
-	followCamera_->Update();
+		rock_->Update();
 
-	enemyCamera_->Update();
+		followCamera_->Update();
 
-	gameCamera_->DrawImgui();
+		enemyCamera_->Update();
 
-	gameCamera_->Update();
+		gameCamera_->DrawImgui();
+
+		gameCamera_->Update();
 
 #ifdef _DEBUG
-	/*if (Input::GetInstance()->GetJoystickState(0, joyState)) {
-	    if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_Y) {
-	        isDebugCameraActive_ = !isDebugCameraActive_;
-	    }
-	}*/
+		/*if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+		    if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_Y) {
+		        isDebugCameraActive_ = !isDebugCameraActive_;
+		    }
+		}*/
 
-	/*if (input_->TriggerKey(DIK_RETURN)) {
-		isDebugCameraActive_ = !isDebugCameraActive_;
-	}*/
-	ImGui::Begin("SELECTMODE");
-	ImGui::Text("select = %d", selectMode);
-	ImGui::End();
-	/*ImGui::Begin("CameraInforMation");
-	ImGui::DragFloat3("CameraRotate", &followCamera_->GetViewProjection().rotation_.x, 0.1f);
-	ImGui::Text("Frame rate: %6.2f fps", ImGui::GetIO().Framerate);
-	ImGui::End();*/
+		/*if (input_->TriggerKey(DIK_RETURN)) {
+		    isDebugCameraActive_ = !isDebugCameraActive_;
+		}*/
+		ImGui::Begin("SELECTMODE");
+		ImGui::Text("select = %d", selectMode);
+		ImGui::End();
+		/*ImGui::Begin("CameraInforMation");
+		ImGui::DragFloat3("CameraRotate", &followCamera_->GetViewProjection().rotation_.x, 0.1f);
+		ImGui::Text("Frame rate: %6.2f fps", ImGui::GetIO().Framerate);
+		ImGui::End();*/
 
 #endif // _DEBUG
 
-	
-	if (enemy_->GetEnemyLife()!=0) {
-		CheckAllCollisions();
-	}
-	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
-		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_START) &&
-		    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_START) && 
-			enemy_->GetEnemyLife()>0) {
-			sceneRequest_ = Scene::Pose;
+		if (enemy_->GetEnemyLife() != 0) {
+			CheckAllCollisions();
+		}
+		if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+			if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_START) &&
+			    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_START) &&
+			    enemy_->GetEnemyLife() > 0) {
+				sceneRequest_ = Scene::Pose;
+			}
+		}
+
+		if (enemy_->GetEnemyLife() <= 0.0f) {
+			// audio_->StopWave(MainBGMHandle_);
+			// sceneRequest_ = Scene::End;
+			gameCamera_->SetTarget(&enemy_->GetWorldTransform());
+
+			viewProjection_.matView = gameCamera_->GetViewProjection().matView;
+			viewProjection_.matProjection = gameCamera_->GetViewProjection().matProjection;
+
+		} else {
+			gameCamera_->SetViewProjection(followCamera_->GetViewProjection());
+		}
+
+		if (enemy_->GetEnemyDead()) {
+			sceneRequest_ = Scene::End;
+		}
+
+		if (player_->IsDead()) {
+			sceneRequest_ = Scene::GameOver;
 		}
 	}
-
-	if (enemy_->GetEnemyLife()<=0.0f) {
-		//audio_->StopWave(MainBGMHandle_);
-		//sceneRequest_ = Scene::End;
-		gameCamera_->SetTarget(&enemy_->GetWorldTransform());
-
-		viewProjection_.matView = gameCamera_->GetViewProjection().matView;
-		viewProjection_.matProjection = gameCamera_->GetViewProjection().matProjection;
-		
-	} else {
-		gameCamera_->SetViewProjection(followCamera_->GetViewProjection());
-	}
-
-	if (enemy_->GetEnemyDead()) {
-		sceneRequest_ = Scene::End;
-	}
-
-	if (player_->IsDead()) {
-		sceneRequest_ = Scene::GameOver;
-	}
-
 }
 
 void GameScene::PoseInitialize() {
