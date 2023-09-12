@@ -180,7 +180,9 @@ void Player::Update() {
 		isInvincible_ = false;
 	}
 
-	if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER) {
+	//弾を増やす
+	if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER && 
+		behavior_ != Behavior::kDead) {
 		if (bulletCreateCoolTime<=0 && kBulletMax > GetBulletNumMax())
 		{
 			bulletCreateCoolTime = kBulletCreateCoolTime;
