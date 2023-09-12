@@ -324,11 +324,17 @@ private:
 	Vector2 changeUIBaseScale_{1.0f,1.0f};
 	float changeUIBaseRotation_=0.0f;
 	Vector2 changeUIBaseTranslation_{640, 320};
-	Vector2 liner_{640, 320};
-	Vector2 chaser_{640, 320};
-	Vector2 xButtom_{640, 320};
+	Vector2 liner_{0, 0};
+	Vector2 chaser_{0, 0};
+	Vector2 xButtom_{0, 0};
+	Vector2 buttonScale_{1.0f,1.0f};
+	Vector2 valid_{70,0};
+	Vector2 notValid_{40, 40};
+
 	float arrowRotate_=0.0f;
 	float changeAnimation_ = 0.0f;
+
+	void ChangeUIUpdate();
 
 	//無敵判定
 	bool isInvincible_ = false;
