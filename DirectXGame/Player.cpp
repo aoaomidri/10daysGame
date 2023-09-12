@@ -193,6 +193,12 @@ void Player::Update() {
 	}
 
 	//ダッシュエフェクト
+	if (behavior_ == Behavior::kDash) {
+		concentrationLine_->SetIsPop(true);
+	} else {
+		concentrationLine_->SetIsPop(false);
+	}
+
 	concentrationLine_->Update();
 }
 
@@ -502,7 +508,6 @@ void Player::BehaviorDashUpdate() {
 	BehaviorRootUpdate();
 	if ((!(joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) ||
 	     input_->TriggerKey(DIK_SPACE))) {
-		concentrationLine_->SetIsPop(false);
 		behaviorRequest_ = Behavior::kRoot;
 	}
 }

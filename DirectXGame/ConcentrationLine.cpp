@@ -13,15 +13,13 @@ void ConcentrationLine::Initialize(Model* model) {
 void ConcentrationLine::Update() {
 	static MyVector vector;
 	static MyMatrix matrix;
-
+	Vector3 playerVelocity = *playerVelocity_;
 	emitter_.worldTransform.translation_ = playerWorldTransform_->translation_; // 後で治す
-	emitter_.worldTransform.translation_.z += 0.45f;
 
 
-	if (IsPop_) {
+	if (IsPop_ && (playerVelocity.x != 0.0f && playerVelocity.z != 0.0f)) {
 		// パーティクルの発生
 		if (particlePopTime_ <= 0) {
-			Vector3 playerVelocity = *playerVelocity_;
 			Matrix4x4 playerRotate = matrix.MakeRotateMatrix(playerWorldTransform_->rotation_);
 			for (int i = 0; i < 8; i++) {
 				//パーティクルの沸き場所
