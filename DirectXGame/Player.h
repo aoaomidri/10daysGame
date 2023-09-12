@@ -105,7 +105,9 @@ public:
 	bool GetIsShotBullet() { return isShotBullet_; }
 
 	void OnCollision();
+	void OnCollision(int Damage);
 	
+
 	void DrawImgui();
 
 	bool IsDead() { return isDead_; };

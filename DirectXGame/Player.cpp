@@ -725,6 +725,24 @@ void Player::OnCollision() {
 		PlayerLife -= 50;
 	}
 }
+void Player::OnCollision(int Damage) {
+	if (!isInvincible_) {
+		int num = Damage;
+		isInvincible_ = true;
+		invincibleTime_ = kHitInvincible;
+		for (PlayerBullet* bullet : bullets_) {
+			if (bullet->GetState() == PlayerBullet::PlayerBulletState::Idle) {
+				bullet->OnCollision();
+				num--;
+				if (num<=0)
+				{
+					return;
+				}
+			}
+		}
+		PlayerLife -= 50;
+	}
+}	
 
 void Player::DrawImgui() {
 	ImGui::Begin("Player");
