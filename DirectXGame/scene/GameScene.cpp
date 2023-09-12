@@ -584,7 +584,8 @@ void GameScene::CheckAllCollisions() {
 		for (PlayerBullet* bullet : playerBullets) {
 			Sphere playerBullet_{.center = bullet->GetWorldPosition(), .radius = bullet->radius};
 			if (isCollisionOBBSphere(enemy_->GetOBB(), playerBullet_)) {
-				if (bullet->GetState() != PlayerBullet::PlayerBulletState::Idle)
+				if (bullet->GetState() != PlayerBullet::PlayerBulletState::Idle && 
+					bullet->GetState() != PlayerBullet::PlayerBulletState::Stance)
 				{
 					if (bullet->GetState() == PlayerBullet::PlayerBulletState::Move) {
 						enemy_->OnCollision();
