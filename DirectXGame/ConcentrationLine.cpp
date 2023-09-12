@@ -9,8 +9,7 @@ void ConcentrationLine::Initialize(Model* model, uint32_t textureHandle) {
 	isDraw_ = true;
 
 	spriteParticle_ = std::make_unique<SpriteParticle>();
-	spriteParticle_->sprite = Sprite::Create(textureHandle_, {0, 0}, {1, 1, 1, 1}, {0.5f, 0.5f});
-	spriteParticle_->sprite->SetPosition({640, 360});
+	spriteParticle_->sprite = Sprite::Create(textureHandle_, {640, 360}, {1, 1, 1, 1}, {0.5, 0.5f});
 	spriteParticle_->activeTime = 0;
 	spriteParticle_->isActive = true;
 }
@@ -67,8 +66,9 @@ void ConcentrationLine::Update() {
 	}
 
 	if (spriteParticle_->isActive) {
-		Vector2 spritePos = spriteParticle_->sprite->GetPosition();
-		spritePos.x = static_cast<float>(rand() % 51 - 25);
+		Vector2 spritePos;
+		spritePos.x = 640 + static_cast<float>(rand() % 51 - 25);
+		spritePos.y = 360;
 		spriteParticle_->sprite->SetPosition(spritePos);
 	}
 
@@ -84,6 +84,6 @@ void ConcentrationLine::Draw(const ViewProjection& viewProjection) {
 
 void ConcentrationLine::Draw() {
 	if (spriteParticle_->isActive) {
-		BaseEffect::Draw();
+		spriteParticle_->sprite->Draw();
 	}
 }
