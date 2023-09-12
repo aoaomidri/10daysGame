@@ -63,7 +63,6 @@ void PlayerBullet::Update() {
 		break;
 	case PlayerBullet::PlayerBulletState::Stance:
 		Stance();
-		deathTimer_ = kLifeTime;
 		break;
 	case PlayerBullet::PlayerBulletState::Move:
 		Move();
@@ -175,7 +174,7 @@ void PlayerBullet::Move()
 	}
 	static MyVector vector;
 	static MyMatrix matrix;
-	if (player_->GetcheckCamera() == 1) {
+	if (isHoming_) {
 	
 	Vector3 toEnemy = enemy_->translation_ - worldTransform_.translation_;	
 
@@ -318,14 +317,20 @@ void PlayerBullet::FinAnimationUpdate()
 	worldTransformFin_.rotation_.y = (std::sin(finRotate))*float(M_PI)/4.0f; 
 }
 
-void PlayerBullet::SetShot(const Vector3& position, const Vector3& rotate, const Vector3& velocity)
+void PlayerBullet::SetShot(const Vector3& rotate, const Vector3& velocity,bool isHoming)
 {
-	worldTransform_.translation_ = position;
+	deathTimer_ = kLifeTime;
+	//worldTransform_.translation_ = position;
 	worldTransform_.translation_ = GetWorldPosition();
 
 	worldTransform_.rotation_ = rotate;
 	velocity_ = velocity;
 	worldTransform_.parent_ = nullptr;
+	//isHoming_ = false;
+	/* if (player_->GetcheckCamera() == 1) {
+		isHoming_ = true;
+	}*/
+	isHoming_ = isHoming;
 };
 
 void PlayerBullet::SetShotIdle(const Vector3& position) {

@@ -47,7 +47,7 @@ public:
 	inline PlayerBulletState GetState() { return state_; };
 	inline void SetState(PlayerBulletState state) { state_ = state; };
 	void SetPlayer(Player* player);
-	void SetShot(const Vector3& position, const Vector3& rotate, const Vector3& velocity);
+	void SetShot(const Vector3& rotate, const Vector3& velocity,bool isHoming);
 	void StanceCancel();
 	//攻撃前にプレイヤーの手元に持ってくる
 	void SetShotIdle(const Vector3& position);
@@ -132,4 +132,7 @@ private:
 	int invincibleTime_;
 
 	Vector3 rotate_;
+
+	//ホーミングの有無
+	bool isHoming_ = false;
 };

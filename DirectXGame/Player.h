@@ -316,6 +316,11 @@ private:
 	const int kHitInvincible = 30;
 	int invincibleTime_;
 
+	//ホーミング切り替え
+	bool HomingMode_ = false;
+
+	XINPUT_STATE preJoyState;
+
 public:
 
 	Behavior GetBehavior() { return behavior_; };

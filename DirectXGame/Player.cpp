@@ -174,7 +174,17 @@ void Player::Update() {
 		isInvincible_ = false;
 	}
 
+	// 発射モード切り替え
+	if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_X) &&
+	    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_X)) {
+		HomingMode_ = !HomingMode_;
+	}
+
 	EnergyUpdate();
+
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+		preJoyState = joyState;
+	}
 }
 
 void Player::Draw(const ViewProjection& viewProjection) {
@@ -761,8 +771,7 @@ void Player::Attack() {
 				if (bullet->GetState() == PlayerBullet::PlayerBulletState::Stance)
 				{
 					bullet->SetShot(
-					    GetWorldPosition(worldTransformL_arm_.matWorld_),
-					    viewProjection_->rotation_, velocity);
+					    viewProjection_->rotation_, velocity,HomingMode_);
 					bullet->SetState(PlayerBullet::PlayerBulletState::Move);
 					break;
 				}
