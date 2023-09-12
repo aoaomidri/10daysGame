@@ -491,6 +491,7 @@ void GameScene::DrawTexture() {
 	}
 
 	if (scene_ == Scene::Main || scene_ == Scene::Pose || scene_ == Scene::GameOver) {
+		player_->DrawUI();
 		sprite_[2]->SetSize({(enemy_->GetEnemyLifePer()), 36.0f});
 		if (enemy_->GetEnemyLife() == 170) {
 			colorChangeEN = {1, 1, 0, 0.5};
@@ -529,7 +530,6 @@ void GameScene::DrawTexture() {
 		//PLSprite_->Draw();
 		ENSprite_->Draw();
 
-		player_->DrawUI();
 	}
 
 	if (scene_ == Scene::Pose) {

@@ -253,6 +253,7 @@ void Player::EnergyUpdate()
 }
 
 void Player::DrawUI() { 
+	concentrationLine_->Draw();
 	if (joyState.Gamepad.bLeftTrigger != 0) {
 		sprite2DReticle_->Draw();
 	}
@@ -263,8 +264,6 @@ void Player::DrawUI() {
 	{
 		spriteEnergyButton_->Draw();
 	}
-
-	concentrationLine_->Draw();
 }
 
 void Player::BehaviorRootInitialize() { 
