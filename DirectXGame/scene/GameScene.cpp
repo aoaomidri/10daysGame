@@ -269,9 +269,10 @@ void GameScene::Initialize() {
 	player_->SetWorldTransformEnemy(&enemy_->GetWorldTransform());
 	player_->AddBullet(player_->kBulletNum);
 	
-	sceneTransition_ = std::make_unique<SceneTransition>();
-	sceneTransition_->Initialize(textureParticleFish);
-
+	if (!sceneTransition_) {
+		sceneTransition_ = std::make_unique<SceneTransition>();
+		sceneTransition_->Initialize(textureParticleFish);
+	}
 
 #ifdef _DEBUG
 	////軸方向表示の表示を有効にする
@@ -365,7 +366,6 @@ void GameScene::Update() {
 		viewProjection_.TransferMatrix();
 	}
 	
-
 	sceneTransition_->Update();
 
 	#ifdef _DEBUG
