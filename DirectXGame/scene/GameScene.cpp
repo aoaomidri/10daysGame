@@ -432,7 +432,8 @@ void GameScene::Draw() {
 	} 
 	
 
-	if (scene_ == Scene::Main || scene_ == Scene::Pose || scene_ == Scene::GameOver) {
+	if (scene_ == Scene::Main || scene_ == Scene::Pose || scene_ == Scene::GameOver ||
+	    scene_ == Scene::End) {
 
 		player_->Draw(viewProjection_);
 
@@ -551,7 +552,7 @@ void GameScene::DrawTexture() {
 		sprite_[11]->Draw();
 	}
 	if (scene_ == Scene::End) {
-		sprite_[13]->Draw();
+		//sprite_[13]->Draw();
 		sprite_[3]->Draw();
 		sprite_[4]->Draw();
 		sprite_[8]->Draw();
@@ -1249,7 +1250,8 @@ void GameScene::MainUpdate() {
 	}
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_START) &&
-		    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_START)) {
+		    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_START) && 
+			enemy_->GetEnemyLife()>0) {
 			sceneRequest_ = Scene::Pose;
 		}
 	}
