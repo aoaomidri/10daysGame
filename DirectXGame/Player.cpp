@@ -777,7 +777,8 @@ void Player::Attack() {
 	if (joyState.Gamepad.bRightTrigger != 0/* || (joyState.Gamepad.wButtons&&XINPUT_GAMEPAD_B)*/) {
 		bulletTime += 1;
 		if (bulletTime % bulletInterval == 1) {
-			
+			isShotBullet_ = true;
+
 			// 弾の速度
 			const float kBulletSpeed = 5.0f;
 			Vector3 world3DReticlePos = GetWorldPosition(worldTransform3DReticle_.matWorld_);
@@ -799,6 +800,7 @@ void Player::Attack() {
 		}
 	} else {
 		bulletTime = 0;
+		isShotBullet_ = false;
 	}
 }
 /*

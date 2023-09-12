@@ -177,6 +177,10 @@ private: // メンバ変数
 
 	uint32_t ENSEHandle_ = 0;
 
+	uint32_t shotSoundHandle_ = 0;
+	uint32_t selectSoundHandle_ = 0;
+	int shotSoundCooldown_;
+
 	// 3Dモデル
 	std::unique_ptr<Model> modelSkyDome_;
 
@@ -248,6 +252,7 @@ private: // メンバ変数
 	//カウントダウン
 	bool isCountDown_;
 	int countDown_;
+	bool cutCountDown_;
 
 	Scene scene_ = Scene::End;
 

@@ -102,6 +102,8 @@ public:
 
 	void SetWorldTransformEnemy(const WorldTransform* worldTransform) {worldTransformEnemy_ = worldTransform;};
 
+	bool GetIsShotBullet() { return isShotBullet_; }
+
 	void OnCollision();
 	
 	void DrawImgui();
@@ -344,6 +346,9 @@ private:
 	//ダッシュのエフェクト
 	std::unique_ptr<ConcentrationLine> concentrationLine_;
 	uint32_t textureConcentrationLine;
+
+	//サウンド
+	bool isShotBullet_;
 
 public:
 

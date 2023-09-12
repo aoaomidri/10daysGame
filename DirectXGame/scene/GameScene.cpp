@@ -174,6 +174,9 @@ void GameScene::SoundInitialize() {
 	EndBGMDataHandle_ = audio_->LoadWave("audio/zingle.wav");
 
 	SEDataHandle_ = audio_->LoadWave("audio/break.wav");
+
+	shotSoundHandle_ = audio_->LoadWave("audio/Shot.wav");
+	selectSoundHandle_ = audio_->LoadWave("audio/selectSound.wav");
 }
 
 void GameScene::Initialize() {
@@ -291,6 +294,7 @@ void GameScene::Initialize() {
 
 	isCountDown_ = true;
 	countDown_ = 0;
+	shotSoundCooldown_ = 0;
 
 #ifdef _DEBUG
 	////軸方向表示の表示を有効にする
@@ -583,28 +587,60 @@ void GameScene::DrawTexture() {
 	static MyVector vector;
 	static MyMatrix matrix;
 	sceneTransition_->Draw();
-	if (countDown_ >= 60 * 3 && countDown_ < 60 * 3.5f) {
-		Vector2 textureSize = vector.Lerp(countDownNum_[0]->GetSize(), {144, 144}, 0.033f);
-		countDownNum_[0]->SetSize(textureSize);
-		countDownNum_[0]->Draw();
+
+	if (BeforeScene_ == Scene::GameOver) {
+		cutCountDown_ = true;
 	}
-	if (countDown_ >= 60 * 3.5f && countDown_ < 60 * 4.0f) {
-		Vector2 textureSize = vector.Lerp(countDownNum_[1]->GetSize(), {144, 144}, 0.033f);
-		countDownNum_[1]->SetSize(textureSize);
-		countDownNum_[1]->Draw();
-	}
-	if (countDown_ >= 60 * 4.0f && countDown_ < 60 * 4.5f) {
-		Vector2 textureSize = vector.Lerp(countDownNum_[2]->GetSize(), {144, 144}, 0.033f);
-		countDownNum_[2]->SetSize(textureSize);
-		countDownNum_[2]->Draw();
-	}
-	if (countDown_ >= 60 * 4.5f && countDown_ < 60 * 5.0f) {
-		Vector2 textureSize = vector.Lerp(countDownNum_[3]->GetSize(), {144, 144}, 0.033f);
-		countDownNum_[3]->SetSize(textureSize);
-		countDownNum_[3]->Draw();
-	}
-	if (countDown_ >= 60 * 5.0f) {
-		isCountDown_ = false;
+
+	if (!cutCountDown_){
+		if (countDown_ >= 60 * 2 && countDown_ < 60 * 2.8f) {
+			Vector2 textureSize = vector.Lerp(countDownNum_[0]->GetSize(), {144, 144}, 0.033f);
+			countDownNum_[0]->SetSize(textureSize);
+			countDownNum_[0]->Draw();
+		}
+		if (countDown_ >= 60 * 2.8f && countDown_ < 60 * 3.5f) {
+			Vector2 textureSize = vector.Lerp(countDownNum_[1]->GetSize(), {144, 144}, 0.033f);
+			countDownNum_[1]->SetSize(textureSize);
+			countDownNum_[1]->Draw();
+		}
+		if (countDown_ >= 60 * 3.5f && countDown_ < 60 * 4.2f) {
+			Vector2 textureSize = vector.Lerp(countDownNum_[2]->GetSize(), {144, 144}, 0.033f);
+			countDownNum_[2]->SetSize(textureSize);
+			countDownNum_[2]->Draw();
+		}
+		if (countDown_ >= 60 * 4.2f && countDown_ < 60 * 5.0f) {
+			Vector2 textureSize = vector.Lerp(countDownNum_[3]->GetSize(), {144, 144}, 0.033f);
+			countDownNum_[3]->SetSize(textureSize);
+			countDownNum_[3]->Draw();
+		}
+		if (countDown_ >= 60 * 5.0f) {
+			isCountDown_ = false;
+		}
+	} 
+	else {
+		if (countDown_ >= 60 * 0.5 && countDown_ < 60 * 1.3f) {
+			Vector2 textureSize = vector.Lerp(countDownNum_[0]->GetSize(), {144, 144}, 0.033f);
+			countDownNum_[0]->SetSize(textureSize);
+			countDownNum_[0]->Draw();
+		}
+		if (countDown_ >= 60 * 1.3f && countDown_ < 60 * 2.1f) {
+			Vector2 textureSize = vector.Lerp(countDownNum_[1]->GetSize(), {144, 144}, 0.033f);
+			countDownNum_[1]->SetSize(textureSize);
+			countDownNum_[1]->Draw();
+		}
+		if (countDown_ >= 60 * 2.1f && countDown_ < 60 * 2.9f) {
+			Vector2 textureSize = vector.Lerp(countDownNum_[2]->GetSize(), {144, 144}, 0.033f);
+			countDownNum_[2]->SetSize(textureSize);
+			countDownNum_[2]->Draw();
+		}
+		if (countDown_ >= 60 * 2.9f && countDown_ < 60 * 3.7f) {
+			Vector2 textureSize = vector.Lerp(countDownNum_[3]->GetSize(), {144, 144}, 0.033f);
+			countDownNum_[3]->SetSize(textureSize);
+			countDownNum_[3]->Draw();
+		}
+		if (countDown_ >= 60 * 3.7f) {
+			isCountDown_ = false;
+		}
 	}
 
 	// スプライト描画後処理
@@ -1297,6 +1333,16 @@ void GameScene::MainUpdate() {
 		gameCamera_->DrawImgui();
 
 		gameCamera_->Update();
+
+		if (player_->GetIsShotBullet()) {
+			if (shotSoundCooldown_ <= 0) {
+				audio_->PlayWave(shotSoundHandle_);
+				shotSoundCooldown_ = 5;
+			}
+			else {
+				shotSoundCooldown_--;
+			}
+		}
 
 #ifdef _DEBUG
 		/*if (Input::GetInstance()->GetJoystickState(0, joyState)) {
