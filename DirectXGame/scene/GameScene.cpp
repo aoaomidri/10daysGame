@@ -584,16 +584,17 @@ void GameScene::CheckAllCollisions() {
 		for (PlayerBullet* bullet : playerBullets) {
 			Sphere playerBullet_{.center = bullet->GetWorldPosition(), .radius = bullet->radius};
 			if (isCollisionOBBSphere(enemy_->GetOBB(), playerBullet_)) {
-				if (bullet->GetState() == PlayerBullet::PlayerBulletState::Move)
+				if (bullet->GetState() != PlayerBullet::PlayerBulletState::Idle)
 				{
-					enemy_->OnCollision();
+					if (bullet->GetState() == PlayerBullet::PlayerBulletState::Move) {
+						enemy_->OnCollision();
+					}
+					if (bullet->GetState() == PlayerBullet::PlayerBulletState::Move ||
+					    !bullet->IsInvincible()) {
+						ENSEHandle_ = audio_->PlayWave(SEDataHandle_);
+					}
+					bullet->OnCollision();
 				}
-				if (bullet->GetState() == PlayerBullet::PlayerBulletState::Move ||
-					!bullet->IsInvincible())
-				{
-					ENSEHandle_ = audio_->PlayWave(SEDataHandle_);
-				}
-				bullet->OnCollision();
 			}
 		}
 	}
@@ -1246,7 +1247,7 @@ void GameScene::MainUpdate() {
 
 	
 	if (enemy_->GetEnemyLife()!=0) {
-		//CheckAllCollisions();
+		CheckAllCollisions();
 	}
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_START) &&
