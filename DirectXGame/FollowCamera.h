@@ -43,8 +43,12 @@ private:
 	float maxRotate;
 
 	float minRotate;
-
-	float rotateSpeed = 0.05f;
+	//基となる回転速度
+	float rotateSpeedBase_ = 0.05f;
+	//回転速度
+	float rotateSpeed_ = 0;
+	//デッドゾーン
+	float threshold_ = 0.7f;
 
 	// 行列の作成
 	std::unique_ptr<MyMatrix> matrix_;
@@ -63,7 +67,15 @@ public:
 
 	void SetTarget(const WorldTransform* target);
 
+	void SetThreshold(float threshold) { threshold_ = threshold; }
+
+	void SetRotateSpeed(float rotatespeed) { rotateSpeedBase_ = rotatespeed; }
+
 	ViewProjection& GetViewProjection() { return viewProjection_; }
 
 	ViewingFrustum& GetViewingFrustum() { return viewingFrustum_; }
+
+	float GetThreshold() { return threshold_; }
+
+	float GetRotateSpeed() { return rotateSpeedBase_; }
 };
