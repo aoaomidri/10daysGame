@@ -230,10 +230,13 @@ public:
 		return worldPos;
 	}
 
+	int GetDamage() { return damage_; };
+
 	// effectモデル
 	Model* model_ = nullptr;
 
-
+	//与えるダメージ
+	int damage_=10;
 
 	void OnCollision();
 };

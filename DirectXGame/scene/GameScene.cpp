@@ -710,7 +710,7 @@ void GameScene::CheckAllCollisions() {
 
 		if (IsCollisionOBBOBB(player_->GetOBB(), enemy_->GetOBB())) {
 				//bullet->OnCollision();
-				player_->OnCollision();
+				player_->OnCollision(enemy_->GetDamage());
 			}
 	}
 #pragma endregion

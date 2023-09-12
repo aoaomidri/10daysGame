@@ -105,7 +105,9 @@ public:
 	bool GetIsShotBullet() { return isShotBullet_; }
 
 	void OnCollision();
+	void OnCollision(int Damage);
 	
+
 	void DrawImgui();
 
 	bool IsDead() { return isDead_; };
@@ -330,8 +332,8 @@ private:
 	Vector2 chaser_{0, 0};
 	Vector2 xButtom_{0, 0};
 	Vector2 buttonScale_{1.0f,1.0f};
-	Vector2 valid_{70,0};
-	Vector2 notValid_{40, 40};
+	Vector2 valid_{120,0};
+	Vector2 notValid_{100, 80};
 
 	float arrowRotate_=0.0f;
 	float changeAnimation_ = 0.0f;
