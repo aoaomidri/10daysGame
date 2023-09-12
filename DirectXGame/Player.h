@@ -4,6 +4,7 @@
 #include<optional>
 #include"PlayerBullet.h"
 #include"Adjustment_Item.h"
+#include "ConcentrationLine.h"
 #include <Sprite.h>
 
 class Player : public BaseCharacter {
@@ -320,6 +321,9 @@ private:
 	bool HomingMode_ = false;
 
 	XINPUT_STATE preJoyState;
+
+	//ダッシュのエフェクト
+	std::unique_ptr<ConcentrationLine> concentrationLine_;
 
 public:
 

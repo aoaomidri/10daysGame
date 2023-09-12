@@ -1246,7 +1246,7 @@ void GameScene::MainUpdate() {
 
 	
 	if (enemy_->GetEnemyLife()!=0) {
-		CheckAllCollisions();
+		//CheckAllCollisions();
 	}
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_START) &&

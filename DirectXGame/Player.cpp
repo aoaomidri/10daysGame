@@ -68,6 +68,12 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	spriteEnergy_ = Sprite::Create(textureHandleEgg_, energyPosition, {1, 1, 1, 1}, {0.5f, 1.0f});
 	spriteEnergiBack_ = Sprite::Create(textureback, energyPosition, {1, 1, 1, 1}, {0.5f, 1.0f});
 	spriteEnergyButton_ = Sprite::Create(textureLB, energyPosition, {1, 1, 1, 1}, {0.5f, 0.5f});
+
+	//ダッシュエフェクト
+	concentrationLine_ = std::make_unique<ConcentrationLine>();
+	concentrationLine_->Initialize(models_[5]);
+	concentrationLine_->SetPlayerVelocity(&move);
+	concentrationLine_->SetPlayerWorldTransform(&worldTransform_);
 }
 
 void Player::Update() {
@@ -185,6 +191,9 @@ void Player::Update() {
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		preJoyState = joyState;
 	}
+
+	//ダッシュエフェクト
+	concentrationLine_->Update();
 }
 
 void Player::Draw(const ViewProjection& viewProjection) {
@@ -196,6 +205,7 @@ void Player::Draw(const ViewProjection& viewProjection) {
 		bullet->Draw(viewProjection);
 	}
 	
+	concentrationLine_->Draw(viewProjection);
 }
 
 void Player::EnergyUpdate()
@@ -313,8 +323,7 @@ void Player::BehaviorRootUpdate() {
 	// プレイヤーの移動方向に見た目を合わせる
 	if (move.x != 0.0f || move.z != 0.0f) {
 		target_angle = std::atan2(move.x, move.z);
-		//worldTransformBody_.rotation_.y = std::atan2(move.x, move.z);
-		
+		//worldTransformBody_.rotation_.y = std::atan2(move.x, move.z);	
 	}
 	
 	worldTransformBody_.rotation_.y =
@@ -444,7 +453,7 @@ void Player::ApplyGlobalVariables() {
 void Player::BehaviorDashInitialize() { 
 	workDash_.dashParameter_ = 0;
 	worldTransformBody_.rotation_.y = target_angle;
-	
+	concentrationLine_->SetIsPop(true);
 }
 
 void Player::BehaviorDashUpdate() { 
@@ -493,6 +502,7 @@ void Player::BehaviorDashUpdate() {
 	BehaviorRootUpdate();
 	if ((!(joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) ||
 	     input_->TriggerKey(DIK_SPACE))) {
+		concentrationLine_->SetIsPop(false);
 		behaviorRequest_ = Behavior::kRoot;
 	}
 }
