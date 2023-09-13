@@ -1325,6 +1325,7 @@ void GameScene::TitleInitialize() {
 	selectMode = 0;
 	gameCamera_->Initialize();
 	audio_->StopWave(GameClearBGMHandle_);
+	audio_->StopWave(GameOverBGMHandle_);
 }
 
 void GameScene::TitleUpdate() {
