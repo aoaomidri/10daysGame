@@ -216,6 +216,8 @@ private: // メンバ変数
 	std::unique_ptr<Model> modelEnemy_;
 	std::unique_ptr<Model> modelEnemyL_parts_;
 	std::unique_ptr<Model> modelEnemyR_parts_;
+	std::unique_ptr<Model> modelEnemyBullet_;
+
 	/*水流エフェクトのモデル*/
 	std::unique_ptr<Model> modelWaterFlowParticle_;
 

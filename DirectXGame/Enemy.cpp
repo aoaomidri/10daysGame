@@ -315,7 +315,7 @@ void Enemy::Fire(float bulletSpeed) {
 		}
 
 		EnemyBullet* newBullet = new EnemyBullet();
-		newBullet->Initialize(model_, enemyPos, worldTransform_.rotation_, velocity);
+	    newBullet->Initialize(models_[3], enemyPos, worldTransform_.rotation_, velocity);
 		// 発射した弾をリストに登録する
 		bullets_.push_back(newBullet);
 }
@@ -343,7 +343,7 @@ void Enemy::TripleFire(float bulletSpeed) {
 		}
 
 		EnemyBullet* newBullet = new EnemyBullet();
-		newBullet->Initialize(model_, enemyPos, worldTransform_.rotation_, velocity);
+		newBullet->Initialize(models_[3], enemyPos, worldTransform_.rotation_, velocity);
 		// 発射した弾をリストに登録する
 		bullets_.push_back(newBullet);
 	}
@@ -376,7 +376,7 @@ void Enemy::randFire(float bulletSpeed) {
 		}
 
 		EnemyBullet* newBullet = new EnemyBullet();
-		newBullet->Initialize(model_, enemyPos, worldTransform_.rotation_, velocity);
+		newBullet->Initialize(models_[3], enemyPos, worldTransform_.rotation_, velocity);
 		// 発射した弾をリストに登録する
 		bullets_.push_back(newBullet);
 	}

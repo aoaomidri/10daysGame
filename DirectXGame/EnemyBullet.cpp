@@ -8,7 +8,7 @@ void EnemyBullet::Initialize(
 
 	model_ = model;
 
-	textureHandle_ = TextureManager::Load("black.png");
+	//textureHandle_ = TextureManager::Load("black.png");
 
 	worldTransform_.Initialize();
 
@@ -45,7 +45,7 @@ void EnemyBullet::Update() {
 }
 
 void EnemyBullet::Draw(const ViewProjection& viewProjection) {
-	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	model_->Draw(worldTransform_, viewProjection);
 }
 
 void EnemyBullet::OnCollision() { isDead_ = true; }

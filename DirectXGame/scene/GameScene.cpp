@@ -206,7 +206,7 @@ void GameScene::Initialize() {
 	modelPlayerBulletBody_.reset(Model::CreateFromOBJ("BulletBody", true));
 	modelPlayerBulletFin_.reset(Model::CreateFromOBJ("tail", true));
 	modelWaterFlowParticle_.reset(Model::CreateFromOBJ("WaterFlowParticle", true));
-
+	modelEnemyBullet_.reset(Model::CreateFromOBJ("EnemyBullet", true));
 
 	viewProjection_.farZ = 2000.0f;
 	viewProjection_.Initialize();
@@ -229,7 +229,8 @@ void GameScene::Initialize() {
 	std::vector<Model*> enemyModels = {
 	    modelEnemy_.get(), 
 		modelEnemyL_parts_.get(), 
-		modelEnemyR_parts_.get()
+		modelEnemyR_parts_.get(),
+		modelEnemyBullet_.get()
 	};
 	//敵キャラの初期化
 	enemy_->Initialize(enemyModels);
