@@ -351,14 +351,14 @@ private:
 	//無敵判定
 	bool isInvincible_ = false;
 	// 被弾時の無敵時間
-	const int kHitInvincible = 30;
+	const int kHitInvincible = 90;
 	int invincibleTime_;
 
 	//ホーミング切り替え
 	bool HomingMode_ = false;
 
 	//最大同時発射数
-	const int kSimuMax = 5;
+	const int kSimuMax = 50;
 
 	XINPUT_STATE preJoyState;
 

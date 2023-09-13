@@ -467,7 +467,7 @@ void Player::UpdateFloatingGimmick() {
 }
 
 void Player::FinAnimationUpdate() {
-	if (behavior_ == Behavior::kDash){
+	if (behavior_ == Behavior::kDash && vector.Length(move)){
 		finRotate += 0.45f;
 	} else {
 		finRotate += 0.05f;
@@ -1014,7 +1014,7 @@ void Player::AttackHoming() {
 
 			Vector3 velocity = world3DReticlePos - GetWorldPosition(worldTransformL_arm_.matWorld_);
 			velocity = vector.NormalizePlus(velocity, kBulletSpeed);
-			int num = kSimuMax;
+			int num = min(GetBulletNumMax()/2,25);
 			for (PlayerBullet* bullet : bullets_) {
 				if (bullet->GetState() == PlayerBullet::PlayerBulletState::Idle) {
 					if (num<=0)

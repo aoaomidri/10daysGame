@@ -61,7 +61,7 @@ public:
 	float radius = 1.0f;
 
 	static const int32_t kAttackTimeNormal = 50;
-	static const int32_t kAttackTimeHoming = 30;
+	static const int32_t kAttackTimeHoming = 60;
 
 	// 攻撃時の速度
 	const float kAttackSpeed = 5.0f;
