@@ -141,6 +141,8 @@ void Player::Update() {
 		// 振る舞いリクエストをリセット
 		behaviorRequest_ = std::nullopt;	
 	
+		
+	isShotBullet_ = false;
 	switch (behavior_) {
 	case Behavior::kRoot:
 	default:
@@ -660,7 +662,6 @@ void Player::BehaviorShotUpdate() {
 
 	L_arm_offset_Base.z = 0.5f;
 
-	isShotBullet_ = false;
 	if (!HomingMode_) {
 		Attack();
 	} else {
