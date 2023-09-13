@@ -1014,7 +1014,7 @@ void Player::AttackHoming() {
 
 			Vector3 velocity = world3DReticlePos - GetWorldPosition(worldTransformL_arm_.matWorld_);
 			velocity = vector.NormalizePlus(velocity, kBulletSpeed);
-			int num = kSimuMax;
+			int num = GetBulletNumMax()/2;
 			for (PlayerBullet* bullet : bullets_) {
 				if (bullet->GetState() == PlayerBullet::PlayerBulletState::Idle) {
 					if (num<=0)

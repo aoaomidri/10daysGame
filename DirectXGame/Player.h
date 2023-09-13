@@ -358,7 +358,7 @@ private:
 	bool HomingMode_ = false;
 
 	//最大同時発射数
-	const int kSimuMax = 5;
+	const int kSimuMax = 50;
 
 	XINPUT_STATE preJoyState;
 
