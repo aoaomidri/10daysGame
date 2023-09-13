@@ -77,6 +77,9 @@ public: // メンバ関数
 
 	bool IsCollisionOBBOBB(const OBB& obb1, const OBB& obb2);
 
+	static bool IsCollisionOBBSegment(const OBB& obb, const Segment& segment);
+
+	static bool IsCollision(const AABB& aabb, const Segment& segment);
 
 public: // メンバクラス
 

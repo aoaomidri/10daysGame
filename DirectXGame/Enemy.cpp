@@ -746,7 +746,7 @@ void Enemy::BehaviorFirstUpdate() {
 	 //// キャラクターの移動ベクトル
 	if (attack_ == Attack::Tackle) {
 		
-		Tackle(2.0f);
+		//Tackle(2.0f);
 	} 
 	if (attack_==Attack::Normal) {
 	

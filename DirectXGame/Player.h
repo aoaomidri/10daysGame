@@ -385,10 +385,13 @@ public:
 	static const int kBulletMax = 99;
 
 	//敵OBB中心
-	Vector3* enemyCenter_;
+	Vector3* enemyCenter_=nullptr;
 	void SetEnemyOBBCenter(Vector3& center) { enemyCenter_ = &center; };
 	void ReticleUpdate();
 
 	bool IsInnerRange(float distance);
+
+	OBB* enemyOBB_=nullptr;
+	void SetEnemyOBB(OBB& center) { enemyOBB_ = &center; };
 };
 
