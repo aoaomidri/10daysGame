@@ -59,6 +59,8 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 	
 	//adjustment_item->AddItem(groupName, "EnemyLife", EnemyLife);
 	adjustment_item->AddItem(groupName, "TackleSpeed", tackleSpeedBase);
+
+	isOpen = true;
 }
 
 void Enemy::ApplyGlobalVariables() {
@@ -233,9 +235,17 @@ void Enemy::FinAnimationUpdate() {
 void Enemy::Draw(const ViewProjection& viewProjection) {
 	//if (isDead == false)
 	{
-		models_[0]->Draw(worldTransformRoll_, viewProjection);
+		if (isOpen)
+		{
+			models_[2]->Draw(worldTransformRoll_, viewProjection);
+		}
+		else
+		{
+			models_[0]->Draw(worldTransformRoll_, viewProjection);
+		}
+		//models_[0]->Draw(worldTransformRoll_, viewProjection);
 		models_[1]->Draw(worldTransformL_parts_, viewProjection);
-		//models_[2]->Draw(worldTransformR_parts_, viewProjection);
+		//models_[2]->Draw(worldTransformRoll_, viewProjection);
 
 		//model_->Draw(worldTransformHitBox_, viewProjection);
 	}

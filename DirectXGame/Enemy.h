@@ -238,5 +238,8 @@ public:
 	//与えるダメージ
 	int damage_=10;
 
+	//口を開いているか
+	bool isOpen = false;
+
 	void OnCollision();
 };
