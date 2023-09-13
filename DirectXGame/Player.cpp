@@ -220,8 +220,10 @@ void Player::Update() {
 	}
 
 	// 発射モード切り替え
+	isStyleChange_ = false;
 	if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_X) &&
 	    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_X)) {
+		isStyleChange_ = true;
 		HomingMode_ = !HomingMode_;
 		changeAnimation_ = 0.0f;
 	}

@@ -173,6 +173,7 @@ void GameScene::SoundInitialize() {
 	swimDataHandle_ = audio_->LoadWave("audio/swim.wav");
 	transitionDataHandle_ = audio_->LoadWave("audio/transition.wav");
 	popFishSoundHandle_ = audio_->LoadWave("audio/popFish.wav");
+	styleChangeSoundHandle_ = audio_->LoadWave("audio/styleChange.wav");
 }
 
 void GameScene::Initialize() {
@@ -359,8 +360,11 @@ void GameScene::Update() {
 		break;
 	}
 	
-	if (player_->GetIsPopFish()) {
+	if (player_->GetIsPopFish() && scene_ == Scene::Main) {
 		audio_->PlayWave(popFishSoundHandle_, false ,1.0f);
+	}
+	if (player_->GetIsStyleChange() && scene_ == Scene::Main) {
+		audio_->PlayWave(styleChangeSoundHandle_, false, 1.0f);
 	}
 	if (sceneTransition_->GetNonFish() && audio_->IsPlaying(transitionSoundHandle_)) {
 		transitionSoundVolume_ -= 0.01f;
