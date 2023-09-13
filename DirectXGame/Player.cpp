@@ -565,13 +565,22 @@ void Player::BehaviorDashUpdate() {
 
 void Player::BehaviorShotInitialize() { 
 	kCharacterSpeed = 0.2f;
-	for (PlayerBullet* bullet : bullets_) {
-		bullet->MoveOn(); 
-	}
 }
 
 void Player::BehaviorShotUpdate() {
-
+	for (PlayerBullet* bullet : bullets_) {
+		bullet->MoveOn();
+	}
+	if (HomingMode_)
+	{
+		// 構え状態の弾を解除
+		for (PlayerBullet* bullet : bullets_) {
+			if (bullet->GetState() == PlayerBullet::PlayerBulletState::Stance) {
+				bullet->StanceCancel();
+				break;
+			}
+		}
+	}
 	ShotReticle(viewProjection_->matView, viewProjection_->matProjection);
 	ReticleUpdate();
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {

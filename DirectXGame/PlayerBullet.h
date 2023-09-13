@@ -119,7 +119,7 @@ private:
 	float idleSpeed = 0.050f;
 	float idleFollow = 0.020f;
 	float kNormalHerd = -11.0f;
-	float kShotHerd = -14.0f;
+	float kShotHerd = -20.0f;
 
 	//待機中に追従するか
 	bool isMove_ = true;
