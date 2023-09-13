@@ -2,6 +2,8 @@
 #include<assert.h>
 #include<imgui.h>
 #include <WinApp.h>
+#include "3d/PrimitiveDrawer.h"
+#include "GameScene.h"
 
 Player::~Player() {
 	for (PlayerBullet* bullet : bullets_) {
@@ -244,20 +246,32 @@ void Player::Update() {
 }
 
 void Player::Draw(const ViewProjection& viewProjection) {
-	if (!isInvincible_ || invincibleTime_%2 == 0)
-	{
+	if (!isInvincible_ || invincibleTime_ % 2 == 0) {
 		models_[0]->Draw(worldTransformBody_, viewProjection);
 		models_[1]->Draw(worldTransformTail_, viewProjection);
 	}
-	//models_[0]->Draw(worldTransformBody_, viewProjection);
-	//models_[1]->Draw(worldTransformTail_, viewProjection);
-	//models_[2]->Draw(worldTransformL_arm_, viewProjection);
+	// models_[0]->Draw(worldTransformBody_, viewProjection);
+	// models_[1]->Draw(worldTransformTail_, viewProjection);
+	/* float distance =
+	    vector.Length((*enemyCenter_) - GetWorldPosition(worldTransformBody_.matWorld_));
+	
+	Segment segment{
+	    GetWorldPosition(worldTransform_.matWorld_),
+	    {vector.Multiply(
+	        distance, vector.Normalize(
+	                      GetWorldPosition(worldTransform3DReticle_.matWorld_) -
+	                      GetWorldPosition(worldTransform_.matWorld_)))}};
+	worldTransform3DReticle_.translation_ = segment.origin + segment.diff;
+	worldTransform3DReticle_.UpdateMatrix(scale);*/
+	//models_[2]->Draw(worldTransform3DReticle_, viewProjection);
 
 	for (PlayerBullet* bullet : bullets_) {
 		bullet->Draw(viewProjection);
 	}
-	
+
 	concentrationLine_->Draw(viewProjection);
+
+
 }
 
 void Player::EnergyUpdate()
@@ -308,6 +322,7 @@ void Player::DrawUI() {
 	}
 	spriteArrow_->Draw();
 	spriteX_->Draw();
+
 }
 
 void Player::BehaviorRootInitialize() { 
@@ -900,14 +915,24 @@ void Player::ShotReticle(const Matrix4x4& matView, const Matrix4x4& matProjectio
 
 bool Player::IsInnerRange(float distance)
 {
+	if (!GetcheckCamera())
+	{
+		return false;
+	}
+	int32_t time = 0;
+	float speed = 0.0f;
+	if (HomingMode_) {
+		time = PlayerBullet::kAttackTimeHoming;
+		speed = 5.0f;
+	} else {
+		time = PlayerBullet::kAttackTimeNormal;
+		speed = 5.0f;
+	}
+	// 時間*速度
+	float length = float(time) * speed;
 	if (!HomingMode_)
 	{
-		Vector3 positionEnemy = *enemyCenter_;
-		/* Matrix4x4 mat = matrix.MakeAffineMatrix(
-		    worldTransformEnemy_->scale_, worldTransformEnemy_->rotation_,
-		    worldTransformEnemy_->translation_);
-		Vector3 positionEnemy = {mat.m[3][0], mat.m[3][1], mat.m[3][2]};*/
-		// Vector3 positionEnemy = {0,0,0};
+		/* Vector3 positionEnemy = *enemyCenter_;
 		//  ビューポート行列
 		Matrix4x4 matViewport =
 		    matrix.MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
@@ -927,34 +952,25 @@ bool Player::IsInnerRange(float distance)
 		if (innerReticle >= max(100.0f / (distance/150.0f),10.0f))
 		{
 			return false;
+		}*/
+		Segment segment{
+		    GetWorldPosition(worldTransform_.matWorld_),
+		    {vector.Multiply(length,vector.Normalize(GetWorldPosition(worldTransform3DReticle_.matWorld_ )- GetWorldPosition(worldTransform_.matWorld_)))}};
+		
+		if (GameScene::IsCollisionOBBSegment(*enemyOBB_,segment))
+		{
+			return true;
 		}
 	}
-	int32_t time = 0;
-	float speed = 0.0f;
 	if (HomingMode_)
 	{
-		time = PlayerBullet::kAttackTimeHoming;
-		speed = 5.0f ;
-	}
-	else
-	{
-		time = PlayerBullet::kAttackTimeNormal;
-		speed = 5.0f;
-	}
-	//時間*速度
-	float length = float(time) * speed;
-	if (!HomingMode_)
-	{
-		length += 15.0f;
-	}
-	else
-	{
+		//length += 15.0f;
 		length -= 5.0f;
+		if (distance <= length) {
+			return true;
+		}
 	}
-	if (distance <= length)
-	{
-		return true;
-	}
+	
 	return false;
 	//return true;
 }

@@ -294,6 +294,7 @@ void GameScene::Initialize() {
 
 	//敵の中心をプレイヤーにセット
 	player_->SetEnemyOBBCenter(enemy_->GetOBB().center);
+	player_->SetEnemyOBB(enemy_->GetOBB());
 
 #ifdef _DEBUG
 	////軸方向表示の表示を有効にする
@@ -1264,6 +1265,48 @@ bool GameScene::IsCollisionOBBOBB(const OBB& obb1, const OBB& obb2) {
 	}
 	return true;
 }
+
+bool GameScene::IsCollision(const AABB& aabb, const Segment& segment) {
+	float tXmin = (aabb.min.x - segment.origin.x) / segment.diff.x;
+	float tXmax = (aabb.max.x - segment.origin.x) / segment.diff.x;
+	float tYmin = (aabb.min.y - segment.origin.y) / segment.diff.y;
+	float tYmax = (aabb.max.y - segment.origin.y) / segment.diff.y;
+	float tZmin = (aabb.min.z - segment.origin.z) / segment.diff.z;
+	float tZmax = (aabb.max.z - segment.origin.z) / segment.diff.z;
+
+	float tNearX = min(tXmin, tXmax);
+	float tNearY = min(tYmin, tYmax);
+	float tNearZ = min(tZmin, tZmax);
+
+	float tFarX = max(tXmin, tXmax);
+	float tFarY = max(tYmin, tYmax);
+	float tFarZ = max(tZmin, tZmax);
+
+	float tmin = max(max(tNearX, tNearY), tNearZ);
+	float tmax = min(min(tFarX, tFarY), tFarZ);
+
+	if (tmin <= tmax) {
+		if (tmin <= 1.0f && tmax >= 0.0f) {
+			return true;
+		}
+	}
+	return false;
+}
+
+bool GameScene::IsCollisionOBBSegment(const OBB& obb, const Segment& segment) {
+	static MyVector vector;
+	static MyMatrix matrix;
+	AABB localAABB{vector.Multiply(- 1.0f, obb.size), obb.size};
+	Matrix4x4 worldInverse =
+	    matrix.Inverce(matrix.Multiply(GetRotate(obb), matrix.MakeTranslateMatrix(obb.center)));
+	auto localLine = segment;
+	localLine.origin = vector.Transform(segment.origin , worldInverse);
+	Vector3 localLineEnd = vector.Transform((segment.origin + segment.diff) , worldInverse);
+	localLine.diff = localLineEnd - localLine.origin;
+	return IsCollision(localAABB, localLine);
+}
+
+
 
 void GameScene::TitleInitialize() { 
 	selectMode = 0;
