@@ -108,6 +108,7 @@ public:
 	void OnCollision();
 	void OnCollision(int Damage);
 	
+	bool IsInviincible() { isInvincible_; };
 
 	void DrawImgui();
 

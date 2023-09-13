@@ -561,7 +561,12 @@ void Player::BehaviorDashUpdate() {
 	}
 }
 
-void Player::BehaviorShotInitialize() { kCharacterSpeed = 0.2f; }
+void Player::BehaviorShotInitialize() { 
+	kCharacterSpeed = 0.2f;
+	for (PlayerBullet* bullet : bullets_) {
+		bullet->MoveOn(); 
+	}
+}
 
 void Player::BehaviorShotUpdate() {
 
