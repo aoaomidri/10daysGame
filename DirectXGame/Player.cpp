@@ -845,6 +845,24 @@ void Player::ShotReticle(const Matrix4x4& matView, const Matrix4x4& matProjectio
 		//sprite2DReticle_->SetPosition(Vector2(positionReticle.x, positionReticle.y));
 		reticleEnemy_ = {positionEnemy.x,positionEnemy.y};
 	}
+	else
+	{
+		Vector3 positionReticle = GetWorldPosition(worldTransform3DReticle_.matWorld_);
+		// ビューポート行列
+		Matrix4x4 matViewport =
+		    matrix.MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
+
+		// ビュー行列とプロジェクション行列、ビューポート行列を合成する
+		Matrix4x4 matViewProjectionViewport =
+		    matrix.Multiply(matrix.Multiply(matView, matProjection), matViewport);
+
+		// ワールド->スクリーン座標変換(ここで3Dから2Dになる)
+		positionReticle = vector.Transform(positionReticle, matViewProjectionViewport);
+
+		// スプライトのレティクルに座標設定
+		reticleCenter_ = (Vector2(positionReticle.x, positionReticle.y));
+		
+	}
 	
 #ifdef _DEBUG
 
