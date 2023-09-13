@@ -694,7 +694,7 @@ void GameScene::CheckAllCollisions() {
 				.radius = bullet->radius
 			};
 			if (isCollisionOBBSphere(player_->GetOBB(),enemyBullet_)) {
-				if (!player_->IsInviincible()) {
+				if (!player_->IsInviincible() && player_->GetBehavior() != Player::Behavior::kDead) {
 					audio_->PlayWave(hitSoundHandle_);
 				}
 				bullet->OnCollision();
@@ -710,7 +710,7 @@ void GameScene::CheckAllCollisions() {
 
 		if (IsCollisionOBBOBB(player_->GetOBB(), enemy_->GetOBB())) {
 			//bullet->OnCollision();
-			if (!player_->IsInviincible()) {
+			if (!player_->IsInviincible() && player_->GetBehavior() != Player::Behavior::kDead) {
 				audio_->PlayWave(hitSoundHandle_);
 			}
 			player_->OnCollision(enemy_->GetDamage());
