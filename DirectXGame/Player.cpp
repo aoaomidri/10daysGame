@@ -316,7 +316,7 @@ void Player::DrawUI() {
 	if (joyState.Gamepad.bLeftTrigger != 0) {
 		sprite2DReticle_->Draw();
 	}
-	if (input_->TriggerKey(DIK_LCONTROL)) {
+	if (input_->PushKey(DIK_LCONTROL)) {
 		sprite2DReticle_->Draw();
 	}
 	
@@ -386,17 +386,39 @@ void Player::BehaviorRootUpdate() {
 		} 
 	} 
 	else {
-		if (input_->TriggerKey(DIK_W)) {
-			move.z += kCharacterSpeed;
-		} else if (input_->TriggerKey(DIK_S)) {
-			move.z -= kCharacterSpeed;
-		} else if (input_->TriggerKey(DIK_D)) {
-			move.x += kCharacterSpeed;
-		} else if (input_->TriggerKey(DIK_A)) {
-			move.x -= kCharacterSpeed;
-		} else {
-			move = {0.0f};
+		const float threshold = 0.7f;
+		bool isMoveing = false;
+		float moveLength = 0.0f;
+		Vector3 move_ = {0};
+		if (input_->PushKey(DIK_W)) {
+			move_.z = 2;
 		}
+		else if (input_->PushKey(DIK_S)) {
+			move_.z = -2;
+		}
+		else {
+			move.z = 0;
+		}
+		if (input_->PushKey(DIK_D)) {
+			move_.x = +2;
+		}
+		else if (input_->PushKey(DIK_A)) {
+			move_.x = -2;
+		}
+		else {
+			move.x = 0;
+		}
+		moveLength = vector.Length(move_);
+		if (moveLength > threshold) {
+			isMoveing = true;
+		}
+		if (isMoveing) {
+			move = {
+			    move_.x * kCharacterSpeed,
+			    0.0f,
+			    move_.z * kCharacterSpeed,
+			};
+		} 
 	}
 
 	/*if (input_->PushKey(DIK_W)) {
@@ -464,13 +486,13 @@ void Player::BehaviorRootUpdate() {
 	worldTransform_.AddTransform(move);
 	worldTransformBody_.AddTransform(move);
 	if (((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) ||
-	     input_->TriggerKey(DIK_LSHIFT))&&dashCoolTime<=0) {
+	     input_->PushKey(DIK_LSHIFT))&&dashCoolTime<=0) {
 		behaviorRequest_ = Behavior::kDash;
 	}
 	/*if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B){
 		behaviorRequest_ = Behavior::kAttack;
 	}*/
-	if (joyState.Gamepad.bLeftTrigger != 0 || input_->TriggerKey(DIK_LCONTROL)) {
+	if (joyState.Gamepad.bLeftTrigger != 0 || input_->PushKey(DIK_LCONTROL)) {
 		behaviorRequest_ = Behavior::kShot;
 	}
 }
@@ -513,7 +535,6 @@ void Player::initializeMoveArm() {
 	armParameter_ = 0.0f;
 	armPeriod = 75;
 	armAmplitude = 0.5f;
-
 }
 
 void Player::UpdateMoveArm() {
@@ -657,17 +678,38 @@ void Player::BehaviorShotUpdate() {
 		}
 	} 
 	else {
-		if (input_->TriggerKey(DIK_W)) {
-			move.z += kCharacterSpeed;
-		} else if (input_->TriggerKey(DIK_S)) {
-			move.z -= kCharacterSpeed;
-		} else if (input_->TriggerKey(DIK_D)) {
-			move.x += kCharacterSpeed;
-		} else if (input_->TriggerKey(DIK_A)) {
-			move.x -= kCharacterSpeed;
-		} else {
-			move = {0.0f};
+		const float threshold = 0.7f;
+		bool isMoveing = false;
+		float moveLength = 0.0f;
+		if (!input_->PushKey(DIK_LCONTROL)) {
+			behaviorRequest_ = Behavior::kRoot;
 		}
+		Vector3 move_ = {0};
+		if (input_->PushKey(DIK_W)) {
+			move_.z = 1;
+		} else if (input_->PushKey(DIK_S)) {
+			move_.z = -1;
+		} else {
+			move.z = 0;
+		}
+		if (input_->PushKey(DIK_D)) {
+			move_.x = +1;
+		} else if (input_->PushKey(DIK_A)) {
+			move_.x = -1;
+		} else {
+			move.x = 0;
+		}
+		moveLength = vector.Length(move_);
+		if (moveLength > threshold) {
+			isMoveing = true;
+		}
+		if (isMoveing) {
+			move = {
+			    move_.x * kCharacterSpeed,
+			    0.0f,
+			    move_.z * kCharacterSpeed,
+			};
+		} 
 	}
 
 	/*if (input_->PushKey(DIK_W)) {

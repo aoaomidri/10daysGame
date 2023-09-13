@@ -80,9 +80,66 @@ void FollowCamera::Update() {
 			baseOffset = vector_->Lerp(baseOffset, rootOffset, offset_t);
 		}
 	}
-	if (input_->TriggerKey(DIK_R)) {
-		destinationAngleY_ = target_->rotation_.y;
-		destinationAngleX_ = 0.2f;
+	else {
+
+		bool isMoveing = false;
+		float moveLength = 0.0f;
+
+		// 移動量
+		Vector3 move_;
+		if (input_->PushKey(DIK_LEFTARROW)) {
+			move_.x = -1;
+ 		}
+		else if (input_->PushKey(DIK_RIGHTARROW)) {
+			move_.x = 1;
+		}
+		else {
+			move_.x = 0;
+		}
+
+		if (input_->PushKey(DIK_UPARROW)) {
+			move_.y = 1;
+		}
+		else if (input_->PushKey(DIK_DOWNARROW)) {
+			move_.y = -1;
+		}
+		else{
+			move_.y = 0;
+		}
+		move_.z = 0;
+
+		moveLength = vector_->Length(move_);
+
+		if (moveLength > threshold_) {
+			isMoveing = true;
+		}
+		if (isMoveing)
+
+		{
+			destinationAngleY_ += move_.x * rotateSpeed_;
+
+			if (destinationAngleX_ > -1.57f && destinationAngleX_ < 1.57f) {
+				destinationAngleX_ -= move_.y * rotateSpeed_;
+			}
+		}
+
+		if (input_->TriggerKey(DIK_R)) {
+			destinationAngleY_ = target_->rotation_.y;
+			destinationAngleX_ = 0.2f;
+		}
+		if (input_->PushKey(DIK_LCONTROL)) {
+			t = 1.0f;
+			rotateSpeed_ = rotateSpeedBase_ / 2.0f;
+			maxRotate = 0.4f;
+			minRotate = -0.31f;
+			baseOffset = vector_->Lerp(baseOffset, shotOffset, offset_t);
+		} else {
+			t = 0.1f;
+			rotateSpeed_ = rotateSpeedBase_;
+			maxRotate = 0.9f;
+			minRotate = -0.1f;
+			baseOffset = vector_->Lerp(baseOffset, rootOffset, offset_t);
+		}
 	}
 	/*if (distance <= -10.0f && distance >= -100.0f) {
 		if (input_->PushKey(DIK_E)) {
