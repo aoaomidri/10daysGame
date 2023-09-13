@@ -73,6 +73,7 @@ void Enemy::ApplyGlobalVariables() {
 }
 
 void Enemy::Update() {
+	isShotBullet = false;
 	// デスフラグの立ったエフェクトを削除
 	effect_.remove_if([](EnemyEffect* effect) {
 		if (effect->IsDead()) {
@@ -292,6 +293,7 @@ void Enemy::OnCollision() {
 void Enemy::Fire(float bulletSpeed) {
 
 	// 弾の速度
+	isShotBullet = true;
 	float kBulletSpeed = bulletSpeed;
 	
 		Vector3 velocity = {0, 0, 0};
@@ -319,6 +321,7 @@ void Enemy::Fire(float bulletSpeed) {
 void Enemy::TripleFire(float bulletSpeed) {
 
 	// 弾の速度
+	isShotBullet = true;
 	float kBulletSpeed = bulletSpeed;
 	for (int i = 0; i < 3; i++) {
 
@@ -347,6 +350,7 @@ void Enemy::TripleFire(float bulletSpeed) {
 
 void Enemy::randFire(float bulletSpeed) {
 	// 弾の速度
+	isShotBullet = true;
 	float kBulletSpeed = bulletSpeed;
 	Vector3 enemyPos = GetMyWorldPosition() + shot_offset;
 

@@ -194,6 +194,7 @@ private: // メンバ変数
 	uint32_t transitionSoundHandle_ = 0;
 	uint32_t popFishSoundHandle_ = 0;
 	uint32_t styleChangeSoundHandle_ = 0;
+	uint32_t enemyShotSoundHandle_ = 0;
 	float transitionSoundVolume_;
 	int shotSoundCooldown_;
 

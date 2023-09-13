@@ -176,6 +176,7 @@ void GameScene::SoundInitialize() {
 	transitionDataHandle_ = audio_->LoadWave("audio/transition.wav");
 	popFishSoundHandle_ = audio_->LoadWave("audio/popFish.wav");
 	styleChangeSoundHandle_ = audio_->LoadWave("audio/styleChange.wav");
+	enemyShotSoundHandle_ = audio_->LoadWave("audio/enemyShot.wav");
 }
 
 void GameScene::Initialize() {
@@ -365,6 +366,9 @@ void GameScene::Update() {
 		break;
 	}
 	
+	if (enemy_->IsShotBullet() && scene_ == Scene::Main) {
+		audio_->PlayWave(enemyShotSoundHandle_, false, 0.8f);
+	}
 	if (player_->GetIsPopFish() && scene_ == Scene::Main) {
 		audio_->PlayWave(popFishSoundHandle_, false ,1.0f);
 	}

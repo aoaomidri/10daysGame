@@ -219,6 +219,8 @@ public:
 
 	bool GetEnemyDead() { return isDead; }
 
+	bool IsShotBullet() { return isShotBullet; }
+
 	// 弾リストを取得
 	const std::list<EnemyBullet*>& GetBullets() { return bullets_; }
 
@@ -229,6 +231,8 @@ public:
 	float radius = size * 2.5f;
 
 	bool isDead = false;
+
+	bool isShotBullet;
 
 	Vector3 GetMyWorldPosition() {
 		Vector3 worldPos(0, 0, 0);
