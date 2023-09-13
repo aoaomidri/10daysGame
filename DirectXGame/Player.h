@@ -105,6 +105,7 @@ public:
 
 	bool GetIsShotBullet() { return isShotBullet_; }
 	bool GetIsPopFish() { return isPopFish_; }
+	bool GetIsStyleChange() { return isStyleChange_; }
 
 	Vector3 GetMoveSpeed() { return move; }
 
@@ -370,6 +371,7 @@ private:
 	//サウンド
 	bool isShotBullet_;
 	bool isPopFish_;
+	bool isStyleChange_;
 
 	//レティクルの移動先
 	Vector2 reticleTarget_;
