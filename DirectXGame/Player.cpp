@@ -426,6 +426,9 @@ void Player::BehaviorRootUpdate() {
 			    move_.z * kCharacterSpeed,
 			};
 		} 
+		else {
+			move = {0, 0, 0};
+		}
 	}
 
 	/*if (input_->PushKey(DIK_W)) {
@@ -719,6 +722,9 @@ void Player::BehaviorShotUpdate() {
 			    move_.z * kCharacterSpeed,
 			};
 		} 
+		else {
+			move = {0, 0, 0};
+		}
 	}
 
 	/*if (input_->PushKey(DIK_W)) {
