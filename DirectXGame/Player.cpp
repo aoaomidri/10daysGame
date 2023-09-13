@@ -424,6 +424,13 @@ void Player::BehaviorRootUpdate() {
 			    (float)joyState.Gamepad.sThumbLY / SHRT_MAX * kCharacterSpeed,
 			};			
 		} 
+		else {
+			move = {
+			    0,
+				0,
+				0
+			};	
+		}
 	} 
 	else {
 		const float threshold = 0.7f;
@@ -431,22 +438,22 @@ void Player::BehaviorRootUpdate() {
 		float moveLength = 0.0f;
 		Vector3 move_ = {0};
 		if (input_->PushKey(DIK_W)) {
-			move_.z = 2;
+			move_.z = 1;
 		}
 		else if (input_->PushKey(DIK_S)) {
-			move_.z = -2;
+			move_.z = -1;
 		}
 		else {
-			move.z = 0;
+			move_.z = 0;
 		}
 		if (input_->PushKey(DIK_D)) {
-			move_.x = +2;
+			move_.x = +1;
 		}
 		else if (input_->PushKey(DIK_A)) {
-			move_.x = -2;
+			move_.x = -1;
 		}
 		else {
-			move.x = 0;
+			move_.x = 0;
 		}
 		moveLength = vector.Length(move_);
 		if (moveLength > threshold) {
@@ -459,6 +466,9 @@ void Player::BehaviorRootUpdate() {
 			    move_.z * kCharacterSpeed,
 			};
 		} 
+		else {
+			move = {0, 0, 0};
+		}
 	}
 
 	/*if (input_->PushKey(DIK_W)) {
@@ -659,9 +669,15 @@ void Player::BehaviorDashUpdate() {
 	}
 	*/
 	BehaviorRootUpdate();
-	if ((!(joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) ||
-	     !input_->PushKey(DIK_LSHIFT))) {
-		behaviorRequest_ = Behavior::kRoot;
+	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+		if ((!(joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER))) {
+			behaviorRequest_ = Behavior::kRoot;
+		}
+	}
+	else {
+		if (!input_->PushKey(DIK_LSHIFT)) {
+			behaviorRequest_ = Behavior::kRoot;
+		}
 	}
 }
 
@@ -715,6 +731,8 @@ void Player::BehaviorShotUpdate() {
 			    0.0f,
 			    (float)joyState.Gamepad.sThumbLY / SHRT_MAX * kCharacterSpeed,
 			};
+		} else {
+			move = {0, 0, 0};
 		}
 	} 
 	else {
@@ -750,6 +768,9 @@ void Player::BehaviorShotUpdate() {
 			    move_.z * kCharacterSpeed,
 			};
 		} 
+		else {
+			move = {0, 0, 0};
+		}
 	}
 
 	/*if (input_->PushKey(DIK_W)) {

@@ -110,11 +110,10 @@ void Enemy::Update() {
 	ImGui::Text("ActionCount = %d", EnemyActionsCount);
 	ImGui::End();
 
-	if (input_->TriggerKey(DIK_E)) {
+	if (input_->TriggerKey(DIK_G)) {
 		EnemyLife = 10.0f;
 	}
 	#endif
-
 	
 	if (behaviorRequest_) {
 		// 振る舞いを変更する
