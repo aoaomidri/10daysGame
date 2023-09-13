@@ -218,11 +218,23 @@ void Player::Update() {
 			AddBullet(kCreateBulletNum);
 		}
 	}
+	if (input_->TriggerKey(DIK_Q) && behavior_ != Behavior::kDead) {
+		if (bulletCreateCoolTime <= 0 && kBulletMax > GetBulletNumMax()) {
+			isPopFish_ = true;
+			bulletCreateCoolTime = kBulletCreateCoolTime;
+			AddBullet(kCreateBulletNum);
+		}
+	}
 
 	// 発射モード切り替え
 	isStyleChange_ = false;
 	if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_X) &&
 	    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_X)) {
+		isStyleChange_ = true;
+		HomingMode_ = !HomingMode_;
+		changeAnimation_ = 0.0f;
+	}
+	if (input_->TriggerKey(DIK_E)) {
 		isStyleChange_ = true;
 		HomingMode_ = !HomingMode_;
 		changeAnimation_ = 0.0f;
@@ -304,6 +316,9 @@ void Player::DrawUI() {
 	if (joyState.Gamepad.bLeftTrigger != 0) {
 		sprite2DReticle_->Draw();
 	}
+	if (input_->TriggerKey(DIK_LCONTROL)) {
+		sprite2DReticle_->Draw();
+	}
 	
 	spriteEnergiBack_->Draw();
 	spriteEnergy_->Draw();
@@ -369,20 +384,21 @@ void Player::BehaviorRootUpdate() {
 			    (float)joyState.Gamepad.sThumbLY / SHRT_MAX * kCharacterSpeed,
 			};			
 		} 
-		else {
-			if (input_->TriggerKey(DIK_W)) {
-				move.z += kCharacterSpeed;
-			} else if (input_->TriggerKey(DIK_S)) {
-				move.z -= kCharacterSpeed;
-			} else if (input_->TriggerKey(DIK_D)) {
-				move.x += kCharacterSpeed;
-			} else if (input_->TriggerKey(DIK_A)) {
-				move.x -= kCharacterSpeed;
-			} else {
-				move = {0.0f};
-			}
+	} 
+	else {
+		if (input_->TriggerKey(DIK_W)) {
+			move.z += kCharacterSpeed;
+		} else if (input_->TriggerKey(DIK_S)) {
+			move.z -= kCharacterSpeed;
+		} else if (input_->TriggerKey(DIK_D)) {
+			move.x += kCharacterSpeed;
+		} else if (input_->TriggerKey(DIK_A)) {
+			move.x -= kCharacterSpeed;
+		} else {
+			move = {0.0f};
 		}
 	}
+
 	/*if (input_->PushKey(DIK_W)) {
 		move.z = kCharacterSpeed;
 	} else if (input_->PushKey(DIK_S)) {
@@ -448,16 +464,15 @@ void Player::BehaviorRootUpdate() {
 	worldTransform_.AddTransform(move);
 	worldTransformBody_.AddTransform(move);
 	if (((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) ||
-	     input_->TriggerKey(DIK_SPACE))&&dashCoolTime<=0) {
+	     input_->TriggerKey(DIK_LSHIFT))&&dashCoolTime<=0) {
 		behaviorRequest_ = Behavior::kDash;
-	} 
+	}
 	/*if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B){
 		behaviorRequest_ = Behavior::kAttack;
 	}*/
-	if (joyState.Gamepad.bLeftTrigger != 0) {
+	if (joyState.Gamepad.bLeftTrigger != 0 || input_->TriggerKey(DIK_LCONTROL)) {
 		behaviorRequest_ = Behavior::kShot;
 	}
-
 }
 
 void Player::InitializeFloatingGimmick() { 
@@ -584,7 +599,7 @@ void Player::BehaviorDashUpdate() {
 	*/
 	BehaviorRootUpdate();
 	if ((!(joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) ||
-	     input_->TriggerKey(DIK_SPACE))) {
+	     !input_->PushKey(DIK_LSHIFT))) {
 		behaviorRequest_ = Behavior::kRoot;
 	}
 }
@@ -639,20 +654,22 @@ void Player::BehaviorShotUpdate() {
 			    0.0f,
 			    (float)joyState.Gamepad.sThumbLY / SHRT_MAX * kCharacterSpeed,
 			};
+		}
+	} 
+	else {
+		if (input_->TriggerKey(DIK_W)) {
+			move.z += kCharacterSpeed;
+		} else if (input_->TriggerKey(DIK_S)) {
+			move.z -= kCharacterSpeed;
+		} else if (input_->TriggerKey(DIK_D)) {
+			move.x += kCharacterSpeed;
+		} else if (input_->TriggerKey(DIK_A)) {
+			move.x -= kCharacterSpeed;
 		} else {
-			if (input_->TriggerKey(DIK_W)) {
-				move.z += kCharacterSpeed;
-			} else if (input_->TriggerKey(DIK_S)) {
-				move.z -= kCharacterSpeed;
-			} else if (input_->TriggerKey(DIK_D)) {
-				move.x += kCharacterSpeed;
-			} else if (input_->TriggerKey(DIK_A)) {
-				move.x -= kCharacterSpeed;
-			} else {
-				move = {0.0f};
-			}
+			move = {0.0f};
 		}
 	}
+
 	/*if (input_->PushKey(DIK_W)) {
 	    move.z = kCharacterSpeed;
 	} else if (input_->PushKey(DIK_S)) {
@@ -1019,7 +1036,31 @@ void Player::Attack() {
 				//assert(false);
 			}
 		}
-	} else {
+	} 
+	else if (input_->PushKey(DIK_SPACE)) {
+		bulletTime += 1;
+		if (bulletTime % bulletInterval == 1) {
+
+			// 弾の速度
+			const float kBulletSpeed = 5.0f;
+			Vector3 world3DReticlePos = GetWorldPosition(worldTransform3DReticle_.matWorld_);
+
+			Vector3 velocity = world3DReticlePos - GetWorldPosition(worldTransformL_arm_.matWorld_);
+			velocity = vector.NormalizePlus(velocity, kBulletSpeed);
+
+			for (PlayerBullet* bullet : bullets_) {
+				if (bullet->GetState() == PlayerBullet::PlayerBulletState::Stance) {
+					isShotBullet_ = true;
+					bullet->SetShot(
+					    viewProjection_->rotation_, velocity, (HomingMode_ && GetcheckCamera()));
+					bullet->SetState(PlayerBullet::PlayerBulletState::Move);
+					break;
+				}
+				// assert(false);
+			}
+		}
+	}
+	else {
 		bulletTime = 0;
 	}
 }
@@ -1039,6 +1080,34 @@ void Player::AttackHoming() {
 				if (bullet->GetState() == PlayerBullet::PlayerBulletState::Idle) {
 					if (num<=0)
 					{
+						break;
+					}
+					bullet->SetShot(
+					    viewProjection_->rotation_, velocity, (HomingMode_ && GetcheckCamera()));
+					bullet->SetState(PlayerBullet::PlayerBulletState::Move);
+					num--;
+				}
+				// assert(false);
+			}
+			if (num != kSimuMax) {
+				isShotBullet_ = true;
+				homingCoolTime = bulletIntervalHoming;
+			}
+		}
+	}
+	if (input_->PushKey(DIK_SPACE)) {
+		if (homingCoolTime <= 0) {
+
+			// 弾の速度
+			const float kBulletSpeed = 5.0f;
+			Vector3 world3DReticlePos = GetWorldPosition(worldTransform3DReticle_.matWorld_);
+
+			Vector3 velocity = world3DReticlePos - GetWorldPosition(worldTransformL_arm_.matWorld_);
+			velocity = vector.NormalizePlus(velocity, kBulletSpeed);
+			int num = min(GetBulletNumMax() / 2, 25);
+			for (PlayerBullet* bullet : bullets_) {
+				if (bullet->GetState() == PlayerBullet::PlayerBulletState::Idle) {
+					if (num <= 0) {
 						break;
 					}
 					bullet->SetShot(
