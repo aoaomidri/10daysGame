@@ -11,6 +11,17 @@ Player::~Player() {
 	}
 	
 	delete sprite2DReticle_;
+
+	delete spriteArrow_;
+	delete spriteChaser_;
+	delete spriteEnergiBack_;
+	delete spriteEnergyButton_;
+	delete spriteEnergy_;
+	delete spriteLiner_;
+	delete spriteNumber_;
+	delete spritePlus_;
+	delete spriteX_;
+
 }
 
 void Player::Initialize(const std::vector<Model*>& models) {
@@ -98,7 +109,32 @@ void Player::Initialize(const std::vector<Model*>& models) {
 	    textureArrow_, changeUIBaseTranslation_, {1, 1, 1, 1}, {0.5f, 0.5f});
 	spriteX_ = Sprite::Create(
 	    textureX_, changeUIBaseTranslation_, {0.19f, 0.82f, 0.89f, 1}, {0.5f, 0.5f});
+	/*
+	textureHandleNumber[0] = TextureManager::Load("Number/number0.png");
+	textureHandleNumber[1] = TextureManager::Load("Number/number1.png");
+	textureHandleNumber[2] = TextureManager::Load("Number/number2.png");
+	textureHandleNumber[3] = TextureManager::Load("Number/number3.png");
+	textureHandleNumber[4] = TextureManager::Load("Number/number4.png");
+	textureHandleNumber[5] = TextureManager::Load("Number/number5.png");
+	*/
+	texturePlus = TextureManager::Load("plus.png");
+	//texturePlus = textureX_;
+	plusPosition_ = {1100,540};
+	numberPosition_ = {1150,535};
+	plusSize_ = {42,42};
+	numberSize_ = {64,64};
+
+	spritePlus_ = Sprite::Create(texturePlus, plusPosition_, {0.0f,1.0f,0.0f,1.0f},{0.5f,0.5f});
+	spriteNumber_ = Sprite::Create(texturePlus, numberPosition_, {0.0f, 1.0f, 0.0f, 1.0f}, {0.5f, 0.5f});
 }
+
+void Player::SetNumberTexture(uint32_t* textureNumber)
+{
+	for (int index = 0; index <= 9; index++) {
+		textureHandleNumber[index] = *textureNumber;
+		textureNumber++;
+	}
+};
 
 void Player::Update() {
 	ApplyGlobalVariables();
@@ -325,6 +361,10 @@ void Player::DrawUI() {
 	spriteArrow_->Draw();
 	spriteX_->Draw();
 
+	if (isPlus_)
+	{
+		DrawPlus();
+	}
 }
 
 void Player::BehaviorRootInitialize() { 
@@ -838,7 +878,15 @@ void Player::DrawImgui() {
 	ImGui::DragFloat2("chaserposition", &chaser_.x, 1.0f);
 	ImGui::DragFloat2("valid", &valid_.x, 1.0f);
 	ImGui::DragFloat2("notValid", &notValid_.x, 1.0f);
+	ImGui::End();
 
+
+	ImGui::Begin("plus");
+	ImGui::DragFloat2("pscale", &plusSize_.x, 1.0f);
+	ImGui::DragFloat2("pposition", &plusPosition_.x, 1.0f);
+	ImGui::DragFloat2("nscale", &numberSize_.x, 1.0f);
+	ImGui::DragFloat2("nposition", &numberPosition_.x, 1.0f);
+	
 	ImGui::End();
 
 }
@@ -1127,6 +1175,10 @@ void Player::AddBullet(int n)
 
 		AddBullet();
 	}
+	if (n >0 && n<=5)
+	{
+		SetPlus(n);
+	}
 }
 
 void Player::ChangeUIUpdate() {
@@ -1182,5 +1234,33 @@ void Player::ChangeUIUpdate() {
 	if (changeAnimation_>1.0f)
 	{
 		changeAnimation_ = 1.0f;
+	}
+}
+
+void Player::SetPlus(int num)
+{
+	plusTime_ = kPlus;
+	plusNum = num;
+	isPlus_ = true;
+	alpha_ = 1.0f;
+}
+
+void Player::DrawPlus() {
+	spritePlus_->SetPosition(plusPosition_);
+	spritePlus_->SetSize(plusSize_);
+	spriteNumber_->SetPosition(numberPosition_);
+	spriteNumber_->SetSize(numberSize_);
+	Vector4 color{0,0.8f,0,alpha_};
+	spritePlus_->SetColor(color);
+	spriteNumber_->SetColor(color);
+
+	spriteNumber_->SetTextureHandle(textureHandleNumber[plusNum]);
+	spriteNumber_->SetTextureRect({0.0f, 0.0f}, {144,144});
+	spritePlus_->Draw();
+	spriteNumber_->Draw();
+	alpha_ -= 0.01f;
+	if (alpha_ <= 0.0f)
+	{
+		isPlus_ = false;
 	}
 }

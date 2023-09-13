@@ -32,6 +32,7 @@ int GameScene::CheckOensPlaceNumber(int num) { return (num % 10); }
 void GameScene::TextureInitialize() {
 	// 画像データ読み込み
 	textureHandle = TextureManager::Load("white1x1.png");
+	/*
 	textureHandleSkydome = TextureManager::Load("skyDome/skyDome.jpg");
 	textureHandleGround = TextureManager::Load("Ground/firld.png");
 	textureHandleWall = TextureManager::Load("Wall/renga.png");
@@ -40,7 +41,7 @@ void GameScene::TextureInitialize() {
 	textureHamdleEnemyparts = TextureManager::Load("EnemyParts/EnemyParts.png");
 	textureHandleWeapon = TextureManager::Load("Weapon/Sword.png");
 	TextureManager::Load("Magic.png");
-
+	*/
 	textureHandleBackGround = TextureManager::Load("backGround/BackGround.png");
 	textureHandleBackGround2 = TextureManager::Load("backGround/Sky.png");
 
@@ -77,6 +78,7 @@ void GameScene::TextureInitialize() {
 	textureParticleFish = TextureManager::Load("fish.png");
 	textureHandleBackBlack = TextureManager::Load("backBlack.png");
 	textureHandleCountDown = TextureManager::Load("CountDownSprite.png");
+
 }
 
 void GameScene::MakeTexture() {
@@ -296,6 +298,8 @@ void GameScene::Initialize() {
 	//敵の中心をプレイヤーにセット
 	player_->SetEnemyOBBCenter(enemy_->GetOBB().center);
 	player_->SetEnemyOBB(enemy_->GetOBB());
+
+	player_->SetNumberTexture(&textureHandleNumber[0]);
 
 #ifdef _DEBUG
 	////軸方向表示の表示を有効にする
