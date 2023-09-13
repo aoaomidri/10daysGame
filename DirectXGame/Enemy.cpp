@@ -114,6 +114,9 @@ void Enemy::Update() {
 	if (input_->TriggerKey(DIK_E)) {
 		EnemyLife = 150.0f;
 	}
+	if (input_->TriggerKey(DIK_R)) {
+		EnemyLife = 0.0f;
+	}
 	#endif
 
 	
