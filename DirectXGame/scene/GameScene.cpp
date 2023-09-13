@@ -7,7 +7,8 @@
 #include<iostream>
 #include <algorithm>
 #include <cmath>
-GameScene::GameScene() {}
+GameScene::GameScene() {
+}
 
 GameScene::~GameScene() {
 	for (int i = 0; i < 13; i++) {
@@ -157,8 +158,8 @@ void GameScene::MakeTexture() {
 
 void GameScene::SoundInitialize() {
 	// サウンドデータ読み込み
-	TitleBGMDataHandle_ = audio_->LoadWave("audio/8bit13.wav");
-	MainBGMDataHandle_ = audio_->LoadWave("audio/Game3.wav");
+	TitleBGMDataHandle_ = audio_->LoadWave("audio/titleBGM.wav");
+	MainBGMDataHandle_ = audio_->LoadWave("audio/inGameBGM.wav");
 	EndBGMDataHandle_ = audio_->LoadWave("audio/zingle.wav");
 
 	SEDataHandle_ = audio_->LoadWave("audio/break.wav");
@@ -307,7 +308,7 @@ void GameScene::Update() {
 		// 各振る舞いごとの初期化を実行
 		switch (scene_) {
 		case Scene::Title:
-				TitleInitialize();
+			TitleInitialize();
 			break;
 		case Scene::Control:
 			ControlInitialize();
@@ -588,6 +589,8 @@ void GameScene::DrawTexture() {
 		if (countDown_ >= 60 * 2.0f && countDown_ < 60 * 3.0f) {
 			if (countDown_ == 60 * 2.0f) {
 				audio_->PlayWave(selectSoundHandle_, false, 1.0f);
+				MainBGMHandle_ = audio_->PlayWave(MainBGMDataHandle_, true);
+				audio_->SetVolume(MainBGMHandle_, 0.3f);
 			}
 			Vector2 textureSize = vector.Lerp(countDownNum_[0]->GetSize(), {144, 144}, 0.033f);
 			countDownNum_[0]->SetSize(textureSize);
@@ -1255,12 +1258,16 @@ bool GameScene::IsCollisionOBBOBB(const OBB& obb1, const OBB& obb2) {
 }
 
 void GameScene::TitleInitialize() { 
-	//TitleBGMHandle_ = audio_->PlayWave(TitleBGMDataHandle_, true);
 	selectMode = 0;
 	gameCamera_->Initialize();
 }
 
 void GameScene::TitleUpdate() {
+
+	if (!audio_->IsPlaying(TitleBGMHandle_)) {
+		TitleBGMHandle_ = audio_->PlayWave(TitleBGMDataHandle_, true, 0.5f);
+	}
+
 	gameCamera_->DrawImgui();
 
 	gameCamera_->Update();
@@ -1291,7 +1298,7 @@ void GameScene::ControlUpdate() {
 		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) &&
 		    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_B)) {
 			audio_->PlayWave(selectSoundHandle_);
-			//audio_->StopWave(TitleBGMHandle_);
+			audio_->StopWave(TitleBGMHandle_);
 			if (!sceneTransition_->GetStartTransition()) {
 				sceneTransition_->Initialize(textureParticleFish);
 				sceneTransition_->SetStartTransition(true);
@@ -1310,8 +1317,6 @@ void GameScene::ControlUpdate() {
 
 void GameScene::MainInitialize() { 
 	Initialize(); 
-	//MainBGMHandle_ = audio_->PlayWave(MainBGMDataHandle_, true);
-	//audio_->SetVolume(MainBGMHandle_, 0.5f);
 }
 
 void GameScene::MainUpdate() { 
@@ -1393,7 +1398,7 @@ void GameScene::MainUpdate() {
 		}
 
 		if (enemy_->GetEnemyLife() <= 0.0f) {
-			// audio_->StopWave(MainBGMHandle_);
+			audio_->StopWave(MainBGMHandle_);
 			// sceneRequest_ = Scene::End;
 			gameCamera_->SetTarget(&enemy_->GetWorldTransform());
 
@@ -1431,7 +1436,7 @@ void GameScene::PoseUpdate() {
 				sceneRequest_ = Scene::Main;
 				audio_->PlayWave(selectSoundHandle_);
 			} else {
-				//audio_->StopWave(MainBGMHandle_);
+				audio_->StopWave(MainBGMHandle_);
 				sceneRequest_ = Scene::Title;
 				audio_->PlayWave(selectSoundHandle_);
 			}
@@ -1483,11 +1488,11 @@ void GameScene::GameOverUpdate() {
 		    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_B)) {
 			audio_->StopWave(EndBGMHandle_);
 			if (selectMode==0) {
-				//audio_->StopWave(MainBGMHandle_);
+				audio_->StopWave(MainBGMHandle_);
 				sceneRequest_ = Scene::Main;
 				audio_->PlayWave(selectSoundHandle_);
 			} else {
-				//audio_->StopWave(MainBGMHandle_);
+				audio_->StopWave(MainBGMHandle_);
 				sceneRequest_ = Scene::Title;
 				audio_->PlayWave(selectSoundHandle_);
 			}
