@@ -524,9 +524,9 @@ void GameScene::DrawTexture() {
 	if (scene_ == Scene::Main || scene_ == Scene::Pose || scene_ == Scene::GameOver) {
 		player_->DrawUI();
 		sprite_[2]->SetSize({(enemy_->GetEnemyLifePer()), 36.0f});
-		if (enemy_->GetEnemyLife() == 170) {
+		if (enemy_->GetEnemyLife() <= 200 && enemy_->GetEnemyLife() > 100) {
 			colorChangeEN = {1, 1, 0, 0.5};
-		} else if (enemy_->GetEnemyLife() == 80) {
+		} else if (enemy_->GetEnemyLife() <= 100) {
 			colorChangeEN = {1, 0, 0, 0.5};
 		}
 		sprite_[2]->SetColor(colorChangeEN);
