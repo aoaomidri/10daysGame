@@ -166,6 +166,7 @@ void GameScene::SoundInitialize() {
 	shotSoundHandle_ = audio_->LoadWave("audio/Shot.wav");
 	selectSoundHandle_ = audio_->LoadWave("audio/selectSound.wav");
 	countdownFinalSoundHandle_ = audio_->LoadWave("audio/countdownFinal.wav");
+	hitSoundHandle_ = audio_->LoadWave("audio/Hit.wav");
 }
 
 void GameScene::Initialize() {
@@ -695,9 +696,8 @@ void GameScene::CheckAllCollisions() {
 			if (isCollisionOBBSphere(player_->GetOBB(),enemyBullet_)) {
 				bullet->OnCollision();
 				player_->OnCollision();
+				audio_->PlayWave(hitSoundHandle_);
 			}
-
-
 		}
 	}
 #pragma endregion
@@ -707,9 +707,10 @@ void GameScene::CheckAllCollisions() {
 	if (enemy_->isDead == false) {
 
 		if (IsCollisionOBBOBB(player_->GetOBB(), enemy_->GetOBB())) {
-				//bullet->OnCollision();
-				player_->OnCollision(enemy_->GetDamage());
-			}
+			//bullet->OnCollision();
+			player_->OnCollision(enemy_->GetDamage());
+			audio_->PlayWave(hitSoundHandle_);
+		}
 	}
 #pragma endregion
 }

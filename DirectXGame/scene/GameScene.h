@@ -180,6 +180,7 @@ private: // メンバ変数
 	uint32_t shotSoundHandle_ = 0;
 	uint32_t selectSoundHandle_ = 0;
 	uint32_t countdownFinalSoundHandle_ = 0;
+	uint32_t hitSoundHandle_ = 0;
 	int shotSoundCooldown_;
 
 	// 3Dモデル
