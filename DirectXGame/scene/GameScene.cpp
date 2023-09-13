@@ -285,6 +285,9 @@ void GameScene::Initialize() {
 	countDown_ = 0;
 	shotSoundCooldown_ = 0;
 
+	//敵の中心をプレイヤーにセット
+	player_->SetEnemyOBBCenter(enemy_->GetOBB().center);
+
 #ifdef _DEBUG
 	////軸方向表示の表示を有効にする
 	AxisIndicator::GetInstance()->SetVisible(true);
@@ -1444,6 +1447,16 @@ void GameScene::GameOverInitialize() {  }
 
 void GameScene::GameOverUpdate() {
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
+		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP) &&
+		    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP)) {
+			selectMode--;
+			audio_->PlayWave(selectSoundHandle_);
+		}
+		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) &&
+		    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN)) {
+			selectMode++;
+			audio_->PlayWave(selectSoundHandle_);
+		}
 		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) &&
 		    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_B)) {
 			audio_->StopWave(EndBGMHandle_);

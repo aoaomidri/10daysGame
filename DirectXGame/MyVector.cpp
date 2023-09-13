@@ -157,10 +157,11 @@ Vector3 MyVector::Lerp(const Vector3& v1, const Vector3& v2, float t) {
 Vector2 MyVector::Lerp(const Vector2& v1, const Vector2& v2, float t) {
 	Vector2 v3;
 	v3.x = v1.x + (v2.x - v1.x) * t;
-	v3.y = v1.y + (v2.x - v1.x) * t;
+	v3.y = v1.y + (v2.y - v1.y) * t;
 
 	return v3;
 }
+
 
 Vector3 MyVector::Slerp(const Vector3& v1, const Vector3& v2, float t) {
 	Vector3 a = Normalize(v1), b = Normalize(v2);
