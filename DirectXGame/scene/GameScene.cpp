@@ -1324,6 +1324,7 @@ bool GameScene::IsCollisionOBBSegment(const OBB& obb, const Segment& segment) {
 void GameScene::TitleInitialize() { 
 	selectMode = 0;
 	gameCamera_->Initialize();
+	audio_->StopWave(GameClearBGMHandle_);
 }
 
 void GameScene::TitleUpdate() {
@@ -1556,6 +1557,7 @@ void GameScene::PoseUpdate() {
 			audio_->PlayWave(selectSoundHandle_);
 		} else {
 			audio_->StopWave(MainBGMHandle_);
+			audio_->StopWave(swimSoundHandle_);
 			sceneRequest_ = Scene::Title;
 			audio_->PlayWave(selectSoundHandle_);
 		}
