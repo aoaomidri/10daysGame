@@ -167,6 +167,7 @@ void GameScene::SoundInitialize() {
 	selectSoundHandle_ = audio_->LoadWave("audio/selectSound.wav");
 	countdownFinalSoundHandle_ = audio_->LoadWave("audio/countdownFinal.wav");
 	hitSoundHandle_ = audio_->LoadWave("audio/Hit.wav");
+	swimDataHandle_ = audio_->LoadWave("audio/swim.wav");
 }
 
 void GameScene::Initialize() {
@@ -352,6 +353,12 @@ void GameScene::Update() {
 		break;
 	}
 	
+	if (player_->GetBehavior() == Player::Behavior::kDash && !audio_->IsPlaying(swimSoundHandle_)) {
+		swimSoundHandle_ = audio_->PlayWave(swimDataHandle_, true, 0.5f);
+	} 
+	else if(player_->GetBehavior() != Player::Behavior::kDash){
+		audio_->StopWave(swimSoundHandle_);
+	}
 
 	selectMode = (selectMode % 2) * (selectMode % 2);
 
