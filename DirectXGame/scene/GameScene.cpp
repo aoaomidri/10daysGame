@@ -54,13 +54,7 @@ void GameScene::TextureInitialize() {
 	textureHandleText[8] = TextureManager::Load("text/retry.png");
 	textureHandleText[9] = TextureManager::Load("text/PRESS.png");
 
-	textureHandleCon[0] = TextureManager::Load("Contro.png");
-	textureHandleCon[1] = TextureManager::Load("text/attack.png");
-	textureHandleCon[2] = TextureManager::Load("text/control.png");
-	textureHandleCon[3] = TextureManager::Load("text/dash.png");
-	textureHandleCon[4] = TextureManager::Load("text/set.png");
-	textureHandleCon[5] = TextureManager::Load("text/move.png");
-	textureHandleCon[6] = TextureManager::Load("text/camera.png");
+	textureHandleCon[0] = TextureManager::Load("Control.png");
 
 	textureHandleTitle = TextureManager::Load("text/title.png");
 
@@ -128,12 +122,6 @@ void GameScene::MakeTexture() {
 	sprite_[11]->SetSize({284.0f, 134.0f});
 
 	conSprite_[0] = Sprite::Create(textureHandleCon[0], {640, 360}, {1, 1, 1, 1}, {0.5f, 0.5f});
-	conSprite_[1] = Sprite::Create(textureHandleCon[1], {780, 160}, {1, 1, 1, 1}, {0.5f, 0.5f});
-	conSprite_[2] = Sprite::Create(textureHandleCon[2], {140, 60}, {1, 1, 1, 1}, {0.5f, 0.5f});
-	conSprite_[3] = Sprite::Create(textureHandleCon[3], {780, 230}, {1, 1, 1, 1}, {0.5f, 0.5f});
-	conSprite_[4] = Sprite::Create(textureHandleCon[4], {500, 160}, {1, 1, 1, 1}, {0.5f, 0.5f});
-	conSprite_[5] = Sprite::Create(textureHandleCon[5], {450, 310}, {1, 1, 1, 1}, {0.5f, 0.5f});
-	conSprite_[6] = Sprite::Create(textureHandleCon[6], {830, 380}, {1, 1, 1, 1}, {0.5f, 0.5f});
 
 	PLSprite_ = Sprite::Create(textureHandlePL, {500, 670}, {1, 1, 1, 1}, {0.5f, 0.5f});
 	ENSprite_ = Sprite::Create(textureHandleEN, {50, 70}, {1, 1, 1, 1}, {0.5f, 0.5f});
@@ -358,24 +346,7 @@ void GameScene::Update() {
 		GameOverUpdate();
 		break;
 	}
-	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
-		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP) &&
-		    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP)) {
-			selectMode--;
-			if (scene_ == Scene::Pose || scene_ == Scene::GameOver) {
-				audio_->PlayWave(selectSoundHandle_);
-			}
-		}
-	} 
-	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
-		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) &&
-		    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN)) {
-			selectMode++;
-			if (scene_ == Scene::Pose || scene_ == Scene::GameOver) {
-				audio_->PlayWave(selectSoundHandle_);
-			}
-		}
-	}
+	
 
 	selectMode = (selectMode % 2) * (selectMode % 2);
 
@@ -510,12 +481,7 @@ void GameScene::DrawTexture() {
 	if (scene_ == Scene::Control) {
 		sprite_[1]->SetColor({0, 0, 0, 0.98f});
 		conSprite_[0]->Draw();
-		conSprite_[1]->Draw();
-		conSprite_[2]->Draw();
-		conSprite_[3]->Draw();
-		conSprite_[4]->Draw();
-		conSprite_[5]->Draw();
-		conSprite_[6]->Draw();
+		
 	}
 
 	if (scene_ == Scene::Main || scene_ == Scene::Pose || scene_ == Scene::GameOver) {
@@ -1419,6 +1385,16 @@ void GameScene::PoseUpdate() {
 				sceneRequest_ = Scene::Title;
 				audio_->PlayWave(selectSoundHandle_);
 			}
+		}
+		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP) &&
+			!(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP)) {
+			selectMode--;
+			audio_->PlayWave(selectSoundHandle_);
+		}
+		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) &&
+			!(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN)) {
+			selectMode++;
+			audio_->PlayWave(selectSoundHandle_);
 		}
 	}
 }

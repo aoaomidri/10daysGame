@@ -16,6 +16,7 @@ void FollowCamera::Initialize() {
 	minRotate = -0.31f;
 	maxRotate = 0.9f;
 
+
 	baseOffset = rootOffset;
 
 
@@ -36,7 +37,7 @@ void FollowCamera::SetTarget(const WorldTransform* target) {
 void FollowCamera::Update() {
 
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
-		const float threshold = 0.7f;
+		
 		bool isMoveing = false;
 		float moveLength = 0.0f;
 
@@ -48,16 +49,16 @@ void FollowCamera::Update() {
 		};
 		moveLength = vector_->Length(move_);
 
-		if (moveLength > threshold) {
+		if (moveLength > threshold_) {
 			isMoveing = true;
 		}
 		if (isMoveing)
 
 		{
-			destinationAngleY_ += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * rotateSpeed;
+			destinationAngleY_ += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * rotateSpeed_;
 
 			if (destinationAngleX_>-1.57f&&destinationAngleX_<1.57f) {
-				destinationAngleX_ -= (float)joyState.Gamepad.sThumbRY / SHRT_MAX * rotateSpeed;
+				destinationAngleX_ -= (float)joyState.Gamepad.sThumbRY / SHRT_MAX * rotateSpeed_;
 			}
 			
 		}
@@ -67,13 +68,13 @@ void FollowCamera::Update() {
 		}
 		if (joyState.Gamepad.bLeftTrigger!=0) {
 			t = 1.0f;
-			rotateSpeed = 0.03f;
+			rotateSpeed_ = rotateSpeedBase_ / 2.0f;
 			maxRotate = 0.4f;
 			minRotate = -0.31f;
 			baseOffset = vector_->Lerp(baseOffset, shotOffset, offset_t);
 		} else {
 			t = 0.1f;
-			rotateSpeed = 0.05f;
+			rotateSpeed_ = rotateSpeedBase_;
 			maxRotate = 0.9f;
 			minRotate = -0.1f;
 			baseOffset = vector_->Lerp(baseOffset, rootOffset, offset_t);
