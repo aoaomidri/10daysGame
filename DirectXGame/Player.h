@@ -366,6 +366,13 @@ private:
 	//サウンド
 	bool isShotBullet_;
 
+	//レティクルの移動先
+	Vector2 reticleTarget_;
+
+	Vector2 reticleCenter_ = {640,320};
+	Vector2 reticleEnemy_ = {640, 320};
+
+
 public:
 
 	Behavior GetBehavior() { return behavior_; };
@@ -373,5 +380,10 @@ public:
 	// 最初に生成する弾の数
 	const int kBulletNum = 15;
 	static const int kBulletMax = 99;
+
+	//敵OBB中心
+	Vector3* enemyCenter_;
+	void SetEnemyOBBCenter(Vector3& center) { enemyCenter_ = &center; };
+	void ReticleUpdate();
 };
 

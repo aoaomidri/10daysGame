@@ -566,7 +566,7 @@ void Player::BehaviorShotInitialize() { kCharacterSpeed = 0.2f; }
 void Player::BehaviorShotUpdate() {
 
 	ShotReticle(viewProjection_->matView, viewProjection_->matProjection);
-
+	ReticleUpdate();
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		const float threshold = 0.7f;
 		bool isMoveing = false;
@@ -734,17 +734,23 @@ void Player::OnCollision() {
 void Player::OnCollision(int Damage) {
 	if (!isInvincible_) {
 		int num = Damage;
-		isInvincible_ = true;
-		invincibleTime_ = kHitInvincible;
 		for (PlayerBullet* bullet : bullets_) {
 			if (bullet->GetState() == PlayerBullet::PlayerBulletState::Idle) {
 				bullet->OnCollision();
 				num--;
 				if (num<=0)
 				{
+					isInvincible_ = true;
+					invincibleTime_ = kHitInvincible;
 					return;
 				}
 			}
+		}
+		if (num != Damage)
+		{
+			isInvincible_ = true;
+			invincibleTime_ = kHitInvincible;
+			return;
 		}
 		PlayerLife -= 50;
 	}
@@ -815,9 +821,15 @@ void Player::ShotReticle(const Matrix4x4& matView, const Matrix4x4& matProjectio
 	    GetWorldPosition(worldTransformL_arm_.matWorld_) + offset;
 	worldTransform3DReticle_.UpdateMatrix(reticleScale_);
 
+	
 	// 3Dレティクルのワールド座標から2Dレティクルのスクリーン座標を計算
-	{
-		Vector3 positionReticle = GetWorldPosition(worldTransform3DReticle_.matWorld_);
+	if(HomingMode_){
+		Vector3 positionEnemy = *enemyCenter_;
+		/* Matrix4x4 mat = matrix.MakeAffineMatrix(
+		    worldTransformEnemy_->scale_, worldTransformEnemy_->rotation_,
+		    worldTransformEnemy_->translation_);
+		Vector3 positionEnemy = {mat.m[3][0], mat.m[3][1], mat.m[3][2]};*/
+		//Vector3 positionEnemy = {0,0,0};
 		// ビューポート行列
 		Matrix4x4 matViewport =
 		    matrix.MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
@@ -827,12 +839,13 @@ void Player::ShotReticle(const Matrix4x4& matView, const Matrix4x4& matProjectio
 		    matrix.Multiply(matrix.Multiply(matView, matProjection), matViewport);
 
 		// ワールド->スクリーン座標変換(ここで3Dから2Dになる)
-		positionReticle = vector.Transform(positionReticle, matViewProjectionViewport);
+		positionEnemy = vector.Transform(positionEnemy, matViewProjectionViewport);
 
 		// スプライトのレティクルに座標設定
-		sprite2DReticle_->SetPosition(Vector2(positionReticle.x, positionReticle.y));
-		
+		//sprite2DReticle_->SetPosition(Vector2(positionReticle.x, positionReticle.y));
+		reticleEnemy_ = {positionEnemy.x,positionEnemy.y};
 	}
+	
 #ifdef _DEBUG
 
 	ImGui::Begin("Shot");
@@ -841,6 +854,17 @@ void Player::ShotReticle(const Matrix4x4& matView, const Matrix4x4& matProjectio
 #endif
 	
 	// ここまで↑
+}
+
+void Player::ReticleUpdate() {
+	reticleTarget_ = reticleCenter_;
+	if (HomingMode_ && GetcheckCamera()) {
+		reticleTarget_ = reticleEnemy_;
+	}
+	Vector2 position =  sprite2DReticle_->GetPosition();
+	position = vector.Lerp(position,reticleTarget_,0.2f);
+	sprite2DReticle_->SetPosition(position);
+	//sprite2DReticle_->SetPosition(reticleEnemy_);
 }
 
 void Player::Attack() {

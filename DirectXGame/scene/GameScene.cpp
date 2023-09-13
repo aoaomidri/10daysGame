@@ -285,6 +285,9 @@ void GameScene::Initialize() {
 	countDown_ = 0;
 	shotSoundCooldown_ = 0;
 
+	//敵の中心をプレイヤーにセット
+	player_->SetEnemyOBBCenter(enemy_->GetOBB().center);
+
 #ifdef _DEBUG
 	////軸方向表示の表示を有効にする
 	AxisIndicator::GetInstance()->SetVisible(true);
