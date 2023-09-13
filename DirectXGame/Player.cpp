@@ -467,7 +467,7 @@ void Player::UpdateFloatingGimmick() {
 }
 
 void Player::FinAnimationUpdate() {
-	if (behavior_ == Behavior::kDash){
+	if (behavior_ == Behavior::kDash && vector.Length(move)){
 		finRotate += 0.45f;
 	} else {
 		finRotate += 0.05f;
