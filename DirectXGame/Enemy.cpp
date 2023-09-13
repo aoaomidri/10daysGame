@@ -39,7 +39,7 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 
 	worldTransformAir.Initialize();
 
-	AirOffset = {0, 30.0f, 0};
+	AirOffset = {0, 50.0f, 0};
 
 	model_ = Model::Create();
 
@@ -112,7 +112,7 @@ void Enemy::Update() {
 	ImGui::End();
 
 	if (input_->TriggerKey(DIK_E)) {
-		EnemyLife = 150.0f;
+		EnemyLife = 10.0f;
 	}
 	#endif
 
@@ -184,8 +184,11 @@ void Enemy::Update() {
 	    target_->translation_.x - worldTransform_.translation_.x,
 	    target_->translation_.y - worldTransform_.translation_.y,
 	    target_->translation_.z - worldTransform_.translation_.z};
-	if (!isRotate) {
-		//worldTransform_.rotation_.y = std::atan2(vector.x, vector.z);
+	if (isRotate) {
+		worldTransform_.rotation_.y = std::atan2(vector.x, vector.z);
+		Vector3 velocityXZ{vector.x, 0.0f, vector.z};
+		float besage = vector_.Length(velocityXZ);
+		worldTransform_.rotation_.x = std::atan2(-vector.y, besage);
 
 	} else {
 	}
@@ -292,7 +295,7 @@ void Enemy::Fire(float bulletSpeed) {
 		Vector3 velocity = {0, 0, 0};
 		Vector3 enemyPos = GetMyWorldPosition();
 		Vector3 vector = {
-		    target_->translation_.x - enemyPos.x, target_->translation_.y - enemyPos.y + 1.05f,
+		    target_->translation_.x - enemyPos.x, target_->translation_.y - enemyPos.y + 1.0f,
 		    target_->translation_.z - enemyPos.z};
 		float bulletNorm =
 		    sqrt((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
@@ -320,7 +323,7 @@ void Enemy::TripleFire(float bulletSpeed) {
 		Vector3 velocity = {0, 0, 0};
 		Vector3 enemyPos = GetMyWorldPosition();
 		Vector3 vector = {
-		    target_->translation_.x - enemyPos.x, target_->translation_.y - enemyPos.y + 3.5f,
+		    target_->translation_.x - enemyPos.x, target_->translation_.y - enemyPos.y + 1.0f,
 		    target_->translation_.z - enemyPos.z};
 		float bulletNorm =
 		    sqrt((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
@@ -353,7 +356,7 @@ void Enemy::randFire(float bulletSpeed) {
 		Vector3 velocity = {0, 0, 0};
 		Vector3 vector = {
 		    target_->translation_.x - enemyPos.x + rand() % 101 - 50,
-		    target_->translation_.y - enemyPos.y + 3.5f + rand() % 101 - 50,
+		    target_->translation_.y - enemyPos.y + 1.0f + rand() % 101 - 50,
 		    target_->translation_.z - enemyPos.z + rand() % 101 - 50};
 		float bulletNorm =
 		    sqrt((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
@@ -642,6 +645,89 @@ void Enemy::ExTackle(float tackleSpeed) {
 	 }
 }
 
+void Enemy::ExTackle2(float tackleSpeed) {
+	 /*tackleMoveCount = 0;
+	  rotate = 0;*/
+	 // 弾の速度
+	 float kTackleSpeed = tackleSpeed;
+
+	 worldTransform_.translation_ = vector_.Lerp(
+	     worldTransform_.translation_,
+	     {worldTransform_.translation_.x, 5, worldTransform_.translation_.z}, 0.12f);
+
+	 worldTransform_.rotation_.y += rotate;
+	 if (tackleTimer < 900) {
+
+		if (rotate < 2.0f) {
+			rotate += 0.01f;
+		} else {
+
+			if (isTackle == false) {
+
+				Vector3 enemyPos = GetMyWorldPosition();
+				Vector3 vector = {
+				    80, target_->translation_.y - enemyPos.y + 5.0f,
+				    target_->translation_.z - enemyPos.z};
+				float bulletNorm =
+				    sqrt((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
+
+				if (bulletNorm != 0.0f) {
+
+					move = {
+					    ((vector.x / bulletNorm) * kTackleSpeed), 0,
+					    (vector.z / bulletNorm) * kTackleSpeed};
+				}
+				tackleMoveTime++;
+				if (tackleMoveTime == tackleMoveInterval) {
+					tackleMoveTime = 0;
+
+					isTackle = true;
+				}
+			}
+			if (isTackle == true) {
+				if (tackleTimer%shotInterval==0) {
+					randFire(1.5f);
+				}
+				tackleTimer++;
+				// if (tackleTimer == tackleTimerMax) {
+				//	tackleTimer = 0;
+				//	tackleMoveCount++;
+				//	isTackle = false;
+				// }
+			}
+		}
+	 } else {
+		isTackle = false;
+		if (rotate > 0.01f) {
+			rotate -= 0.01f;
+		} else {
+			move = {1.0f, 0, 1.0f};
+			EnemyActionsCount++;
+			attack_ = Attack::Normal;
+		}
+	 }
+
+	 if (isTackle) {
+		if ((worldTransform_.translation_ + move).x > MoveMax) {
+			move.x *= -1;
+			worldTransform_.translation_.x = MoveMax;
+		} else if ((worldTransform_.translation_ + move).x <= -MoveMax) {
+			move.x *= -1;
+			worldTransform_.translation_.x = -MoveMax;
+		}
+
+		if ((worldTransform_.translation_ + move).z > MoveMax) {
+			move.z *= -1;
+			worldTransform_.translation_.z = MoveMax;
+		} else if ((worldTransform_.translation_ + move).z <= -MoveMax) {
+			move.z *= -1;
+			worldTransform_.translation_.z = -MoveMax;
+		}
+
+		worldTransform_.AddTransform(move);
+	 }
+}
+
 void Enemy::BehaviorFirstInitialize() { 
 	move = {0.5f, 0.0f, 0.5f};
 	isOpen = false;
@@ -733,13 +819,15 @@ void Enemy::BehaviorSecondInitialize() {
 }
 void Enemy::BehaviorSecondUpdate() { 
 	if (attack_ == Attack::Tackle) {
-
+		isOpen = false;
+		isRotate = false;
 		ExTackle(4.0f);
 	} 
 	if (attack_ == Attack::Normal) {
-		
+		isOpen = true;
+		isRotate = true;
 
-		if (worldTransform_.translation_.y < 35.0f) {
+		if (worldTransform_.translation_.y < 55.0f) {
 			worldTransform_.translation_ =
 			    vector_.Lerp(worldTransform_.translation_, worldTransformAir.translation_, 0.02f);
 		}
@@ -751,7 +839,11 @@ void Enemy::BehaviorSecondUpdate() {
 
 				worldTransform_.translation_ =
 				    vector_.Lerp(worldTransform_.translation_, movePos[moveCount], 0.04f);
-
+				if (enemyMoveInterval<300) {
+					isOpen = false;
+				} else {
+					isOpen = true;
+				}
 				
 
 				if (vector_.Length(worldTransform_.translation_ - movePos[moveCount]) <= 5.0f &&
@@ -799,6 +891,7 @@ void Enemy::BehaviorSecondUpdate() {
 	 }
 }
 void Enemy::BehaviorThirdInitialize() {
+	 EnemyActionsCount = 0;
 	fireCount = 0;
 	enemyMoveCount = 0;
 
@@ -806,42 +899,62 @@ void Enemy::BehaviorThirdInitialize() {
 
 }
 void Enemy::BehaviorThirdUpdate() { 
-
-	if (worldTransform_.translation_.y < 35.0f) {
-		worldTransform_.translation_ =
-		    vector_.Lerp(worldTransform_.translation_, worldTransformAir.translation_, 0.02f);
+	if (attack_ == Attack::Tackle) {
+		isOpen = false;
+		isRotate = false;
+		ExTackle2(5.0f);
 	}
-
-	if (enemyMoveCount >= enemyMoveCountMax && EnemyLife > 0.0f) {
-		if (enemyMoveInterval > 0) {
-			enemyMoveInterval--;
-			kFireInterval = 60;
-
+	if (attack_ == Attack::Normal) {
+		isOpen = true;
+		isRotate = true;
+		if (worldTransform_.translation_.y < 55.0f) {
 			worldTransform_.translation_ =
-			    vector_.Lerp(worldTransform_.translation_, movePos[moveCount], 0.06f);
+			    vector_.Lerp(worldTransform_.translation_, worldTransformAir.translation_, 0.02f);
+		}
 
-			if (vector_.Length(worldTransform_.translation_ - movePos[moveCount]) <= 4.0f &&
-			    moveCount < 6) {
-				randFire(4.5f);
-				moveCount++;
+		if (enemyMoveCount >= enemyMoveCountMax && EnemyLife > 0.0f) {
+			if (enemyMoveInterval > 0) {
+				enemyMoveInterval--;
+				kFireInterval = 60;
+				if (enemyMoveInterval < 300) {
+					isOpen = false;
+				} else {
+					isOpen = true;
+				}
+
+				worldTransform_.translation_ =
+				    vector_.Lerp(worldTransform_.translation_, movePos[moveCount], 0.06f);
+
+				if (vector_.Length(worldTransform_.translation_ - movePos[moveCount]) <= 4.0f &&
+				    moveCount < 6) {
+					randFire(4.5f);
+					moveCount++;
+				}
+
+			} else {
+				if (moveCount == 5) {
+					EnemyActionsCount++;
+				}
+				if (EnemyActionsCount % 2 == 1) {
+					TackleInitialize();
+					attack_ = Attack::Tackle;
+				}
+				moveCount = 0;
+				enemyMoveCount = 0;
+				if (enemyMoveInterval <= 0) {
+					kFireInterval = 45;
+					enemyMoveInterval = 600;
+				}
 			}
 
 		} else {
-			moveCount = 0;
-			enemyMoveCount = 0;
-			if (enemyMoveInterval <= 0) {
-				kFireInterval = 45;
-				enemyMoveInterval = 600;
+			enemyMoveCount++;
+			FlyAttack(6.0f);
+			for (int i = 0; i < 5; i++) {
+				movePos[i].x = {(rand() % 461 - 230) / 1.0f};
+				movePos[i].y = {36.0f};
+				movePos[i].z = {(rand() % 461 - 230) / 1.0f};
 			}
-		}
-
-	} else {
-		enemyMoveCount++;
-		FlyAttack(6.0f);
-		for (int i = 0; i < 5; i++) {
-			movePos[i].x = {(rand() % 461 - 230) / 1.0f};
-			movePos[i].y = {36.0f};
-			movePos[i].z = {(rand() % 461 - 230) / 1.0f};
 		}
 	}
 	if (EnemyLife <= 0.0f) {

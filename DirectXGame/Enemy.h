@@ -36,8 +36,6 @@ private:
 	//移動制限
 	const float MoveMax = 237.00000f;
 
-
-
 	//ひれ
 	Vector3 Fin_offset_Base = {0.0f, 0.0f, -8.72f};
 	float finRotate = 0.0f;
@@ -119,6 +117,8 @@ private:
 
 	int tackleMoveCountMax = 3;
 
+	int shotInterval = 75;
+
 	float tackleSpeedBase = 3.0f;
 
 	//死んだ後の演出に関する変数
@@ -139,6 +139,8 @@ private:
 	void ExTackleInitialize();
 
 	void ExTackle(float tackleSpeed);	
+
+	void ExTackle2(float tackleSpeed);	
 
 	void NormalAttack();
 
