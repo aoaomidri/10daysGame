@@ -41,8 +41,6 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 
 	AirOffset = {0, 50.0f, 0};
 
-	model_ = Model::Create();
-
 	fireTimer = kFireInterval;
 
 	EnemyLife = kMaxEnemyLife;
@@ -58,7 +56,8 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 	// グループを追加
 	adjustment_item->CreateGroup(groupName);
 
-	
+	model_ = Model::Create();
+
 	//adjustment_item->AddItem(groupName, "EnemyLife", EnemyLife);
 	adjustment_item->AddItem(groupName, "TackleSpeed", tackleSpeedBase);
 
@@ -171,10 +170,7 @@ void Enemy::Update() {
 	// ImGui::DragFloat("EnemyPartsR_Rotate", &worldTransformR_parts_.rotation_.x ,0.01f);
 	// ImGui::End();
 
-	Matrix4x4 EnemyRotateMatrix = matrix.MakeRotateMatrix(worldTransform_.rotation_);
-	Vector3 OBB_offset = {0.0f, 0.0f, 5.0f};
-
-	OBB_offset = vector_.TransformNormal(OBB_offset, EnemyRotateMatrix);
+	
 
 	//worldTransformL_parts_.translation_ = worldTransform_.translation_ + L_parts_offset;
 	//worldTransformR_parts_.translation_ = worldTransform_.translation_ + R_parts_offset;
@@ -192,6 +188,13 @@ void Enemy::Update() {
 
 	} else {
 	}
+
+	Matrix4x4 EnemyRotateMatrix = matrix.MakeRotateMatrix(worldTransform_.rotation_);
+	Vector3 OBB_offset = {0.0f, 0.0f, 5.0f};
+	Vector3 shot_offsetBase = {0.0f, -10.0f, 15.0f};
+
+	OBB_offset = vector_.TransformNormal(OBB_offset, EnemyRotateMatrix);
+	shot_offset = vector_.TransformNormal(shot_offsetBase, EnemyRotateMatrix);
 
 	//worldTransformL_parts_.rotation_.y=worldTransform_.rotation_.y; 
 	//worldTransformR_parts_.rotation_.y=worldTransform_.rotation_.y;
@@ -293,7 +296,7 @@ void Enemy::Fire(float bulletSpeed) {
 	float kBulletSpeed = bulletSpeed;
 	
 		Vector3 velocity = {0, 0, 0};
-		Vector3 enemyPos = GetMyWorldPosition();
+	Vector3 enemyPos = GetMyWorldPosition() + shot_offset;
 		Vector3 vector = {
 		    target_->translation_.x - enemyPos.x, target_->translation_.y - enemyPos.y + 1.0f,
 		    target_->translation_.z - enemyPos.z};
@@ -321,7 +324,7 @@ void Enemy::TripleFire(float bulletSpeed) {
 	for (int i = 0; i < 3; i++) {
 
 		Vector3 velocity = {0, 0, 0};
-		Vector3 enemyPos = GetMyWorldPosition();
+		    Vector3 enemyPos = GetMyWorldPosition() + shot_offset;
 		Vector3 vector = {
 		    target_->translation_.x - enemyPos.x, target_->translation_.y - enemyPos.y + 1.0f,
 		    target_->translation_.z - enemyPos.z};
@@ -346,7 +349,7 @@ void Enemy::TripleFire(float bulletSpeed) {
 void Enemy::randFire(float bulletSpeed) {
 	// 弾の速度
 	float kBulletSpeed = bulletSpeed;
-	Vector3 enemyPos = GetMyWorldPosition();
+	Vector3 enemyPos = GetMyWorldPosition() + shot_offset;
 
 	unsigned int currenTime = static_cast<unsigned int>(time(nullptr));
 	srand(currenTime);
@@ -876,7 +879,7 @@ void Enemy::BehaviorSecondUpdate() {
 			FlyAttack(4.0f);
 			for (int i = 0; i < 4; i++) {
 				movePos[i].x = {(rand() % 461 - 230) / 1.0f};
-				movePos[i].y = {36.0f};
+				movePos[i].y = {56.0f};
 				movePos[i].z = {(rand() % 461 - 230) / 1.0f};
 			}
 		}
@@ -952,7 +955,7 @@ void Enemy::BehaviorThirdUpdate() {
 			FlyAttack(6.0f);
 			for (int i = 0; i < 5; i++) {
 				movePos[i].x = {(rand() % 461 - 230) / 1.0f};
-				movePos[i].y = {36.0f};
+				movePos[i].y = {56.0f};
 				movePos[i].z = {(rand() % 461 - 230) / 1.0f};
 			}
 		}

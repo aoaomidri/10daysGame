@@ -17,6 +17,8 @@ private:
 
 	Vector3 AirOffset = {0};
 
+	Vector3 shot_offset = {0};
+
 	float EnemyLife = 10;
 
 	const float kMaxEnemyLife = 250.0f;
