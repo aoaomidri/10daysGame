@@ -364,7 +364,7 @@ void GameScene::Update() {
 	if (player_->GetBehavior() == Player::Behavior::kDash && !audio_->IsPlaying(swimSoundHandle_)) {
 		swimSoundHandle_ = audio_->PlayWave(swimDataHandle_, true, 0.5f);
 	} 
-	else if(player_->GetBehavior() != Player::Behavior::kDash){
+	else if(player_->GetBehavior() != Player::Behavior::kDash || scene_ != Scene::Main){
 		audio_->StopWave(swimSoundHandle_);
 	}
 
