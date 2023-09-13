@@ -160,6 +160,7 @@ void GameScene::SoundInitialize() {
 	// サウンドデータ読み込み
 	TitleBGMDataHandle_ = audio_->LoadWave("audio/titleBGM.wav");
 	MainBGMDataHandle_ = audio_->LoadWave("audio/inGameBGM.wav");
+	GameClearBGMDataHandle_ = audio_->LoadWave("audio/GameClear.wav");
 	EndBGMDataHandle_ = audio_->LoadWave("audio/zingle.wav");
 
 	SEDataHandle_ = audio_->LoadWave("audio/break.wav");
@@ -1399,6 +1400,9 @@ void GameScene::MainUpdate() {
 
 		if (enemy_->GetEnemyLife() <= 0.0f) {
 			audio_->StopWave(MainBGMHandle_);
+			if (!audio_->IsPlaying(GameClearBGMHandle_)) {
+				GameClearBGMHandle_ = audio_->PlayWave(GameClearBGMDataHandle_, true, 0.4f);
+			}
 			// sceneRequest_ = Scene::End;
 			gameCamera_->SetTarget(&enemy_->GetWorldTransform());
 
@@ -1464,6 +1468,7 @@ void GameScene::EndUpdate() {
 		    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_B)) {
 			//audio_->StopWave(EndBGMHandle_);
 			sceneRequest_ = Scene::Title;
+			audio_->StopWave(GameClearBGMHandle_);
 			audio_->PlayWave(selectSoundHandle_);
 		}
 	}
