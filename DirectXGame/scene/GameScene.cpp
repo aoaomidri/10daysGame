@@ -694,9 +694,11 @@ void GameScene::CheckAllCollisions() {
 				.radius = bullet->radius
 			};
 			if (isCollisionOBBSphere(player_->GetOBB(),enemyBullet_)) {
+				if (!player_->IsInviincible()) {
+					audio_->PlayWave(hitSoundHandle_);
+				}
 				bullet->OnCollision();
 				player_->OnCollision();
-				audio_->PlayWave(hitSoundHandle_);
 			}
 		}
 	}
@@ -708,8 +710,10 @@ void GameScene::CheckAllCollisions() {
 
 		if (IsCollisionOBBOBB(player_->GetOBB(), enemy_->GetOBB())) {
 			//bullet->OnCollision();
+			if (!player_->IsInviincible()) {
+				audio_->PlayWave(hitSoundHandle_);
+			}
 			player_->OnCollision(enemy_->GetDamage());
-			audio_->PlayWave(hitSoundHandle_);
 		}
 	}
 #pragma endregion
