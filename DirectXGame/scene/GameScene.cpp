@@ -168,6 +168,7 @@ void GameScene::SoundInitialize() {
 	countdownFinalSoundHandle_ = audio_->LoadWave("audio/countdownFinal.wav");
 	hitSoundHandle_ = audio_->LoadWave("audio/Hit.wav");
 	swimDataHandle_ = audio_->LoadWave("audio/swim.wav");
+	transitionDataHandle_ = audio_->LoadWave("audio/transition.wav");
 }
 
 void GameScene::Initialize() {
@@ -353,6 +354,13 @@ void GameScene::Update() {
 		break;
 	}
 	
+	if (sceneTransition_->GetNonFish() && audio_->IsPlaying(transitionSoundHandle_)) {
+		transitionSoundVolume_ -= 0.01f;
+		if (transitionSoundVolume_ <= 0.0f) {
+			audio_->StopWave(transitionSoundHandle_);
+		}
+		audio_->SetVolume(transitionSoundHandle_, transitionSoundVolume_);
+	}
 	if (player_->GetBehavior() == Player::Behavior::kDash && !audio_->IsPlaying(swimSoundHandle_)) {
 		swimSoundHandle_ = audio_->PlayWave(swimDataHandle_, true, 0.5f);
 	} 
@@ -1287,6 +1295,8 @@ void GameScene::ControlUpdate() {
 			if (!sceneTransition_->GetStartTransition()) {
 				sceneTransition_->Initialize(textureParticleFish);
 				sceneTransition_->SetStartTransition(true);
+				transitionSoundVolume_ = 0.7f;
+				transitionSoundHandle_ = audio_->PlayWave(transitionDataHandle_, true ,transitionSoundVolume_);
 			}
 		}
 	}

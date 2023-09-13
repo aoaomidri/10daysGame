@@ -22,6 +22,7 @@ public: //ゲッターセッター
 	inline bool GetStartTransition() { return startTransition_; }
 	inline void SetCompleteTransition(bool completeTransition) { completeTransition_ = completeTransition; }
 	inline bool GetCompleteTransition() { return completeTransition_; }
+	inline bool GetNonFish() { return nonFish_; }
 
 
 private:
@@ -32,4 +33,5 @@ private:
 	const int kTransitionTime_ = 120;
 	bool startTransition_;
 	bool completeTransition_;
+	bool nonFish_;
 };
