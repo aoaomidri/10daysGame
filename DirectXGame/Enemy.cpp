@@ -20,7 +20,7 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 	worldTransform_.translation_ = {0.0f, 5.0f, 150.0f};
 	worldTransform_.rotation_ = {0.0f, 0.0f, 0.0f};
 
-	move = {0.0f, 0.0f, -1.0f};
+	move = {1.0f, 0.0f, -1.0f};
 
 	enemyMoveCount = 0;
 	enemyMoveInterval = 90;
@@ -784,7 +784,8 @@ void Enemy::BehaviorFirstUpdate() {
 	 //// キャラクターの移動ベクトル
 	if (attack_ == Attack::Tackle) {
 		
-		Tackle(2.0f);
+		//Tackle(2.0f);
+		Tackle2(3.5f);
 	} 
 	if (attack_==Attack::Normal) {
 	
@@ -837,7 +838,7 @@ void Enemy::BehaviorFirstUpdate() {
 			worldTransform_.AddTransform(move);
 		}
 
-		if (EnemyActionsCount % 3 == 0){
+		if (EnemyActionsCount % 3 == 2){
 			TackleInitialize();
 			attack_ = Attack::Tackle;
 		}
@@ -883,7 +884,7 @@ void Enemy::BehaviorSecondUpdate() {
 
 				worldTransform_.translation_ =
 				    vector_.Lerp(worldTransform_.translation_, movePos[moveCount], 0.03f);
-				if (enemyMoveInterval<300) {
+				if (moveCount>4) {
 					isOpen = false;
 				} else {
 					isOpen = true;
@@ -902,7 +903,7 @@ void Enemy::BehaviorSecondUpdate() {
 					EnemyActionsCount++;
 				}
 				if (EnemyActionsCount % 2 == 1) {
-					TackleInitialize();
+					ExTackleInitialize();
 					attack_ = Attack::Tackle;
 				}
 				moveCount = 0;
@@ -949,9 +950,7 @@ void Enemy::BehaviorThirdUpdate() {
 	if (attack_ == Attack::Tackle) {
 		isOpen = false;
 		isRotate = false;
-		if (EnemyActionsCount%3==0) {
-			Tackle2(3.5f);
-		}
+		
 		ExTackle2(5.0f);
 	}
 	if (attack_ == Attack::Normal) {
@@ -966,7 +965,7 @@ void Enemy::BehaviorThirdUpdate() {
 			if (enemyMoveInterval > 0) {
 				enemyMoveInterval--;
 				kFireInterval = 60;
-				if (enemyMoveInterval < 300) {
+				if (moveCount>4) {
 					isOpen = false;
 				} else {
 					isOpen = true;
@@ -987,6 +986,7 @@ void Enemy::BehaviorThirdUpdate() {
 				}
 				if (EnemyActionsCount % 2 == 1) {
 					TackleInitialize();
+					ExTackleInitialize();
 					attack_ = Attack::Tackle;
 				}
 				moveCount = 0;

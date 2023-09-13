@@ -163,7 +163,7 @@ private:
 
 	};
 
-	Attack attack_ = Attack::Tackle;
+	Attack attack_ = Attack::Normal;
 
 	Behavior behavior_ = Behavior::kFirst;
 
