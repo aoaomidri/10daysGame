@@ -118,3 +118,11 @@ public:
 
 private:
 };
+
+/// <summary>
+/// 線分
+/// </summary>
+struct Segment {
+	Vector3 origin; //!< 始点
+	Vector3 diff;   //!< 終点への差分ベクトル
+};
