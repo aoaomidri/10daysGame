@@ -39,7 +39,7 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 
 	worldTransformAir.Initialize();
 
-	AirOffset = {0, 50.0f, 0};
+	AirOffset = {0, 70.0f, 0};
 
 	fireTimer = kFireInterval;
 
@@ -573,6 +573,7 @@ void Enemy::ExTackle(float tackleSpeed) {
 	     worldTransform_.translation_,
 	     {worldTransform_.translation_.x, 5, worldTransform_.translation_.z}, 0.12f);
 
+	  worldTransform_.rotation_.x = 0;
 	 worldTransform_.rotation_.y += rotate;
 	 if (tackleTimer < 900) {
 
@@ -660,7 +661,7 @@ void Enemy::ExTackle2(float tackleSpeed) {
 	 worldTransform_.translation_ = vector_.Lerp(
 	     worldTransform_.translation_,
 	     {worldTransform_.translation_.x, 5, worldTransform_.translation_.z}, 0.12f);
-
+	 worldTransform_.rotation_.x = 0;
 	 worldTransform_.rotation_.y += rotate;
 	 if (tackleTimer < 900) {
 
@@ -833,7 +834,7 @@ void Enemy::BehaviorSecondUpdate() {
 		isOpen = true;
 		isRotate = true;
 
-		if (worldTransform_.translation_.y < 55.0f) {
+		if (worldTransform_.translation_.y < 75.0f) {
 			worldTransform_.translation_ =
 			    vector_.Lerp(worldTransform_.translation_, worldTransformAir.translation_, 0.02f);
 		}
@@ -882,7 +883,7 @@ void Enemy::BehaviorSecondUpdate() {
 			FlyAttack(4.0f);
 			for (int i = 0; i < 4; i++) {
 				movePos[i].x = {(rand() % 461 - 230) / 1.0f};
-				movePos[i].y = {56.0f};
+				movePos[i].y = {76.0f};
 				movePos[i].z = {(rand() % 461 - 230) / 1.0f};
 			}
 		}
@@ -913,7 +914,7 @@ void Enemy::BehaviorThirdUpdate() {
 	if (attack_ == Attack::Normal) {
 		isOpen = true;
 		isRotate = true;
-		if (worldTransform_.translation_.y < 55.0f) {
+		if (worldTransform_.translation_.y < 75.0f) {
 			worldTransform_.translation_ =
 			    vector_.Lerp(worldTransform_.translation_, worldTransformAir.translation_, 0.02f);
 		}
@@ -958,7 +959,7 @@ void Enemy::BehaviorThirdUpdate() {
 			FlyAttack(6.0f);
 			for (int i = 0; i < 5; i++) {
 				movePos[i].x = {(rand() % 461 - 230) / 1.0f};
-				movePos[i].y = {56.0f};
+				movePos[i].y = {76.0f};
 				movePos[i].z = {(rand() % 461 - 230) / 1.0f};
 			}
 		}
