@@ -138,15 +138,13 @@ private:
 
 	void Tackle(float tackleSpeed);
 
+	void Tackle2(float tackleSpeed);
+
 	void ExTackleInitialize();
 
 	void ExTackle(float tackleSpeed);	
 
 	void ExTackle2(float tackleSpeed);	
-
-	void NormalAttack();
-
-	void SecondAttack();
 
 	void FlyAttack(float bulletSpeed);
 
@@ -165,7 +163,7 @@ private:
 
 	};
 
-	Attack attack_ = Attack::Tackle;
+	Attack attack_ = Attack::Normal;
 
 	Behavior behavior_ = Behavior::kFirst;
 

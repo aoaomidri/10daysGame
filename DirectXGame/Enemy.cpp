@@ -20,7 +20,7 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 	worldTransform_.translation_ = {0.0f, 5.0f, 150.0f};
 	worldTransform_.rotation_ = {0.0f, 0.0f, 0.0f};
 
-	move = {0.0f, 0.0f, -1.0f};
+	move = {1.0f, 0.0f, -1.0f};
 
 	enemyMoveCount = 0;
 	enemyMoveInterval = 90;
@@ -312,7 +312,7 @@ void Enemy::Fire(float bulletSpeed) {
 		}
 
 		EnemyBullet* newBullet = new EnemyBullet();
-		newBullet->Initialize(model_, enemyPos, worldTransform_.rotation_, velocity);
+	    newBullet->Initialize(models_[3], enemyPos, worldTransform_.rotation_, velocity);
 		// 発射した弾をリストに登録する
 		bullets_.push_back(newBullet);
 }
@@ -340,7 +340,7 @@ void Enemy::TripleFire(float bulletSpeed) {
 		}
 
 		EnemyBullet* newBullet = new EnemyBullet();
-		newBullet->Initialize(model_, enemyPos, worldTransform_.rotation_, velocity);
+		newBullet->Initialize(models_[3], enemyPos, worldTransform_.rotation_, velocity);
 		// 発射した弾をリストに登録する
 		bullets_.push_back(newBullet);
 	}
@@ -373,60 +373,12 @@ void Enemy::randFire(float bulletSpeed) {
 		}
 
 		EnemyBullet* newBullet = new EnemyBullet();
-		newBullet->Initialize(model_, enemyPos, worldTransform_.rotation_, velocity);
+		newBullet->Initialize(models_[3], enemyPos, worldTransform_.rotation_, velocity);
 		// 発射した弾をリストに登録する
 		bullets_.push_back(newBullet);
 	}
 	Fire(bulletSpeed);
 
-}
-
-void Enemy::NormalAttack() {
-	 if (isDead == false) {
-		// 発射タイマーカウントダウン
-		fireTimer -= 1;
-	 }
-	 if (fireTimer==30&&fireCount%3==2) {
-		TripleFire(2.0f);
-	 }
-	 if (fireTimer == 30 && fireCount % 10 == 9) {
-		randFire(0.8f);
-	 }
-
-	 // 指定時間に達した
-	 if (fireTimer == 0) {
-		// 弾を発射
-
-		Fire(2.0f);
-		//カウント追加
-		fireCount++;
-
-		// タイマー初期化
-		fireTimer = kFireInterval;
-	 }
-
-}
-
-void Enemy::SecondAttack() {
-	 if (isDead == false) {
-		// 発射タイマーカウントダウン
-		fireTimer -= 1;
-	 }
-	 if (fireTimer == 30 && fireCount % 3 == 2) {
-		TripleFire(2.0f);
-	 }
-
-	 // 指定時間に達した
-	 if (fireTimer == 0) {
-		// 弾を発射
-
-		Fire(2.0f);
-		// カウント追加
-		fireCount++;
-
-		// タイマー初期化
-		fireTimer = kFireInterval;
-	 }
 }
 
 void Enemy::FlyAttack(float bulletSpeed) {
@@ -455,7 +407,7 @@ void Enemy::TackleInitialize() {
 	 isTackle = false;
 
 	 tackleTimer = 0;
-	 tackleTimerMax = 90;
+	 tackleTimerMax = 120;
 	 tackleMoveCount = 0;
 	 tackleMoveTime = 0;
 	 tackleMoveInterval = 120;
@@ -468,7 +420,7 @@ void Enemy::Tackle(float tackleSpeed) {
 	 rotate = 0;*/
 	 // 弾の速度
 	 float kTackleSpeed = tackleSpeed;
-
+	 worldTransform_.rotation_.x = 0;
 	 worldTransformRoll_.rotation_.z += rotate;
 	 if (tackleMoveCount < tackleMoveCountMax) {
 		if (rotate < 2.0f) {
@@ -545,6 +497,91 @@ void Enemy::Tackle(float tackleSpeed) {
 	 }
 	
 
+}
+
+void Enemy::Tackle2(float tackleSpeed) {
+	 /*tackleMoveCount = 0;
+	  rotate = 0;*/
+	 // 弾の速度
+	 float kTackleSpeed = tackleSpeed;
+
+	 worldTransform_.rotation_.x = 0;
+	 worldTransformRoll_.rotation_.z += rotate;
+	 if (tackleMoveCount < tackleMoveCountMax) {
+		if (rotate < 2.0f) {
+			rotate += 0.01f;
+		} else {
+
+			if (isTackle == false) {
+
+				Vector3 enemyPos = GetMyWorldPosition();
+				Vector3 vector = {
+				    target_->translation_.x - enemyPos.x,
+				    target_->translation_.y - enemyPos.y + 5.0f,
+				    target_->translation_.z - enemyPos.z};
+				float bulletNorm =
+				    sqrt((vector.x * vector.x) + (vector.y * vector.y) + (vector.z * vector.z));
+
+				if (bulletNorm != 0.0f) {
+
+					move = {
+					    ((vector.x / bulletNorm) * kTackleSpeed), 0,
+					    (vector.z / bulletNorm) * kTackleSpeed};
+				}
+				
+				if (tackleMoveTime % 30 == 29){
+					randFire(3.0f);
+
+				}
+				tackleMoveTime++;
+				if (tackleMoveTime == tackleMoveInterval) {
+					tackleMoveTime = 0;
+
+					isTackle = true;
+				}
+			}
+			if (isTackle == true) {
+
+				tackleTimer++;
+				if (tackleTimer == tackleTimerMax) {
+					tackleTimer = 0;
+					tackleMoveCount++;
+					isTackle = false;
+				}
+			}
+		}
+	 } else {
+		if (rotate > 0.01f) {
+			rotate -= 0.01f;
+		} else {
+			move = {1.0f, 0, 1.0f};
+			EnemyActionsCount++;
+			attack_ = Attack::Normal;
+		}
+	 }
+	 worldTransform_.rotation_.y = std::atan2(move.x, move.z);
+	 Vector3 velocityXZ{move.x, 0.0f, move.z};
+	 float besage = vector_.Length(velocityXZ);
+	 worldTransform_.rotation_.x = std::atan2(-move.y, besage);
+
+	 if (isTackle) {
+		if ((worldTransform_.translation_ + move).x > MoveMax) {
+			move.x = {0};
+			worldTransform_.translation_.x = MoveMax;
+		} else if ((worldTransform_.translation_ + move).x <= -MoveMax) {
+			move.x = {0};
+			worldTransform_.translation_.x = -MoveMax;
+		}
+
+		if ((worldTransform_.translation_ + move).z > MoveMax) {
+			move.z = {0};
+			worldTransform_.translation_.z = MoveMax;
+		} else if ((worldTransform_.translation_ + move).z <= -MoveMax) {
+			move.z = {0};
+			worldTransform_.translation_.z = -MoveMax;
+		}
+		worldTransform_.AddTransform(move);
+	 }
 }
 
 void Enemy::ExTackleInitialize() {
@@ -745,6 +782,7 @@ void Enemy::BehaviorFirstUpdate() {
 	if (attack_ == Attack::Tackle) {
 		
 		//Tackle(2.0f);
+		Tackle2(3.5f);
 	} 
 	if (attack_==Attack::Normal) {
 	
@@ -797,12 +835,12 @@ void Enemy::BehaviorFirstUpdate() {
 			worldTransform_.AddTransform(move);
 		}
 
-		if (EnemyActionsCount % 3 == 0){
+		if (EnemyActionsCount % 3 == 2){
 			TackleInitialize();
 			attack_ = Attack::Tackle;
 		}
 
-		if (EnemyLife <= 170.0f) {
+		if (EnemyLife <= 200.0f) {
 			behaviorRequest_ = Behavior::kSecond;
 		}
 		
@@ -833,7 +871,7 @@ void Enemy::BehaviorSecondUpdate() {
 
 		if (worldTransform_.translation_.y < 75.0f) {
 			worldTransform_.translation_ =
-			    vector_.Lerp(worldTransform_.translation_, worldTransformAir.translation_, 0.02f);
+			    vector_.Lerp(worldTransform_.translation_, worldTransformAir.translation_, 0.01f);
 		}
 
 		if (enemyMoveCount >= enemyMoveCountMax&& attack_ == Attack::Normal) {
@@ -842,8 +880,8 @@ void Enemy::BehaviorSecondUpdate() {
 				kFireInterval = 60;
 
 				worldTransform_.translation_ =
-				    vector_.Lerp(worldTransform_.translation_, movePos[moveCount], 0.04f);
-				if (enemyMoveInterval<300) {
+				    vector_.Lerp(worldTransform_.translation_, movePos[moveCount], 0.03f);
+				if (moveCount>4) {
 					isOpen = false;
 				} else {
 					isOpen = true;
@@ -862,7 +900,7 @@ void Enemy::BehaviorSecondUpdate() {
 					EnemyActionsCount++;
 				}
 				if (EnemyActionsCount % 2 == 1) {
-					TackleInitialize();
+					ExTackleInitialize();
 					attack_ = Attack::Tackle;
 				}
 				moveCount = 0;
@@ -875,9 +913,12 @@ void Enemy::BehaviorSecondUpdate() {
 			}
 
 		} else {
+			if (worldTransform_.translation_.y > 70.0f) {
+				enemyMoveCount++;
+				FlyAttack(4.0f);
+			}
+
 			
-			enemyMoveCount++;
-			FlyAttack(4.0f);
 			for (int i = 0; i < 4; i++) {
 				movePos[i].x = {(rand() % 461 - 230) / 1.0f};
 				movePos[i].y = {76.0f};
@@ -886,7 +927,7 @@ void Enemy::BehaviorSecondUpdate() {
 		}
 		
 
-		if (EnemyLife <= 80.0f) {
+		if (EnemyLife <= 100.0f) {
 			behaviorRequest_ = Behavior::kThird;
 		}
 	}
@@ -906,6 +947,7 @@ void Enemy::BehaviorThirdUpdate() {
 	if (attack_ == Attack::Tackle) {
 		isOpen = false;
 		isRotate = false;
+		
 		ExTackle2(5.0f);
 	}
 	if (attack_ == Attack::Normal) {
@@ -920,14 +962,14 @@ void Enemy::BehaviorThirdUpdate() {
 			if (enemyMoveInterval > 0) {
 				enemyMoveInterval--;
 				kFireInterval = 60;
-				if (enemyMoveInterval < 300) {
+				if (moveCount>4) {
 					isOpen = false;
 				} else {
 					isOpen = true;
 				}
 
 				worldTransform_.translation_ =
-				    vector_.Lerp(worldTransform_.translation_, movePos[moveCount], 0.06f);
+				    vector_.Lerp(worldTransform_.translation_, movePos[moveCount], 0.05f);
 
 				if (vector_.Length(worldTransform_.translation_ - movePos[moveCount]) <= 4.0f &&
 				    moveCount < 6) {
@@ -941,6 +983,7 @@ void Enemy::BehaviorThirdUpdate() {
 				}
 				if (EnemyActionsCount % 2 == 1) {
 					TackleInitialize();
+					ExTackleInitialize();
 					attack_ = Attack::Tackle;
 				}
 				moveCount = 0;
@@ -952,8 +995,10 @@ void Enemy::BehaviorThirdUpdate() {
 			}
 
 		} else {
-			enemyMoveCount++;
-			FlyAttack(6.0f);
+			if (worldTransform_.translation_.y > 70.0f) {
+				enemyMoveCount++;
+				FlyAttack(6.0f);
+			}
 			for (int i = 0; i < 5; i++) {
 				movePos[i].x = {(rand() % 461 - 230) / 1.0f};
 				movePos[i].y = {76.0f};

@@ -1,17 +1,17 @@
 #include "Wall.h"
 void Wall::Initialize(const std::vector<Model*>& models) { 
 	BaseField::Initialize(models);
-	worldTransform_.translation_.x = 270.0f;
+	worldTransform_.translation_.x = MoveMax;
 	for (int i = 0; i < 3; i++) {
 		worldTransformWall_[i].Initialize();
 	}
-	worldTransformWall_[0].translation_.x = -270.0f;
+	worldTransformWall_[0].translation_.x = -MoveMax;
 
 	worldTransformWall_[1].rotation_.y = 1.57f;
-	worldTransformWall_[1].translation_.z = 270.0f;
+	worldTransformWall_[1].translation_.z = MoveMax;
 
 	worldTransformWall_[2].rotation_.y = 1.57f;
-	worldTransformWall_[2].translation_.z = -270.0f;
+	worldTransformWall_[2].translation_.z = -MoveMax;
 }
 
 void Wall::Update() { 
