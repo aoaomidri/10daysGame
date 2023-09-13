@@ -104,6 +104,7 @@ public:
 	void SetWorldTransformEnemy(const WorldTransform* worldTransform) {worldTransformEnemy_ = worldTransform;};
 
 	bool GetIsShotBullet() { return isShotBullet_; }
+	bool GetIsPopFish() { return isPopFish_; }
 
 	Vector3 GetMoveSpeed() { return move; }
 
@@ -368,6 +369,7 @@ private:
 
 	//サウンド
 	bool isShotBullet_;
+	bool isPopFish_;
 
 	//レティクルの移動先
 	Vector2 reticleTarget_;

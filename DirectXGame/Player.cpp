@@ -206,10 +206,12 @@ void Player::Update() {
 	}
 
 	//弾を増やす
+	isPopFish_ = false;
 	if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER && 
 		behavior_ != Behavior::kDead) {
 		if (bulletCreateCoolTime<=0 && kBulletMax > GetBulletNumMax())
 		{
+			isPopFish_ = true;
 			bulletCreateCoolTime = kBulletCreateCoolTime;
 			AddBullet(kCreateBulletNum);
 		}
