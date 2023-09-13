@@ -362,14 +362,18 @@ void GameScene::Update() {
 		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP) &&
 		    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP)) {
 			selectMode--;
-			audio_->PlayWave(selectSoundHandle_);
+			if (scene_ == Scene::Pose || scene_ == Scene::GameOver) {
+				audio_->PlayWave(selectSoundHandle_);
+			}
 		}
 	} 
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) &&
 		    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN)) {
 			selectMode++;
-			audio_->PlayWave(selectSoundHandle_);
+			if (scene_ == Scene::Pose || scene_ == Scene::GameOver) {
+				audio_->PlayWave(selectSoundHandle_);
+			}
 		}
 	}
 
