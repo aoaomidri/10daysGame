@@ -16,6 +16,6 @@ private:
 
 	WorldTransform worldTransformWall_[3];
 
-
+	const float MoveMax = 270.0f;
 
 };
