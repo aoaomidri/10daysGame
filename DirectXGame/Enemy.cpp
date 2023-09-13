@@ -108,10 +108,11 @@ void Enemy::Update() {
 	ImGui::Text("EnemyMoveInterval = %d", enemyMoveInterval);
 	ImGui::Text("isTackle = %d", isTackle);
 	ImGui::Text("EnemyLifePer = %.1f", enemyLifePer);
+	ImGui::Text("ActionCount = %d", EnemyActionsCount);
 	ImGui::End();
 
 	if (input_->TriggerKey(DIK_E)) {
-		EnemyLife = 10.0f;
+		EnemyLife = 150.0f;
 	}
 	#endif
 
@@ -559,6 +560,10 @@ void Enemy::ExTackle(float tackleSpeed) {
 	 // 弾の速度
 	 float kTackleSpeed = tackleSpeed;
 
+	 worldTransform_.translation_ = vector_.Lerp(
+	     worldTransform_.translation_,
+	     {worldTransform_.translation_.x, 5, worldTransform_.translation_.z}, 0.12f);
+
 	 worldTransform_.rotation_.y += rotate;
 	 if (tackleTimer < 900) {
 
@@ -649,7 +654,7 @@ void Enemy::BehaviorFirstUpdate() {
 	 //// キャラクターの移動ベクトル
 	if (attack_ == Attack::Tackle) {
 		
-		//Tackle(2.0f);
+		Tackle(2.0f);
 	} 
 	if (attack_==Attack::Normal) {
 	
@@ -731,11 +736,8 @@ void Enemy::BehaviorSecondUpdate() {
 
 		ExTackle(4.0f);
 	} 
-	else {
-		if (EnemyActionsCount % 2 == 1) {
-			TackleInitialize();
-			attack_ = Attack::Tackle;
-		}
+	if (attack_ == Attack::Normal) {
+		
 
 		if (worldTransform_.translation_.y < 35.0f) {
 			worldTransform_.translation_ =
@@ -750,9 +752,7 @@ void Enemy::BehaviorSecondUpdate() {
 				worldTransform_.translation_ =
 				    vector_.Lerp(worldTransform_.translation_, movePos[moveCount], 0.04f);
 
-				if (moveCount==5) {
-					EnemyActionsCount++;
-				}
+				
 
 				if (vector_.Length(worldTransform_.translation_ - movePos[moveCount]) <= 5.0f &&
 				    moveCount < 6) {
@@ -762,15 +762,24 @@ void Enemy::BehaviorSecondUpdate() {
 				
 
 			} else {
+				if (moveCount == 4) {
+					EnemyActionsCount++;
+				}
+				if (EnemyActionsCount % 2 == 1) {
+					TackleInitialize();
+					attack_ = Attack::Tackle;
+				}
 				moveCount = 0;
 				enemyMoveCount = 0;
 				if (enemyMoveInterval <= 0) {
 					kFireInterval = 45;
 					enemyMoveInterval = 800;
+					
 				}
 			}
 
 		} else {
+			
 			enemyMoveCount++;
 			FlyAttack(4.0f);
 			for (int i = 0; i < 4; i++) {
