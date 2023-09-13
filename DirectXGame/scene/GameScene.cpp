@@ -721,7 +721,7 @@ void GameScene::CheckAllCollisions() {
 
 
 #pragma region 自機と敵の当たり判定
-	if (enemy_->GetEnemyLife() <= 0) {
+	if (enemy_->GetEnemyLife() > 0) {
 
 		if (IsCollisionOBBOBB(player_->GetOBB(), enemy_->GetOBB())) {
 			//bullet->OnCollision();
