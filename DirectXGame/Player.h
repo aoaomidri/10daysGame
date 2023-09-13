@@ -386,5 +386,7 @@ public:
 	Vector3* enemyCenter_;
 	void SetEnemyOBBCenter(Vector3& center) { enemyCenter_ = &center; };
 	void ReticleUpdate();
+
+	bool IsInnerRange(float distance);
 };
 

@@ -30,6 +30,13 @@ Vector3 MyVector::TransformNormal(const Vector3& v, const Matrix4x4& m) {
 	return result;
 }
 
+float MyVector::Length(const Vector2& v) {
+	float result{0.0f};
+	float bulletNorm = static_cast<float>(sqrt((v.x * v.x) + (v.y * v.y)));
+	result = bulletNorm;
+	return result;
+}
+
 float MyVector::Length(const Vector3& v) {
 	float result{0.0f};
 	float bulletNorm = static_cast<float>(sqrt((v.x * v.x) + (v.y * v.y) + (v.z * v.z)));
