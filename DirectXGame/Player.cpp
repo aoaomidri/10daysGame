@@ -101,6 +101,7 @@ void Player::Initialize(const std::vector<Model*>& models) {
 void Player::Update() {
 	ApplyGlobalVariables();
 	bulletCreateCoolTime--;
+	homingCoolTime--;
 	if (bulletCreateCoolTime<0)
 	{
 		bulletCreateCoolTime = 0;
@@ -655,8 +656,11 @@ void Player::BehaviorShotUpdate() {
 	L_arm_offset_Base.z = 0.5f;
 
 	isShotBullet_ = false;
-	Attack();
-
+	if (!HomingMode_) {
+		Attack();
+	} else {
+		AttackHoming();
+	}
 	if ((worldTransform_.translation_ + move).x > MoveMax) {
 		move.x = {0};
 		worldTransform_.translation_.x = MoveMax;
@@ -677,15 +681,16 @@ void Player::BehaviorShotUpdate() {
 		worldTransformBody_.translation_.z = -MoveMax;
 	}
 
-	//待機状態になっている奴の先頭を手元に持ってくる
-	for (PlayerBullet* bullet : bullets_) {
-		if (bullet->GetState() == PlayerBullet::PlayerBulletState::Idle || 
-			bullet->GetState() == PlayerBullet::PlayerBulletState::Stance) {
-			bullet->SetShotIdle(L_arm_offset_Base);
-			break;
+	if (!HomingMode_) {
+		// 待機状態になっている奴の先頭を手元に持ってくる
+		for (PlayerBullet* bullet : bullets_) {
+			if (bullet->GetState() == PlayerBullet::PlayerBulletState::Idle ||
+			    bullet->GetState() == PlayerBullet::PlayerBulletState::Stance) {
+				bullet->SetShotIdle(L_arm_offset_Base);
+				break;
+			}
 		}
 	}
-
 	// 座標を加算
 	worldTransform_.AddTransform(move);
 	worldTransformBody_.AddTransform(move);
@@ -865,6 +870,38 @@ void Player::Attack() {
 		}
 	} else {
 		bulletTime = 0;
+	}
+}
+
+void Player::AttackHoming() {
+	if (joyState.Gamepad.bRightTrigger != 0 /* || (joyState.Gamepad.wButtons&&XINPUT_GAMEPAD_B)*/) {
+		if (homingCoolTime <= 0) {
+
+			// 弾の速度
+			const float kBulletSpeed = 5.0f;
+			Vector3 world3DReticlePos = GetWorldPosition(worldTransform3DReticle_.matWorld_);
+
+			Vector3 velocity = world3DReticlePos - GetWorldPosition(worldTransformL_arm_.matWorld_);
+			velocity = vector.NormalizePlus(velocity, kBulletSpeed);
+			int num = kSimuMax;
+			for (PlayerBullet* bullet : bullets_) {
+				if (bullet->GetState() == PlayerBullet::PlayerBulletState::Idle) {
+					if (num<=0)
+					{
+						break;
+					}
+					bullet->SetShot(
+					    viewProjection_->rotation_, velocity, (HomingMode_ && GetcheckCamera()));
+					bullet->SetState(PlayerBullet::PlayerBulletState::Move);
+					num--;
+				}
+				// assert(false);
+			}
+			if (num != kSimuMax) {
+				isShotBullet_ = true;
+				homingCoolTime = bulletIntervalHoming;
+			}
+		}
 	}
 }
 /*

@@ -42,6 +42,7 @@ public:
 	/// 射撃攻撃
 	///</summary>
 	void Attack();
+	void AttackHoming();
 		
 	//通常行動初期化
 	void BehaviorRootInitialize();
@@ -262,6 +263,10 @@ private:
 	// 自機の弾の発射間隔
 	int bulletInterval = 10;
 
+	//同時発射の発射間隔
+	int bulletIntervalHoming = 60;
+	int homingCoolTime;
+
 	int Life = 0;
 
 	// 発射タイマー
@@ -348,6 +353,9 @@ private:
 
 	//ホーミング切り替え
 	bool HomingMode_ = false;
+
+	//最大同時発射数
+	const int kSimuMax = 5;
 
 	XINPUT_STATE preJoyState;
 
