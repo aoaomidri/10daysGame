@@ -111,10 +111,11 @@ void Enemy::Update() {
 	ImGui::Text("ActionCount = %d", EnemyActionsCount);
 	ImGui::End();
 
-	#endif
 	if (input_->TriggerKey(DIK_G)) {
 		EnemyLife = 10.0f;
 	}
+
+	#endif
 
 	if (behaviorRequest_) {
 		// 振る舞いを変更する
@@ -175,18 +176,24 @@ void Enemy::Update() {
 	//worldTransformL_parts_.translation_ = worldTransform_.translation_ + L_parts_offset;
 	//worldTransformR_parts_.translation_ = worldTransform_.translation_ + R_parts_offset;
 
+	if (behavior_ != Behavior::kDead) {
+		Vector3 vector = {
+		    target_->translation_.x - worldTransform_.translation_.x,
+		    target_->translation_.y - worldTransform_.translation_.y,
+		    target_->translation_.z - worldTransform_.translation_.z};
+		if (isRotate) {
+			worldTransform_.rotation_.y = std::atan2(vector.x, vector.z);
+			Vector3 velocityXZ{vector.x, 0.0f, vector.z};
+			float besage = vector_.Length(velocityXZ);
+			worldTransform_.rotation_.x = std::atan2(-vector.y, besage);
 
-	 Vector3 vector = {
-	    target_->translation_.x - worldTransform_.translation_.x,
-	    target_->translation_.y - worldTransform_.translation_.y,
-	    target_->translation_.z - worldTransform_.translation_.z};
-	if (isRotate) {
-		worldTransform_.rotation_.y = std::atan2(vector.x, vector.z);
-		Vector3 velocityXZ{vector.x, 0.0f, vector.z};
-		float besage = vector_.Length(velocityXZ);
-		worldTransform_.rotation_.x = std::atan2(-vector.y, besage);
-
-	} else {
+		} else {
+		}
+	}
+	else {
+		worldTransform_.rotation_.x = 3.14f;
+		worldTransform_.rotation_.y = 0.0f;
+		worldTransform_.rotation_.z = 0.0f;
 	}
 
 	Matrix4x4 EnemyRotateMatrix = matrix.MakeRotateMatrix(worldTransform_.rotation_);
