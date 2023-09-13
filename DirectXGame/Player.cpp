@@ -384,6 +384,13 @@ void Player::BehaviorRootUpdate() {
 			    (float)joyState.Gamepad.sThumbLY / SHRT_MAX * kCharacterSpeed,
 			};			
 		} 
+		else {
+			move = {
+			    0,
+				0,
+				0
+			};	
+		}
 	} 
 	else {
 		const float threshold = 0.7f;
@@ -397,7 +404,7 @@ void Player::BehaviorRootUpdate() {
 			move_.z = -2;
 		}
 		else {
-			move.z = 0;
+			move_.z = 0;
 		}
 		if (input_->PushKey(DIK_D)) {
 			move_.x = +2;
@@ -406,7 +413,7 @@ void Player::BehaviorRootUpdate() {
 			move_.x = -2;
 		}
 		else {
-			move.x = 0;
+			move_.x = 0;
 		}
 		moveLength = vector.Length(move_);
 		if (moveLength > threshold) {
@@ -675,6 +682,8 @@ void Player::BehaviorShotUpdate() {
 			    0.0f,
 			    (float)joyState.Gamepad.sThumbLY / SHRT_MAX * kCharacterSpeed,
 			};
+		} else {
+			move = {0, 0, 0};
 		}
 	} 
 	else {
