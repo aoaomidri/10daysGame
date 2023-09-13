@@ -379,6 +379,8 @@ private:
 	Vector2 reticleCenter_ = {640,320};
 	Vector2 reticleEnemy_ = {640, 320};
 
+	uint32_t textureHandleNumber[10] = {0};
+
 
 public:
 
@@ -397,5 +399,26 @@ public:
 
 	OBB* enemyOBB_=nullptr;
 	void SetEnemyOBB(OBB& center) { enemyOBB_ = &center; };
+
+	//増やした数表示
+	void DrawPlus();
+	void SetPlus(int num);
+	//表示残り時間
+	int plusTime_ = 0;
+	int kPlus = 60;
+	int plusNum = 5;
+	bool isPlus_;
+
+	uint32_t texturePlus;
+	
+	Sprite* spritePlus_;
+	Sprite* spriteNumber_;
+	Vector2 plusPosition_;
+	Vector2 numberPosition_;
+	Vector2 plusSize_;
+	Vector2 numberSize_;
+	float alpha_ = 0.0f;
+
+	void SetNumberTexture(uint32_t* textureNumber);
 };
 
