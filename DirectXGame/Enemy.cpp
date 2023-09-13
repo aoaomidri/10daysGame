@@ -60,7 +60,7 @@ void Enemy::Initialize(const std::vector<Model*>& models) {
 	//adjustment_item->AddItem(groupName, "EnemyLife", EnemyLife);
 	adjustment_item->AddItem(groupName, "TackleSpeed", tackleSpeedBase);
 
-	isOpen = true;
+	isOpen = false;
 }
 
 void Enemy::ApplyGlobalVariables() {
@@ -440,6 +440,20 @@ void Enemy::FlyAttack(float bulletSpeed) {
 
 }
 
+void Enemy::TackleInitialize() {
+	 rotate = 0;
+
+	 isTackle = false;
+
+	 tackleTimer = 0;
+	 tackleTimerMax = 90;
+	 tackleMoveCount = 0;
+	 tackleMoveTime = 0;
+	 tackleMoveInterval = 120;
+	 tackleMoveCountMax = 3;
+	 
+}
+
 void Enemy::Tackle(float tackleSpeed) { 
 	/*tackleMoveCount = 0;
 	 rotate = 0;*/
@@ -468,8 +482,9 @@ void Enemy::Tackle(float tackleSpeed) {
 
 					move = {
 						((vector.x / bulletNorm) * kTackleSpeed),
-						0 /*(vector.y / bulletNorm) * kTackleSpeed*/,
-						(vector.z / bulletNorm) * kTackleSpeed};
+						0 ,
+						(vector.z / bulletNorm) * kTackleSpeed
+					};
 				}
 				tackleMoveTime++;
 				if (tackleMoveTime == tackleMoveInterval) {
@@ -494,6 +509,7 @@ void Enemy::Tackle(float tackleSpeed) {
 			rotate -= 0.01f;
 		} else {
 			move = {1.0f, 0, 1.0f};
+			EnemyActionsCount++;
 			attack_ = Attack::Normal;
 		}
 	 }
@@ -526,15 +542,17 @@ void Enemy::Tackle(float tackleSpeed) {
 
 void Enemy::BehaviorFirstInitialize() { 
 	move = {0.5f, 0.0f, 0.5f};
+	isOpen = false;
 	fireCount = 0;
+	EnemyActionsCount = 0;
 	enemyMoveCount = 0;
 	enemyMoveInterval = 180;
 }
 void Enemy::BehaviorFirstUpdate() {
 	 //// キャラクターの移動ベクトル
 	if (attack_ == Attack::Tackle) {
-
-		Tackle(3.0f);
+		
+		Tackle(2.0f);
 	} 
 	if (attack_==Attack::Normal) {
 	
@@ -550,6 +568,7 @@ void Enemy::BehaviorFirstUpdate() {
 				enemyMoveInterval--;
 				kFireInterval = 60;
 			} else {
+				EnemyActionsCount++;
 				if (move.x > 0 && move.z < 0) {
 					move.x *= -1;
 				} else if (move.x < 0 && move.z < 0) {
@@ -586,7 +605,10 @@ void Enemy::BehaviorFirstUpdate() {
 			worldTransform_.AddTransform(move);
 		}
 
-		//NormalAttack();
+		if (EnemyActionsCount % 3 == 0){
+			TackleInitialize();
+			attack_ = Attack::Tackle;
+		}
 
 		if (EnemyLife <= 170.0f) {
 			behaviorRequest_ = Behavior::kSecond;
