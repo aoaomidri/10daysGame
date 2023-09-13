@@ -57,7 +57,7 @@ void SceneTransition::Update() {
 		
 
 
-		if (particle->sprite->GetPosition().x <= -1500) {
+		if (particle->sprite->GetPosition().x <= -250) {
 			particle->isActive = false;
 		}
 		if (!particle->isActive) {
@@ -65,6 +65,12 @@ void SceneTransition::Update() {
 		} else {
 			++spriteParticlesIt;
 		}
+	}
+
+	if (spriteParticles_.size() == 0) {
+		nonFish_ = true;
+	} else {
+		nonFish_ = false;
 	}
 
 	BaseEffect::Update();

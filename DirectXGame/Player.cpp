@@ -279,7 +279,10 @@ void Player::EnergyUpdate()
 }
 
 void Player::DrawUI() { 
-	concentrationLine_->Draw();
+	
+	if (move.x != 0.0f || move.z != 0.0f) {
+		concentrationLine_->Draw();
+	}
 	if (joyState.Gamepad.bLeftTrigger != 0) {
 		sprite2DReticle_->Draw();
 	}
@@ -464,7 +467,11 @@ void Player::UpdateFloatingGimmick() {
 }
 
 void Player::FinAnimationUpdate() {
+	if (behavior_ == Behavior::kDash){
+		finRotate += 0.45f;
+	} else {
 		finRotate += 0.05f;
+	}
 		worldTransformTail_.rotation_.y = (std::sin(finRotate)) * float(M_PI) / 4.0f;
 }
 
@@ -889,15 +896,82 @@ void Player::ShotReticle(const Matrix4x4& matView, const Matrix4x4& matProjectio
 	// ここまで↑
 }
 
+bool Player::IsInnerRange(float distance)
+{
+	if (!HomingMode_)
+	{
+		Vector3 positionEnemy = *enemyCenter_;
+		/* Matrix4x4 mat = matrix.MakeAffineMatrix(
+		    worldTransformEnemy_->scale_, worldTransformEnemy_->rotation_,
+		    worldTransformEnemy_->translation_);
+		Vector3 positionEnemy = {mat.m[3][0], mat.m[3][1], mat.m[3][2]};*/
+		// Vector3 positionEnemy = {0,0,0};
+		//  ビューポート行列
+		Matrix4x4 matViewport =
+		    matrix.MakeViewportMatrix(0, 0, WinApp::kWindowWidth, WinApp::kWindowHeight, 0, 1);
+
+		// ビュー行列とプロジェクション行列、ビューポート行列を合成する
+		Matrix4x4 matViewProjectionViewport = matrix.Multiply(
+		    matrix.Multiply(viewProjection_->matView, viewProjection_->matProjection), matViewport);
+
+		// ワールド->スクリーン座標変換(ここで3Dから2Dになる)
+		positionEnemy = vector.Transform(positionEnemy, matViewProjectionViewport);
+
+		// スプライトのレティクルに座標設定
+		// sprite2DReticle_->SetPosition(Vector2(positionReticle.x, positionReticle.y));
+		reticleEnemy_ = {positionEnemy.x, positionEnemy.y};
+		
+		float innerReticle = vector.Length(Vector2{reticleEnemy_.x - reticleCenter_.x, reticleEnemy_.y - reticleCenter_.y});
+		if (innerReticle >= max(100.0f / (distance/150.0f),10.0f))
+		{
+			return false;
+		}
+	}
+	int32_t time = 0;
+	float speed = 0.0f;
+	if (HomingMode_)
+	{
+		time = PlayerBullet::kAttackTimeHoming;
+		speed = 5.0f ;
+	}
+	else
+	{
+		time = PlayerBullet::kAttackTimeNormal;
+		speed = 5.0f;
+	}
+	//時間*速度
+	float length = float(time) * speed;
+	if (!HomingMode_)
+	{
+		length += 15.0f;
+	}
+	else
+	{
+		length -= 5.0f;
+	}
+	if (distance <= length)
+	{
+		return true;
+	}
+	return false;
+	//return true;
+}
+
 void Player::ReticleUpdate() {
 	reticleTarget_ = reticleCenter_;
 	if (HomingMode_ && GetcheckCamera()) {
 		reticleTarget_ = reticleEnemy_;
 	}
+	float distance = vector.Length((*enemyCenter_ )- GetWorldPosition(worldTransformBody_.matWorld_));
+	Vector4 color = {0.0f,0.0f,0.0f,1.0f};
+	if (IsInnerRange(distance))
+	{
+		color = {0.0f,0.9f,0.0f,1.0f};
+	}
 	Vector2 position =  sprite2DReticle_->GetPosition();
 	position = vector.Lerp(position,reticleTarget_,0.2f);
 	sprite2DReticle_->SetPosition(position);
-	//sprite2DReticle_->SetPosition(reticleEnemy_);
+	sprite2DReticle_->SetColor(color);
 }
 
 void Player::Attack() {

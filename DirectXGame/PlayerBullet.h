@@ -60,6 +60,13 @@ public:
 
 	float radius = 1.0f;
 
+	static const int32_t kAttackTimeNormal = 50;
+	static const int32_t kAttackTimeHoming = 30;
+
+	// 攻撃時の速度
+	const float kAttackSpeed = 5.0f;
+
+
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
@@ -81,9 +88,6 @@ private:
 	// 寿命
 	static const int32_t kLifeTime = 30;
 
-	static const int32_t kAttackTimeNormal = 50;
-	static const int32_t kAttackTimeHoming = 30;
-
 
 	// デスタイマー
 	int32_t deathTimer_ = kLifeTime;
@@ -95,9 +99,6 @@ private:
 	Player* player_ = nullptr;
 
 	float t = 0.0f;
-
-	//攻撃時の速度
-	const float kAttackSpeed =5.0f;
 
 	//戻ってくるときの速度
 	const float kReturnSpeed = 1.2f;

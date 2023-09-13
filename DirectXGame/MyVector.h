@@ -28,6 +28,7 @@ public:
 	// 正規化して速度を整える
 	Vector3 NormalizePlus(const Vector3& v, float speed);
 	// 長さだけ
+	float Length(const Vector2& v);
 	float Length(const Vector3& v);
 
 	Vector3 Cross(const Vector3& vA, const Vector3& vB);
