@@ -467,7 +467,11 @@ void Player::UpdateFloatingGimmick() {
 }
 
 void Player::FinAnimationUpdate() {
+	if (behavior_ == Behavior::kDash){
+		finRotate += 0.45f;
+	} else {
 		finRotate += 0.05f;
+	}
 		worldTransformTail_.rotation_.y = (std::sin(finRotate)) * float(M_PI) / 4.0f;
 }
 
