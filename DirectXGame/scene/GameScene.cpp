@@ -589,6 +589,8 @@ void GameScene::DrawTexture() {
 		if (countDown_ >= 60 * 2.0f && countDown_ < 60 * 3.0f) {
 			if (countDown_ == 60 * 2.0f) {
 				audio_->PlayWave(selectSoundHandle_, false, 1.0f);
+				MainBGMHandle_ = audio_->PlayWave(MainBGMDataHandle_, true);
+				audio_->SetVolume(MainBGMHandle_, 0.3f);
 			}
 			Vector2 textureSize = vector.Lerp(countDownNum_[0]->GetSize(), {144, 144}, 0.033f);
 			countDownNum_[0]->SetSize(textureSize);
@@ -1315,8 +1317,6 @@ void GameScene::ControlUpdate() {
 
 void GameScene::MainInitialize() { 
 	Initialize(); 
-	MainBGMHandle_ = audio_->PlayWave(MainBGMDataHandle_, true);
-	audio_->SetVolume(MainBGMHandle_, 0.5f);
 }
 
 void GameScene::MainUpdate() { 
