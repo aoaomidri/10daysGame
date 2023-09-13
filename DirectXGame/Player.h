@@ -351,7 +351,7 @@ private:
 	//無敵判定
 	bool isInvincible_ = false;
 	// 被弾時の無敵時間
-	const int kHitInvincible = 30;
+	const int kHitInvincible = 90;
 	int invincibleTime_;
 
 	//ホーミング切り替え
