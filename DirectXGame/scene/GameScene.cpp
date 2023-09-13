@@ -361,10 +361,10 @@ void GameScene::Update() {
 		}
 		audio_->SetVolume(transitionSoundHandle_, transitionSoundVolume_);
 	}
-	if (player_->GetBehavior() == Player::Behavior::kDash && !audio_->IsPlaying(swimSoundHandle_)) {
+	if (player_->GetBehavior() == Player::Behavior::kDash && (player_->GetMoveSpeed().x != 0.0f || player_->GetMoveSpeed().z != 0.0f) && !audio_->IsPlaying(swimSoundHandle_)) {
 		swimSoundHandle_ = audio_->PlayWave(swimDataHandle_, true, 0.5f);
 	} 
-	else if(player_->GetBehavior() != Player::Behavior::kDash || scene_ != Scene::Main){
+	else if(player_->GetBehavior() != Player::Behavior::kDash || scene_ != Scene::Main || (player_->GetMoveSpeed().x == 0.0f && player_->GetMoveSpeed().z == 0.0f)){
 		audio_->StopWave(swimSoundHandle_);
 	}
 

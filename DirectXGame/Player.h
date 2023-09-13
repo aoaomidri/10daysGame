@@ -105,6 +105,8 @@ public:
 
 	bool GetIsShotBullet() { return isShotBullet_; }
 
+	Vector3 GetMoveSpeed() { return move; }
+
 	void OnCollision();
 	void OnCollision(int Damage);
 	
