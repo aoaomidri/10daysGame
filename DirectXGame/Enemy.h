@@ -100,6 +100,8 @@ private:
 	
 	int moveCount = 0;
 
+	int EnemyActionsCount = 0;
+
 	//タックルに関連する関数
 	float rotate;
 
@@ -131,6 +133,8 @@ private:
 	void randFire(float bulletSpeed);
 
 	void Tackle(float tackleSpeed);
+
+	void TackleInitialize();
 
 	void NormalAttack();
 
@@ -237,6 +241,9 @@ public:
 
 	//与えるダメージ
 	int damage_=10;
+
+	//口を開いているか
+	bool isOpen = false;
 
 	void OnCollision();
 };

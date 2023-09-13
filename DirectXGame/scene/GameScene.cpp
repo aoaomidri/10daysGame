@@ -193,7 +193,7 @@ void GameScene::Initialize() {
 	modelPlayerL_arm_.reset(Model::CreateFromOBJ("float_L_arm", true));
 	modelEnemy_.reset(Model::CreateFromOBJ("Enemy", true));
 	modelEnemyL_parts_.reset(Model::CreateFromOBJ("EnemyParts", true));
-	modelEnemyR_parts_.reset(Model::CreateFromOBJ("EnemyParts", true));
+	modelEnemyR_parts_.reset(Model::CreateFromOBJ("Enemy2", true));
 	modelPlayerBulletBody_.reset(Model::CreateFromOBJ("BulletBody", true));
 	modelPlayerBulletFin_.reset(Model::CreateFromOBJ("tail", true));
 	modelWaterFlowParticle_.reset(Model::CreateFromOBJ("WaterFlowParticle", true));
