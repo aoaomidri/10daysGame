@@ -279,7 +279,10 @@ void Player::EnergyUpdate()
 }
 
 void Player::DrawUI() { 
-	concentrationLine_->Draw();
+	
+	if (move.x != 0.0f || move.z != 0.0f) {
+		concentrationLine_->Draw();
+	}
 	if (joyState.Gamepad.bLeftTrigger != 0) {
 		sprite2DReticle_->Draw();
 	}
