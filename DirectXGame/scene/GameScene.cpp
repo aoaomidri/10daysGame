@@ -1340,7 +1340,10 @@ void GameScene::TitleUpdate() {
 			audio_->PlayWave(selectSoundHandle_);
 		}
 	}
-
+	if (input_->TriggerKey(DIK_SPACE)) {
+		sceneRequest_ = Scene::Control;
+		audio_->PlayWave(selectSoundHandle_);
+	}
 	
 }
 
@@ -1360,6 +1363,17 @@ void GameScene::ControlUpdate() {
 				transitionSoundVolume_ = 0.7f;
 				transitionSoundHandle_ = audio_->PlayWave(transitionDataHandle_, true ,transitionSoundVolume_);
 			}
+		}
+	}
+	if (input_->TriggerKey(DIK_SPACE)) {
+		audio_->PlayWave(selectSoundHandle_);
+		audio_->StopWave(TitleBGMHandle_);
+		if (!sceneTransition_->GetStartTransition()) {
+			sceneTransition_->Initialize(textureParticleFish);
+			sceneTransition_->SetStartTransition(true);
+			transitionSoundVolume_ = 0.7f;
+			transitionSoundHandle_ =
+			    audio_->PlayWave(transitionDataHandle_, true, transitionSoundVolume_);
 		}
 	}
 	if (sceneTransition_->GetCompleteTransition()) {
@@ -1451,6 +1465,9 @@ void GameScene::MainUpdate() {
 				sceneRequest_ = Scene::Pose;
 			}
 		}
+		if (input_->TriggerKey(DIK_TAB) && enemy_->GetEnemyLife() > 0) {
+			sceneRequest_ = Scene::Pose;
+		}
 
 		if (enemy_->GetEnemyLife() <= 0.0f) {
 			audio_->StopWave(MainBGMHandle_);
@@ -1495,6 +1512,7 @@ void GameScene::PoseUpdate() {
 				sceneRequest_ = Scene::Main;
 				audio_->PlayWave(selectSoundHandle_);
 		}
+
 		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) &&
 		    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_B)) {
 			if (selectMode == 0) {
@@ -1506,16 +1524,41 @@ void GameScene::PoseUpdate() {
 				audio_->PlayWave(selectSoundHandle_);
 			}
 		}
+
 		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP) &&
 			!(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_UP)) {
 			selectMode--;
 			audio_->PlayWave(selectSoundHandle_);
 		}
+
 		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN) &&
 			!(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN)) {
 			selectMode++;
 			audio_->PlayWave(selectSoundHandle_);
 		}
+	}
+
+	if (input_->TriggerKey(DIK_TAB)) {
+		sceneRequest_ = Scene::Main;
+		audio_->PlayWave(selectSoundHandle_);
+	}
+	if (input_->TriggerKey(DIK_SPACE)) {
+		if (selectMode == 0) {
+			sceneRequest_ = Scene::Main;
+			audio_->PlayWave(selectSoundHandle_);
+		} else {
+			audio_->StopWave(MainBGMHandle_);
+			sceneRequest_ = Scene::Title;
+			audio_->PlayWave(selectSoundHandle_);
+		}
+	}
+	if (input_->TriggerKey(DIK_W)) {
+		selectMode--;
+		audio_->PlayWave(selectSoundHandle_);
+	}
+	if (input_->TriggerKey(DIK_S)) {
+		selectMode++;
+		audio_->PlayWave(selectSoundHandle_);
 	}
 }
 
@@ -1533,7 +1576,12 @@ void GameScene::EndUpdate() {
 			audio_->PlayWave(selectSoundHandle_);
 		}
 	}
-	
+	if (input_->TriggerKey(DIK_SPACE)) {
+		// audio_->StopWave(EndBGMHandle_);
+		sceneRequest_ = Scene::Title;
+		audio_->StopWave(GameClearBGMHandle_);
+		audio_->PlayWave(selectSoundHandle_);
+	}
 }
 
 void GameScene::GameOverInitialize() {  }
@@ -1562,6 +1610,27 @@ void GameScene::GameOverUpdate() {
 				sceneRequest_ = Scene::Title;
 				audio_->PlayWave(selectSoundHandle_);
 			}
+		}
+	}
+
+	if (input_->TriggerKey(DIK_W)) {
+		selectMode--;
+		audio_->PlayWave(selectSoundHandle_);
+	}
+	if (input_->TriggerKey(DIK_S)) {
+		selectMode++;
+		audio_->PlayWave(selectSoundHandle_);
+	}
+	if (input_->TriggerKey(DIK_SPACE)) {
+		audio_->StopWave(EndBGMHandle_);
+		if (selectMode == 0) {
+			audio_->StopWave(GameOverBGMHandle_);
+			sceneRequest_ = Scene::Main;
+			audio_->PlayWave(selectSoundHandle_);
+		} else {
+			audio_->StopWave(GameOverBGMHandle_);
+			sceneRequest_ = Scene::Title;
+			audio_->PlayWave(selectSoundHandle_);
 		}
 	}
 }
