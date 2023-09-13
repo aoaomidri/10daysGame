@@ -167,6 +167,7 @@ private: // メンバ変数
 	uint32_t TitleBGMDataHandle_ = 0;
 	uint32_t MainBGMDataHandle_ = 0;
 	uint32_t EndBGMDataHandle_ = 0;
+	uint32_t swimDataHandle_ = 0;
 
 	uint32_t SEDataHandle_ = 0;
 
@@ -180,6 +181,8 @@ private: // メンバ変数
 	uint32_t shotSoundHandle_ = 0;
 	uint32_t selectSoundHandle_ = 0;
 	uint32_t countdownFinalSoundHandle_ = 0;
+	uint32_t hitSoundHandle_ = 0;
+	uint32_t swimSoundHandle_ = 0;
 	int shotSoundCooldown_;
 
 	// 3Dモデル

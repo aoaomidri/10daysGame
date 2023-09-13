@@ -41,7 +41,7 @@ void PlayerBullet::Initialize(
 	worldTransformHerd_.Initialize();
 	worldTransformHerd_.translation_.x = (float(rand()) / float(RAND_MAX) - 0.5f) * 10.0f;
 	worldTransformHerd_.translation_.y = 2.0f + (float(rand()) / float(RAND_MAX) - 0.5f) * 10.0f;
-	worldTransformHerd_.translation_.z = -11.0f;
+	worldTransformHerd_.translation_.z = kNormalHerd;
 
 	idleFollow = (float(rand()) / float(RAND_MAX)+1.0f)*idleFollow;
 	idleSpeed = idleFollow * 2.0f;
@@ -112,6 +112,14 @@ void PlayerBullet::Update() {
 
 void PlayerBullet::Idle() 
 {
+	if (player_->GetBehavior() == Player::Behavior::kShot)
+	{
+		worldTransformHerd_.translation_.z = kShotHerd;
+	}
+	else
+	{
+		worldTransformHerd_.translation_.z = kNormalHerd;
+	}
 	worldTransformHerd_.parent_ = &player_->GetWorldTransform(); 
 	target_ = &worldTransformHerd_;	
 	

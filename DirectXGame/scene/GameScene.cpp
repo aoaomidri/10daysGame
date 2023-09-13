@@ -166,6 +166,8 @@ void GameScene::SoundInitialize() {
 	shotSoundHandle_ = audio_->LoadWave("audio/Shot.wav");
 	selectSoundHandle_ = audio_->LoadWave("audio/selectSound.wav");
 	countdownFinalSoundHandle_ = audio_->LoadWave("audio/countdownFinal.wav");
+	hitSoundHandle_ = audio_->LoadWave("audio/Hit.wav");
+	swimDataHandle_ = audio_->LoadWave("audio/swim.wav");
 }
 
 void GameScene::Initialize() {
@@ -351,6 +353,12 @@ void GameScene::Update() {
 		break;
 	}
 	
+	if (player_->GetBehavior() == Player::Behavior::kDash && !audio_->IsPlaying(swimSoundHandle_)) {
+		swimSoundHandle_ = audio_->PlayWave(swimDataHandle_, true, 0.5f);
+	} 
+	else if(player_->GetBehavior() != Player::Behavior::kDash){
+		audio_->StopWave(swimSoundHandle_);
+	}
 
 	selectMode = (selectMode % 2) * (selectMode % 2);
 
@@ -693,23 +701,27 @@ void GameScene::CheckAllCollisions() {
 				.radius = bullet->radius
 			};
 			if (isCollisionOBBSphere(player_->GetOBB(),enemyBullet_)) {
+				if (!player_->IsInviincible() && player_->GetBehavior() != Player::Behavior::kDead) {
+					audio_->PlayWave(hitSoundHandle_);
+				}
 				bullet->OnCollision();
 				player_->OnCollision();
 			}
-
-
 		}
 	}
 #pragma endregion
 
 
 #pragma region 自機と敵の当たり判定
-	if (enemy_->isDead == false) {
+	if (enemy_->GetEnemyLife() <= 0) {
 
 		if (IsCollisionOBBOBB(player_->GetOBB(), enemy_->GetOBB())) {
-				//bullet->OnCollision();
-				player_->OnCollision(enemy_->GetDamage());
+			//bullet->OnCollision();
+			if (!player_->IsInviincible()&& player_->GetBehavior() != Player::Behavior::kDead) {
+				audio_->PlayWave(hitSoundHandle_);
 			}
+			player_->OnCollision(enemy_->GetDamage());
+		}
 	}
 #pragma endregion
 }
