@@ -746,6 +746,10 @@ void Player::OnCollision(int Damage) {
 				}
 			}
 		}
+		if (num != Damage)
+		{
+			return;
+		}
 		PlayerLife -= 50;
 	}
 }	
