@@ -1360,9 +1360,9 @@ void GameScene::ControlUpdate() {
 	if (Input::GetInstance()->GetJoystickState(0, joyState)) {
 		if ((joyState.Gamepad.wButtons & XINPUT_GAMEPAD_B) &&
 		    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_B)) {
-			audio_->PlayWave(selectSoundHandle_);
 			audio_->StopWave(TitleBGMHandle_);
 			if (!sceneTransition_->GetStartTransition()) {
+				audio_->PlayWave(selectSoundHandle_);
 				sceneTransition_->Initialize(textureParticleFish);
 				sceneTransition_->SetStartTransition(true);
 				transitionSoundVolume_ = 0.7f;
@@ -1371,14 +1371,13 @@ void GameScene::ControlUpdate() {
 		}
 	}
 	if (input_->TriggerKey(DIK_SPACE)) {
-		audio_->PlayWave(selectSoundHandle_);
 		audio_->StopWave(TitleBGMHandle_);
 		if (!sceneTransition_->GetStartTransition()) {
+			audio_->PlayWave(selectSoundHandle_);
 			sceneTransition_->Initialize(textureParticleFish);
 			sceneTransition_->SetStartTransition(true);
 			transitionSoundVolume_ = 0.7f;
-			transitionSoundHandle_ =
-			    audio_->PlayWave(transitionDataHandle_, true, transitionSoundVolume_);
+			transitionSoundHandle_ = audio_->PlayWave(transitionDataHandle_, true, transitionSoundVolume_);
 		}
 	}
 	if (sceneTransition_->GetCompleteTransition()) {
