@@ -161,6 +161,7 @@ void GameScene::SoundInitialize() {
 	TitleBGMDataHandle_ = audio_->LoadWave("audio/titleBGM.wav");
 	MainBGMDataHandle_ = audio_->LoadWave("audio/inGameBGM.wav");
 	GameClearBGMDataHandle_ = audio_->LoadWave("audio/GameClear.wav");
+	GameOverBGMDataHandle_ = audio_->LoadWave("audio/GameOver.wav");
 	EndBGMDataHandle_ = audio_->LoadWave("audio/zingle.wav");
 
 	SEDataHandle_ = audio_->LoadWave("audio/break.wav");
@@ -632,6 +633,8 @@ void GameScene::DrawTexture() {
 			countDownNum_[0]->Draw();
 			if (countDown_ == 60 * 0.5f) {
 				audio_->PlayWave(selectSoundHandle_, false, 1.0f);
+				MainBGMHandle_ = audio_->PlayWave(MainBGMDataHandle_, true);
+				audio_->SetVolume(MainBGMHandle_, 0.3f);
 			}
 		}
 		if (countDown_ >= 60 * 1.5f && countDown_ < 60 * 2.5f) {
@@ -1417,6 +1420,13 @@ void GameScene::MainUpdate() {
 			sceneRequest_ = Scene::End;
 		}
 
+		if (player_->GetBehavior() == Player::Behavior::kDead) {
+			audio_->StopWave(MainBGMHandle_);
+			if (!audio_->IsPlaying(GameOverBGMHandle_)) {
+				GameOverBGMHandle_ = audio_->PlayWave(GameOverBGMDataHandle_, true, 0.3f);
+			}
+		}
+
 		if (player_->IsDead()) {
 			sceneRequest_ = Scene::GameOver;
 		}
@@ -1493,11 +1503,11 @@ void GameScene::GameOverUpdate() {
 		    !(preJoyState.Gamepad.wButtons & XINPUT_GAMEPAD_B)) {
 			audio_->StopWave(EndBGMHandle_);
 			if (selectMode==0) {
-				audio_->StopWave(MainBGMHandle_);
+				audio_->StopWave(GameOverBGMHandle_);
 				sceneRequest_ = Scene::Main;
 				audio_->PlayWave(selectSoundHandle_);
 			} else {
-				audio_->StopWave(MainBGMHandle_);
+				audio_->StopWave(GameOverBGMHandle_);
 				sceneRequest_ = Scene::Title;
 				audio_->PlayWave(selectSoundHandle_);
 			}

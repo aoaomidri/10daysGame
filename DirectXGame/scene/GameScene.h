@@ -167,6 +167,7 @@ private: // メンバ変数
 	uint32_t TitleBGMDataHandle_ = 0;
 	uint32_t MainBGMDataHandle_ = 0;
 	uint32_t GameClearBGMDataHandle_ = 0;
+	uint32_t GameOverBGMDataHandle_ = 0;
 	uint32_t EndBGMDataHandle_ = 0;
 	uint32_t swimDataHandle_ = 0;
 	uint32_t transitionDataHandle_ = 0;
@@ -177,6 +178,7 @@ private: // メンバ変数
 	uint32_t TitleBGMHandle_ = 0;
 	uint32_t MainBGMHandle_ = 0;
 	uint32_t GameClearBGMHandle_ = 0;
+	uint32_t GameOverBGMHandle_ = 0;
 	uint32_t EndBGMHandle_ = 0;
 
 	uint32_t ENSEHandle_ = 0;
