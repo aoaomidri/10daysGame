@@ -165,7 +165,7 @@ void GameScene::SoundInitialize() {
 
 	shotSoundHandle_ = audio_->LoadWave("audio/Shot.wav");
 	selectSoundHandle_ = audio_->LoadWave("audio/selectSound.wav");
-	countDownSoundHandle_ = audio_->LoadWave("audio/Countdown.wav");
+	countdownFinalSoundHandle_ = audio_->LoadWave("audio/countdownFinal.wav");
 }
 
 void GameScene::Initialize() {
@@ -566,9 +566,9 @@ void GameScene::DrawTexture() {
 	}
 
 	if (!cutCountDown_){
-		if (countDown_ >= 60 * 2 && countDown_ < 60 * 3.0f) {
-			if (countDown_ == 60 * 2) {
-				audio_->PlayWave(countDownSoundHandle_, false, 1.0f);
+		if (countDown_ >= 60 * 2.0f && countDown_ < 60 * 3.0f) {
+			if (countDown_ == 60 * 2.0f) {
+				audio_->PlayWave(selectSoundHandle_, false, 1.0f);
 			}
 			Vector2 textureSize = vector.Lerp(countDownNum_[0]->GetSize(), {144, 144}, 0.033f);
 			countDownNum_[0]->SetSize(textureSize);
@@ -578,16 +578,25 @@ void GameScene::DrawTexture() {
 			Vector2 textureSize = vector.Lerp(countDownNum_[1]->GetSize(), {144, 144}, 0.033f);
 			countDownNum_[1]->SetSize(textureSize);
 			countDownNum_[1]->Draw();
+			if (countDown_ == 60 * 3.0f) {
+				audio_->PlayWave(selectSoundHandle_, false, 1.0f);
+			}
 		}
 		if (countDown_ >= 60 * 4.0f && countDown_ < 60 * 5.0f) {
 			Vector2 textureSize = vector.Lerp(countDownNum_[2]->GetSize(), {144, 144}, 0.033f);
 			countDownNum_[2]->SetSize(textureSize);
 			countDownNum_[2]->Draw();
+			if (countDown_ == 60 * 4.0f) {
+				audio_->PlayWave(selectSoundHandle_, false, 1.0f);
+			}
 		}
 		if (countDown_ >= 60 * 5.0f && countDown_ < 60 * 6.0f) {
 			Vector2 textureSize = vector.Lerp(countDownNum_[3]->GetSize(), {144, 144}, 0.033f);
 			countDownNum_[3]->SetSize(textureSize);
 			countDownNum_[3]->Draw();
+			if (countDown_ == 60 * 5.0f) {
+				audio_->PlayWave(countdownFinalSoundHandle_, false, 1.0f);
+			}
 		}
 		if (countDown_ >= 60 * 6.0f) {
 			isCountDown_ = false;
@@ -598,21 +607,33 @@ void GameScene::DrawTexture() {
 			Vector2 textureSize = vector.Lerp(countDownNum_[0]->GetSize(), {144, 144}, 0.033f);
 			countDownNum_[0]->SetSize(textureSize);
 			countDownNum_[0]->Draw();
+			if (countDown_ == 60 * 0.5f) {
+				audio_->PlayWave(selectSoundHandle_, false, 1.0f);
+			}
 		}
 		if (countDown_ >= 60 * 1.5f && countDown_ < 60 * 2.5f) {
 			Vector2 textureSize = vector.Lerp(countDownNum_[1]->GetSize(), {144, 144}, 0.033f);
 			countDownNum_[1]->SetSize(textureSize);
 			countDownNum_[1]->Draw();
+			if (countDown_ == 60 * 1.5f) {
+				audio_->PlayWave(selectSoundHandle_, false, 1.0f);
+			}
 		}
 		if (countDown_ >= 60 * 2.5f && countDown_ < 60 * 3.5f) {
 			Vector2 textureSize = vector.Lerp(countDownNum_[2]->GetSize(), {144, 144}, 0.033f);
 			countDownNum_[2]->SetSize(textureSize);
 			countDownNum_[2]->Draw();
+			if (countDown_ == 60 * 2.5f) {
+				audio_->PlayWave(selectSoundHandle_, false, 1.0f);
+			}
 		}
 		if (countDown_ >= 60 * 3.5f && countDown_ < 60 * 4.5f) {
 			Vector2 textureSize = vector.Lerp(countDownNum_[3]->GetSize(), {144, 144}, 0.033f);
 			countDownNum_[3]->SetSize(textureSize);
 			countDownNum_[3]->Draw();
+			if (countDown_ == 60 * 3.5f) {
+				audio_->PlayWave(countdownFinalSoundHandle_, false, 1.0f);
+			}
 		}
 		if (countDown_ >= 60 * 4.5f) {
 			isCountDown_ = false;
