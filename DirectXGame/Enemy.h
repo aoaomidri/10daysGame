@@ -132,9 +132,13 @@ private:
 
 	void randFire(float bulletSpeed);
 
+	void TackleInitialize();
+
 	void Tackle(float tackleSpeed);
 
-	void TackleInitialize();
+	void ExTackleInitialize();
+
+	void ExTackle(float tackleSpeed);	
 
 	void NormalAttack();
 
