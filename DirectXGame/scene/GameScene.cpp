@@ -165,6 +165,7 @@ void GameScene::SoundInitialize() {
 
 	shotSoundHandle_ = audio_->LoadWave("audio/Shot.wav");
 	selectSoundHandle_ = audio_->LoadWave("audio/selectSound.wav");
+	countDownSoundHandle_ = audio_->LoadWave("audio/Countdown.wav");
 }
 
 void GameScene::Initialize() {
@@ -566,6 +567,9 @@ void GameScene::DrawTexture() {
 
 	if (!cutCountDown_){
 		if (countDown_ >= 60 * 2 && countDown_ < 60 * 2.8f) {
+			if (countDown_ == 60 * 2) {
+				audio_->PlayWave(countDownSoundHandle_, false, 1.0f);
+			}
 			Vector2 textureSize = vector.Lerp(countDownNum_[0]->GetSize(), {144, 144}, 0.033f);
 			countDownNum_[0]->SetSize(textureSize);
 			countDownNum_[0]->Draw();
